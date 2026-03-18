@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
+import { getImagePath } from "@/utils/imagePath";
 
 export const Locations = () => {
   return (
@@ -61,7 +62,7 @@ export const Locations = () => {
               >
                 <div className="relative h-[350px]">
                   <img 
-                    src={loc.image} 
+                    src={getImagePath(loc.image)} 
                     alt={loc.city} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
