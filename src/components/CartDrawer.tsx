@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ShoppingBasket, Trash2, Plus, Minus, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { getImagePath } from "@/utils/imagePath";
 
 export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, onClose: () => void, onCheckout: () => void }) => {
   const { items, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
@@ -54,7 +55,7 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                 items.map((item) => (
                   <div key={item.id} className="flex gap-4">
                     <div className="w-20 h-20 rounded-2xl bg-secondary/10 overflow-hidden flex-shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                      <img src={getImagePath(item.image)} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-gray-800">{item.name}</h4>

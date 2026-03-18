@@ -12,6 +12,7 @@ import { CandyLab } from "@/components/CandyLab";
 import SmoothScroll from "@/components/SmoothScroll";
 import Link from "next/link";
 import { CANDIES } from "@/app/mock-data";
+import { getImagePath } from "@/utils/imagePath";
 
 /* Constantes de badge para los destacados */
 const BADGE_STYLES: Record<string, string> = {
@@ -44,9 +45,10 @@ export default function Home() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
+    // STOP MOTION FLIPBOOK EFFECT (Cambiamos rápido sin esperas)
     const timer = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length);
-    }, 4000); // Cambia cada 4 segundos
+    }, 350); // Cambia cada 350 milisegundos
     return () => clearInterval(timer);
   }, []);
   const { totalItems } = useCart();
@@ -94,77 +96,72 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* ── HERO SECTION - ESTILO PAWSY ── */}
-        <section className="relative h-[100dvh] bg-[#B9C2F5] overflow-hidden flex flex-col">
+        {/* ── HERO SECTION - ESTILO PAWSY EXACTO + CANDY CRUSH ── */}
+        <section className="relative h-[100dvh] overflow-hidden flex flex-col"
+                 style={{ background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #FFD1DC 40%, #B9C2F5 100%)' }}>
+          {/* Layer 1: Nubes Blancas Flotantes Absolutas (z-0) */}
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            {/* Nube flotante decorativa - izquierda */}
+            <motion.div
+              animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-[18%] left-[4%] opacity-60"
+            >
+              <svg width="130" height="72" viewBox="0 0 130 72" fill="none">
+                <path d="M10,62 C10,62 0,60 0,52 C0,44 8,40 16,42 C16,30 26,22 38,24 C40,14 50,8 62,10 C70,4 82,4 90,12 C100,8 112,14 114,24 C122,24 130,32 128,40 C126,48 118,52 110,50 C110,58 100,64 90,62 Z" fill="white" />
+              </svg>
+            </motion.div>
 
-          {/* Nube flotante decorativa - izquierda */}
-          <motion.div
-            animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[18%] left-[4%] opacity-90 pointer-events-none"
-          >
-            <svg width="130" height="72" viewBox="0 0 130 72" fill="none">
-              <path d="M10,62 C10,62 0,60 0,52 C0,44 8,40 16,42 C16,30 26,22 38,24 C40,14 50,8 62,10 C70,4 82,4 90,12 C100,8 112,14 114,24 C122,24 130,32 128,40 C126,48 118,52 110,50 C110,58 100,64 90,62 Z" fill="white"/>
-            </svg>
-          </motion.div>
+            {/* Nube flotante decorativa - derecha */}
+            <motion.div
+              animate={{ y: [0, 10, 0], x: [0, -6, 0] }}
+              transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+              className="absolute top-[12%] right-[6%] opacity-50"
+            >
+              <svg width="170" height="95" viewBox="0 0 170 95" fill="none">
+                <path d="M14,82 C14,82 0,80 0,68 C0,56 10,50 22,53 C20,36 34,24 50,26 C52,14 66,6 82,8 C92,2 108,2 118,12 C130,6 146,14 148,28 C158,28 170,38 168,52 C166,64 156,70 144,68 C144,78 132,86 120,84 C116,92 104,96 94,88 C84,94 70,92 64,82 Z" fill="white" />
+              </svg>
+            </motion.div>
+          </div>
 
-          {/* Nube flotante decorativa - derecha */}
-          <motion.div
-            animate={{ y: [0, 10, 0], x: [0, -6, 0] }}
-            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className="absolute top-[12%] right-[6%] opacity-85 pointer-events-none"
-          >
-            <svg width="170" height="95" viewBox="0 0 170 95" fill="none">
-              <path d="M14,82 C14,82 0,80 0,68 C0,56 10,50 22,53 C20,36 34,24 50,26 C52,14 66,6 82,8 C92,2 108,2 118,12 C130,6 146,14 148,28 C158,28 170,38 168,52 C166,64 156,70 144,68 C144,78 132,86 120,84 C116,92 104,96 94,88 C84,94 70,92 64,82 Z" fill="white"/>
-            </svg>
-          </motion.div>
+          {/* ── FLOATING CANDIES (Candy Crush Inspiration) (z-10) ── */}
+          <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
+            {/* Caramelo elevado para que NO tape el texto de la izquierda */}
+            <motion.div
+              animate={{ y: [0, -15, 0], x: [0, 10, 0], rotate: [0, 45, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-[10%] left-[8%] md:left-[5%] text-6xl drop-shadow-md"
+            >
+              🍬
+            </motion.div>
 
-          {/* Nube flotante pequeña - derecha media */}
-          <motion.div
-            animate={{ y: [0, -7, 0] }}
-            transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-            className="absolute top-[42%] right-[3%] opacity-65 pointer-events-none"
-          >
-            <svg width="90" height="52" viewBox="0 0 90 52" fill="none">
-              <path d="M8,44 C8,44 0,42 0,34 C0,26 6,22 14,24 C14,14 22,8 32,10 C36,4 46,2 54,8 C62,4 72,8 74,18 C80,18 88,24 86,32 C84,40 76,44 68,42 Z" fill="white"/>
-            </svg>
-          </motion.div>
-
-          {/* Emoji decorativo */}
-          <motion.div
-            animate={{ rotate: [0, 8, -4, 0], y: [0, -6, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[20%] right-[25%] text-5xl opacity-15 select-none pointer-events-none"
-          >
-            🍬
-          </motion.div>
+            {/* Paleta de colores gigante asomándose en la esquina derecha inferior */}
+            <motion.div
+              animate={{ y: [0, -8, 0], rotate: [15, 25, 15] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute bottom-[18%] md:bottom-[22%] right-[2%] md:right-[5%] text-[90px] md:text-[110px] drop-shadow-2xl z-20"
+            >
+              🍭
+            </motion.div>
+          </div>
 
           {/* ── CONTENIDO TEXTO (IZQUIERDA) ── */}
-          <div className="flex-1 flex items-center relative z-10 px-8 md:px-16">
+          <div className="flex-1 flex items-center relative z-20 px-8 md:px-[10%] lg:px-[12%]">
             <motion.div
               initial={{ opacity: 0, x: -24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.9, ease: "easeOut" }}
-              className="w-full max-w-[420px] pb-24"
+              className="w-full max-w-[480px] mt-[-5%]"
             >
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/60 mb-6 shadow-sm"
-              >
-                <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
-                <span className="text-xs font-black uppercase tracking-widest text-gray-600">Directo de USA 🇺🇸</span>
-              </motion.div>
-
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35, duration: 0.8 }}
-                className="text-5xl md:text-6xl font-black text-gray-800 leading-[1.05] mb-5"
+                transition={{ delay: 0.2, duration: 0.8 }}
+                className="text-5xl md:text-6xl font-black text-gray-900 leading-[1.05] mb-4 tracking-tight"
+                style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
               >
                 ¡Vuelve a ser{" "}
-                <span className="font-script text-primary bg-white px-4 py-0.5 rounded-3xl inline-block -rotate-1 drop-shadow-sm">
+                <span className="font-script text-primary inline-block -rotate-2 drop-shadow-sm bg-white px-2 py-1 rounded-2xl border-2 border-primary/20">
                   un niño
                 </span>
                 {" "}hoy!
@@ -173,115 +170,56 @@ export default function Home() {
               <motion.p
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="text-base text-gray-700 mb-8 leading-relaxed font-medium max-w-sm"
+                transition={{ delay: 0.35 }}
+                className="text-[18px] text-gray-800 mb-8 leading-relaxed font-semibold max-w-[380px]"
+                style={{ fontFamily: "Inter, system-ui, sans-serif" }}
               >
-                Dulces raros, colaboraciones exclusivas y la cercanía de Dolce Candy en cada video.
+                Dulces raros, colaboraciones exclusivas y la magia de Dolce Candy en cada caja.
               </motion.p>
 
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.65 }}
+                transition={{ delay: 0.5 }}
               >
                 <Link
                   href="/catalogo"
-                  className="bg-primary text-white px-7 py-3.5 rounded-full font-black text-base shadow-xl shadow-primary/30 inline-flex items-center gap-2.5 hover:bg-primary/90 active:scale-95 transition-all"
+                  className="bg-primary text-white px-8 py-3.5 rounded-full font-bold text-[16px] inline-flex items-center gap-2 hover:bg-[#c9181e] active:scale-95 transition-all shadow-lg shadow-primary/40 group"
                 >
-                  Ir al Catálogo <ArrowRight className="w-4 h-4 stroke-[3]" />
+                  Ver todos los dulces <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
             </motion.div>
           </div>
 
-          {/* ── NUBE TRASERA - lavanda estilo Pawsy, z-10 ── */}
-          <div className="absolute bottom-0 left-0 w-full z-10 pointer-events-none">
-            <svg viewBox="0 0 1440 320" className="w-full" style={{ display: 'block' }} preserveAspectRatio="none">
-              <path
-                d="
-                  M 0,255
-                  C 40,250 80,232 120,222
-                  C 160,212 195,192 235,182
-                  C 275,172 305,155 345,152
-                  C 385,149 410,168 445,172
-                  C 480,178 505,162 540,158
-                  C 575,155 600,172 625,178
-                  C 650,184 665,192 680,205
-                  C 695,218 705,235 715,248
-                  C 725,260 730,272 740,278
-                  C 750,284 760,285 775,280
-                  C 790,276 800,264 812,252
-                  C 824,240 830,228 845,218
-                  C 860,208 875,198 898,192
-                  C 921,186 940,178 968,172
-                  C 996,166 1015,152 1048,148
-                  C 1081,144 1105,160 1135,165
-                  C 1165,170 1185,158 1215,155
-                  C 1245,152 1270,165 1298,172
-                  C 1326,179 1350,198 1380,210
-                  C 1408,222 1430,242 1440,248
-                  L 1440,320 L 0,320 Z
-                "
-                fill="#b8bef0"
-                opacity="0.75"
-              />
-            </svg>
+          {/* ── IMAGEN CENTRAL / PERSONAJE - STOP MOTION EFFECT (z-20) ── */}
+          <div className="absolute bottom-0 right-0 md:right-[5%] z-20 pointer-events-none w-full lg:w-[50%] h-full flex justify-center items-end">
+            {/* NO AnimatePresence para lograr el efecto seco y rápido del flipbook */}
+            <img
+              key={HERO_IMAGES[currentImageIndex]}
+              src={getImagePath(HERO_IMAGES[currentImageIndex])}
+              className="w-full max-w-[600px] object-contain object-bottom block h-[65dvh] lg:h-[85dvh] drop-shadow-2xl transition-none"
+              alt="Dolce Candy Showcase Flipbook"
+            />
           </div>
 
-          {/* ── MUJER EMERGIENDO DE LAS NUBES - z-20 ── */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-[10%] z-20 pointer-events-none"
-            style={{ width: 'clamp(320px, 40vw, 600px)' }}>
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={HERO_IMAGES[currentImageIndex]}
-                src={HERO_IMAGES[currentImageIndex]}
-                initial={{ opacity: 0, scale: 0.95, y: 30 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 1.05, y: -20 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                className="w-full h-auto object-contain object-bottom block"
-                style={{ maxHeight: 'calc(100dvh - 56px)' }}
-                alt="Dolce Candy Showcase"
-              />
-            </AnimatePresence>
+          {/* Layer 3: Pawsy Foreground Transition Strip EXACT MATCH (z-30) */}
+          <div className="absolute bottom-[-1px] left-0 w-full z-30 pointer-events-none">
+            <img 
+              src="https://framerusercontent.com/images/t49nGcvSU3RT2ngSvvjRRajdes4.png" 
+              alt="Cloud Transition Strip" 
+              className="w-full h-[120px] md:h-[222px] object-cover object-bottom"
+            />
           </div>
 
-          {/* ── NUBE DELANTERA BLANCA - estilo Pawsy puro, z-30 ── */}
-          <div className="absolute bottom-0 left-0 w-full z-30 pointer-events-none">
-            <svg viewBox="0 0 1440 320" className="w-full" style={{ display: 'block' }} preserveAspectRatio="none">
-              <path
-                d="
-                  M 0,248
-                  C 22,240 50,218 82,202
-                  C 114,186 145,165 178,152
-                  C 211,139 238,120 270,112
-                  C 302,104 328,122 355,128
-                  C 382,134 405,116 432,110
-                  C 459,104 480,122 504,130
-                  C 528,138 540,152 550,166
-                  C 560,180 564,195 570,210
-                  C 576,225 580,240 588,254
-                  C 596,268 606,280 622,288
-                  C 638,296 655,300 672,300
-                  C 689,300 703,295 716,286
-                  C 729,277 735,264 743,251
-                  C 751,238 756,224 765,210
-                  C 774,196 783,184 800,174
-                  C 817,164 838,152 865,144
-                  C 892,136 915,124 944,116
-                  C 973,108 996,88 1028,82
-                  C 1060,76 1082,92 1108,100
-                  C 1134,108 1154,92 1180,86
-                  C 1206,80 1230,96 1255,106
-                  C 1280,116 1302,134 1328,146
-                  C 1354,158 1382,180 1410,196
-                  C 1428,204 1440,212 1440,218
-                  L 1440,320 L 0,320 Z
-                "
-                fill="white"
-              />
-            </svg>
-          </div>
+          {/* Chocolate superpuesto (Sobreponiendo la nube) z-40 */}
+          <motion.div
+            animate={{ y: [0, -10, 0], rotate: [-10, 5, -10] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[2%] md:bottom-[5%] left-[35%] md:left-[40%] text-[90px] md:text-[110px] drop-shadow-2xl z-40 pointer-events-none"
+          >
+            🍫
+          </motion.div>
 
         </section>
 
@@ -334,7 +272,7 @@ export default function Home() {
                   {/* Imagen */}
                   <div className="relative h-56 overflow-hidden bg-gray-50">
                     <img
-                      src={candy.image}
+                      src={getImagePath(candy.image)}
                       alt={candy.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
@@ -377,7 +315,7 @@ export default function Home() {
           </div>
           <CandyLab />
           <div className="absolute bottom-0 left-0 w-full translate-y-[2px]">
-            <CloudDivider color="fill-gray-900" />
+            <CloudDivider color="fill-white" />
           </div>
         </section>
 
@@ -404,16 +342,16 @@ export default function Home() {
 
             <div className="grid md:grid-cols-2 gap-10">
               {[
-                { 
-                  city: "Caracas", 
-                  address: "C.C. San Ignacio, Nivel Jardín. Chacao.", 
-                  schedule: "Lun - Dom: 10:00 AM - 8:00 PM",
+                {
+                  city: "Caracas - Campo Claro",
+                  address: "Av. Principal de Campo Claro &, Avenida D, Caracas 1071, Distrito Capital, Venezuela",
+                  schedule: ["Lun-Vier: 8AM - 6PM", "Sab: 10AM - 4PM", "Dom: Cerrado"],
                   color: "bg-blue-50"
                 },
-                { 
-                  city: "Valencia", 
-                  address: "C.C. Sambil Valencia, Nivel Feria.", 
-                  schedule: "Lun - Dom: 11:00 AM - 9:00 PM",
+                {
+                  city: "Caracas - El Bosque",
+                  address: "Av Principal del Bosque",
+                  schedule: ["Lun-Vier: 9AM - 7PM", "Sáb: 10AM - 6PM", "Domingos: 12PM - 6PM"],
                   color: "bg-purple-50"
                 }
               ].map((loc, idx) => (
@@ -430,7 +368,11 @@ export default function Home() {
                   </div>
                   <h3 className="text-3xl font-black mb-4 text-gray-900">{loc.city}</h3>
                   <p className="text-gray-600 font-bold mb-2 text-lg">{loc.address}</p>
-                  <p className="text-primary font-black text-sm uppercase tracking-tighter italic">{loc.schedule}</p>
+                  <p className="text-primary font-black text-sm uppercase tracking-tighter italic">
+                    {loc.schedule.map((line, i) => (
+                      <span key={i} className="block">{line}</span>
+                    ))}
+                  </p>
                 </motion.div>
               ))}
             </div>

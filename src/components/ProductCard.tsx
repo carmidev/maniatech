@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ShoppingBasket, Plus } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShoppingBasket, Plus, Check } from "lucide-react";
 import { Candy } from "@/app/mock-data";
 import { useCart } from "@/context/CartContext";
+import { getImagePath } from "@/utils/imagePath";
 
 /* Colores por badge */
 const BADGE_STYLES: Record<string, string> = {
@@ -22,6 +24,13 @@ const BADGE_LABELS: Record<string, string> = {
 
 export const ProductCard = ({ candy }: { candy: Candy }) => {
   const { addToCart } = useCart();
+  const [isAdded, setIsAdded] = useState(false);
+
+  const handleAdd = () => {
+    addToCart(candy);
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 2000);
+  };
 
   return (
     <motion.div
@@ -40,7 +49,7 @@ export const ProductCard = ({ candy }: { candy: Candy }) => {
         {/* Imagen con Aspect Ratio divertido */}
         <div className="relative h-64 overflow-hidden bg-slate-50">
           <img
-            src={candy.image}
+            src={getImagePath(candy.image)}
             alt={candy.name}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
@@ -72,11 +81,38 @@ export const ProductCard = ({ candy }: { candy: Candy }) => {
           
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={() => addToCart(candy)}
-            className="mt-4 w-full py-4 rounded-[2rem] bg-primary text-white font-black text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-primary/20"
+            onClick={handleAdd}
+            className={`mt-4 w-full py-4 rounded-[2rem] font-black text-sm transition-all duration-300 flex items-center justify-center gap-3 shadow-lg ${
+              isAdded 
+                ? "bg-green-500 text-white shadow-green-500/30" 
+                : "bg-primary text-white hover:bg-primary/90 shadow-primary/20"
+            }`}
           >
-            <ShoppingBasket className="w-5 h-5" />
-            ¡Lo quiero!
+            <AnimatePresence mode="wait">
+              {isAdded ? (
+                <motion.div
+                  key="check"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="flex items-center gap-2"
+                >
+                  <Check className="w-5 h-5" />
+                  <span>¡Agregado al carrito!</span>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="basket"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="flex items-center gap-2"
+                >
+                  <ShoppingBasket className="w-5 h-5" />
+                  <span>¡Lo quiero!</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.button>
         </div>
       </div>

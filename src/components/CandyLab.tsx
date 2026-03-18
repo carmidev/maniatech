@@ -2,16 +2,17 @@
 
 import { motion } from "framer-motion";
 import { Play, Instagram, Star, Sparkles } from "lucide-react";
+import { getImagePath } from "@/utils/imagePath";
 
 const LAB_VIDEOS = [
-  { id: 1, title: "Probando Reese x Oreo 🍪", type: "Viral", likes: "1.2k" },
-  { id: 2, title: "¡Esa textura es otro nivel! 🤤", type: "Review", likes: "850" },
-  { id: 3, title: "Combo Mega Dulce Reveal 🎁", type: "Unboxing", likes: "2.1k" },
+  { id: 1, title: "Probando Reese x Oreo 🍪", type: "Viral", likes: "1.2k", image: "/images/lab/live1.png" },
+  { id: 2, title: "¡Esa textura es otro nivel! 🤤", type: "Review", likes: "850", image: "/images/lab/live2.png" },
+  { id: 3, title: "Combo Mega Dulce Reveal 🎁", type: "Unboxing", likes: "2.1k", image: "/images/lab/live3.png" },
 ];
 
 export const CandyLab = () => {
   return (
-    <section id="lab" className="py-24 bg-white overflow-hidden">
+    <div className="py-24 bg-transparent overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-16">
           <div className="max-w-xl text-center md:text-left">
@@ -79,8 +80,12 @@ export const CandyLab = () => {
               </div>
 
               {/* Thumbnail (using candy images for now as reels thumbnails) */}
-              <div className="absolute inset-0 bg-secondary/20">
-                <div className="sr-only">Video Placeholder</div>
+              <div className="absolute inset-0 bg-secondary/20 overflow-hidden">
+                <img 
+                  src={getImagePath(video.image)} 
+                  alt={video.title} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                />
               </div>
             </motion.div>
           ))}
@@ -106,6 +111,6 @@ export const CandyLab = () => {
            </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
