@@ -4,14 +4,9 @@ export function getImagePath(path: string | undefined): string | undefined {
   
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
   
-  // Detectamos si estamos en desarrollo local
-  const isLocal = typeof window !== 'undefined' && 
-    (window.location.hostname === 'localhost' || 
-     window.location.hostname === '127.0.0.1' || 
-     window.location.port !== '');
-
-  // Si no es local, forzamos el prefijo del repositorio de GitHub Pages
-  const prefix = isLocal ? "" : "/DolceCandy";
+  // En producción (GitHub Pages), NEXT_PUBLIC_BASE_PATH vendrá de la Acción de GitHub
+  // En local será un string vacío.
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
   
-  return `${prefix}${cleanPath}`;
+  return `${basePath}${cleanPath}`;
 }
