@@ -1,4 +1,5 @@
 # Workflow para desplegar Next.js a GitHub Pages
+# Triggering deployment...
 name: Deploy Next.js site to Pages
 
 on:
