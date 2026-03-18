@@ -11,8 +11,10 @@ import { CheckoutModal } from "@/components/CheckoutModal";
 import { CandyLab } from "@/components/CandyLab";
 import SmoothScroll from "@/components/SmoothScroll";
 import Link from "next/link";
-import { CANDIES } from "@/app/mock-data";
+import { CANDIES, Candy } from "@/app/mock-data";
 import { getImagePath } from "@/utils/imagePath";
+import { ProductModal } from "@/components/ProductModal";
+import { FloatingCart } from "@/components/FloatingCart";
 
 /* Constantes de badge para los destacados */
 const BADGE_STYLES: Record<string, string> = {
@@ -42,6 +44,7 @@ const FEATURED_CANDIES = CANDIES.filter((c) => c.badge).slice(0, 3);
 export default function Home() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Candy | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
@@ -197,7 +200,7 @@ export default function Home() {
             {/* NO AnimatePresence para lograr el efecto seco y rápido del flipbook */}
             <img
               key={HERO_IMAGES[currentImageIndex]}
-              src={getImagePath(HERO_IMAGES[currentImageIndex])}
+              src={getImagePath(HERO_IMAGES[currentImageIndex]) || undefined}
               className="w-full max-w-[600px] object-contain object-bottom block h-[65dvh] lg:h-[85dvh] drop-shadow-2xl transition-none"
               alt="Dolce Candy Showcase Flipbook"
             />
@@ -206,7 +209,7 @@ export default function Home() {
           {/* Layer 3: Pawsy Foreground Transition Strip EXACT MATCH (z-30) */}
           <div className="absolute bottom-[-1px] left-0 w-full z-30 pointer-events-none">
             <img 
-              src="https://framerusercontent.com/images/t49nGcvSU3RT2ngSvvjRRajdes4.png" 
+              src="https://framerusercontent.com/images/t49nGcvSU3RT2ngSvvjRRajdes4.png"
               alt="Cloud Transition Strip" 
               className="w-full h-[120px] md:h-[222px] object-cover object-bottom"
             />
@@ -267,12 +270,13 @@ export default function Home() {
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  onClick={() => setSelectedProduct(candy)}
                   className="group relative bg-white rounded-3xl overflow-hidden shadow-md shadow-gray-100 border border-gray-50 flex flex-col cursor-pointer"
                 >
                   {/* Imagen */}
                   <div className="relative h-56 overflow-hidden bg-gray-50">
                     <img
-                      src={getImagePath(candy.image)}
+                      src={getImagePath(candy.images?.[0]) || undefined}
                       alt={candy.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
@@ -379,6 +383,7 @@ export default function Home() {
           </div>
         </section>
 
+
         {/* ── FOOTER ── */}
 
         <footer className="bg-gray-900 text-white py-32 px-6 relative z-10">
@@ -418,6 +423,13 @@ export default function Home() {
           isOpen={isCheckoutOpen}
           onClose={() => setIsCheckoutOpen(false)}
         />
+        <ProductModal
+          candy={selectedProduct}
+          isOpen={!!selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+
+        <FloatingCart onClick={() => setIsCartOpen(true)} />
       </main>
     </SmoothScroll>
   );

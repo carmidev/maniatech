@@ -55,7 +55,7 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                 items.map((item) => (
                   <div key={item.id} className="flex gap-4">
                     <div className="w-20 h-20 rounded-2xl bg-secondary/10 overflow-hidden flex-shrink-0">
-                      <img src={getImagePath(item.image)} alt={item.name} className="w-full h-full object-cover" />
+                      <img src={getImagePath(item.images?.[0] || (item as any).image) || undefined} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-gray-800">{item.name}</h4>

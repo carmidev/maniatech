@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Pacifico } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import { WhatsAppWidget } from "@/components/WhatsAppWidget";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({
       >
         <CartProvider>
           {children}
+          <WhatsAppWidget />
         </CartProvider>
       </body>
     </html>

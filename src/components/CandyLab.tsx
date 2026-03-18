@@ -82,7 +82,7 @@ export const CandyLab = () => {
               {/* Thumbnail (using candy images for now as reels thumbnails) */}
               <div className="absolute inset-0 bg-secondary/20 overflow-hidden">
                 <img 
-                  src={getImagePath(video.image)} 
+                  src={getImagePath(video.image) || undefined} 
                   alt={video.title} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
                 />

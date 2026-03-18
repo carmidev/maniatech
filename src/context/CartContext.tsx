@@ -19,7 +19,7 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
   // LocalStorage persistence
@@ -75,8 +75,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }}>
       {children}
     </CartContext.Provider>
-  );
-};
+    );
+}
 
 export const useCart = () => {
   const context = useContext(CartContext);

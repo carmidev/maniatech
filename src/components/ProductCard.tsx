@@ -22,7 +22,13 @@ const BADGE_LABELS: Record<string, string> = {
   exclusivo: "Exclusivo",
 };
 
-export const ProductCard = ({ candy }: { candy: Candy }) => {
+export const ProductCard = ({ 
+  candy, 
+  onOpenDetails 
+}: { 
+  candy: Candy;
+  onOpenDetails?: (candy: Candy) => void; 
+}) => {
   const { addToCart } = useCart();
   const [isAdded, setIsAdded] = useState(false);
 
@@ -47,9 +53,12 @@ export const ProductCard = ({ candy }: { candy: Candy }) => {
       <div className="flex flex-col h-full rounded-[3.5rem_1.5rem_3.5rem_1.5rem] border border-black/5 bg-white overflow-hidden relative">
         
         {/* Imagen con Aspect Ratio divertido */}
-        <div className="relative h-64 overflow-hidden bg-slate-50">
+        <div 
+          className="relative h-64 overflow-hidden bg-slate-50 cursor-pointer"
+          onClick={() => onOpenDetails?.(candy)}
+        >
           <img
-            src={getImagePath(candy.image)}
+            src={getImagePath(candy.images[0]) || undefined}
             alt={candy.name}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
