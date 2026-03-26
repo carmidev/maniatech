@@ -14,7 +14,7 @@ export const Footer = () => {
           <div>
             <div className="flex items-center gap-6 mb-10">
               <LollipopLogo className="w-[100px] h-[100px] shrink-0 drop-shadow-lg" />
-              <img src={getImagePath("letras-dolce-candy-blanco.png")} alt="Dolce Candy" className="h-[75px] object-contain drop-shadow" />
+              <img src={getImagePath("/images/letras-dolce-candy-blanco.png")} alt="Dolce Candy" className="h-[75px] object-contain drop-shadow" />
             </div>
             <p className="text-gray-400 text-xl leading-relaxed font-medium max-w-md mb-8">
               Hacemos magia dulce. Directo de USA a tus manos en Venezuela. ⚡️

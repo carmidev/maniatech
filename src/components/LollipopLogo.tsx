@@ -11,7 +11,7 @@ export const LollipopLogo = ({ className = "w-12 h-12" }: { className?: string }
       transition={{ type: "spring", stiffness: 300 }}
     >
       <img
-        src={getImagePath("logo-oficial.png")}
+        src={getImagePath("/images/logo-oficial.png")}
         alt="Dolce Candy Oficial Logo"
         className="w-full h-full object-contain drop-shadow-md"
       />
