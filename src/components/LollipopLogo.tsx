@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { getImagePath } from "@/utils/imagePath";
 
 export const LollipopLogo = ({ className = "w-12 h-12" }: { className?: string }) => {
   return (
@@ -10,7 +11,7 @@ export const LollipopLogo = ({ className = "w-12 h-12" }: { className?: string }
       transition={{ type: "spring", stiffness: 300 }}
     >
       <img
-        src="/images/logo-oficial.png"
+        src={getImagePath("logo-oficial.png")}
         alt="Dolce Candy Oficial Logo"
         className="w-full h-full object-contain drop-shadow-md"
       />

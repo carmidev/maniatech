@@ -4,6 +4,7 @@ import { Instagram, MessageCircle, Play } from "lucide-react";
 import { LollipopLogo } from "./LollipopLogo";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { getImagePath } from "@/utils/imagePath";
 
 export const Footer = () => {
   return (
@@ -13,7 +14,7 @@ export const Footer = () => {
           <div>
             <div className="flex items-center gap-6 mb-10">
               <LollipopLogo className="w-[100px] h-[100px] shrink-0 drop-shadow-lg" />
-              <img src="/images/letras-dolce-candy-blanco.png" alt="Dolce Candy" className="h-[75px] object-contain drop-shadow" />
+              <img src={getImagePath("letras-dolce-candy-blanco.png")} alt="Dolce Candy" className="h-[75px] object-contain drop-shadow" />
             </div>
             <p className="text-gray-400 text-xl leading-relaxed font-medium max-w-md mb-8">
               Hacemos magia dulce. Directo de USA a tus manos en Venezuela. ⚡️

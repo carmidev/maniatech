@@ -12,6 +12,7 @@ import Link from "next/link";
 
 import { ProductModal } from "@/components/ProductModal";
 import { Footer } from "@/components/Footer";
+import { getImagePath } from "@/utils/imagePath";
 import { DolceButton } from "@/components/DolceButton";
 import { FloatingCart } from "@/components/FloatingCart";
 import { CheckoutModal } from "@/components/CheckoutModal";
@@ -50,9 +51,9 @@ export default function CatalogoPage() {
         <div className="bg-white/90 backdrop-blur-xl rounded-full shadow-lg shadow-black/8 px-6 h-16 flex items-center justify-between border border-white/60">
           <Link href="/" className="flex items-center gap-1 md:gap-2">
             <div className="w-[44px] h-[44px] flex items-center justify-center overflow-hidden shrink-0 -ml-2 rounded-full">
-              <img src="/images/espiral-dolce.png" alt="Dolce Isotipo" className="w-full h-full object-cover scale-[1.3] drop-shadow-sm" />
+              <img src={getImagePath("espiral-dolce.png")} alt="Dolce Isotipo" className="w-full h-full object-cover scale-[1.3] drop-shadow-sm" />
             </div>
-            <img src="/images/letras-dolce-candy-blanco.png" alt="Dolce Candy" className="h-[34px] object-contain mt-1 invert opacity-90" />
+            <img src={getImagePath("letras-dolce-candy-blanco.png")} alt="Dolce Candy" className="h-[34px] object-contain mt-1 invert opacity-90" />
           </Link>
 
           <div className="hidden md:flex items-center gap-7 font-bold text-sm tracking-wide">
