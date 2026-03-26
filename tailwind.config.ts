@@ -10,20 +10,30 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#E31B23", // Rojo Dulce
+          DEFAULT: "#EE3123", // Rojo Principal
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#B9C2F5", // Azul Pawsy
-          foreground: "#1F2937",
+          DEFAULT: "#F7941D", // Ocre
+          foreground: "#FFFFFF",
         },
         accent: {
-          DEFAULT: "#FFD1DC", // Rosa Chicle
+          DEFAULT: "#ED5565", // Coral
           foreground: "#1F2937",
         },
+        brand: {
+          red: "#ED1C24",
+          darkred: "#B10D1F",
+          brown: "#603813",
+          lightbrown: "#C49A6C",
+          cream: "#EDCFC3",
+          blue: "#93CDEA",
+          darkgray: "#212121",
+        }
       },
       fontFamily: {
-        sans: ["var(--font-jakarta)", "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["var(--font-catamaran)", "sans-serif"],
         script: ["var(--font-script)", "cursive"],
       },
       borderRadius: {

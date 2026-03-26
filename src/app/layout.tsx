@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Pacifico } from "next/font/google";
+import { Inter, Catamaran, Pacifico } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { WhatsAppWidget } from "@/components/WhatsAppWidget";
+import SmoothScroll from "@/components/SmoothScroll";
 
-const plusJakarta = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-jakarta",
+  variable: "--font-inter",
+});
+
+const catamaran = Catamaran({
+  subsets: ["latin"],
+  variable: "--font-catamaran",
 });
 
 const pacifico = Pacifico({
@@ -28,12 +34,14 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body
-        className={`${plusJakarta.variable} ${pacifico.variable} font-sans antialiased`}
+        className={`${inter.variable} ${catamaran.variable} ${pacifico.variable} font-sans antialiased`}
       >
-        <CartProvider>
-          {children}
-          <WhatsAppWidget />
-        </CartProvider>
+        <SmoothScroll>
+          <CartProvider>
+            {children}
+            <WhatsAppWidget />
+          </CartProvider>
+        </SmoothScroll>
       </body>
     </html>
   );

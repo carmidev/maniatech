@@ -2,12 +2,12 @@
 
 import { motion } from "framer-motion";
 
-export const CloudDivider = ({ 
-  color = "fill-white", 
-  flip = false 
-}: { 
-  color?: string, 
-  flip?: boolean 
+export const CloudDivider = ({
+  color = "fill-white",
+  flip = false
+}: {
+  color?: string,
+  flip?: boolean
 }) => {
   return (
     <div className={`relative w-full overflow-hidden leading-[0] z-20 ${flip ? '-mb-2 rotate-180' : '-mt-2'}`}>

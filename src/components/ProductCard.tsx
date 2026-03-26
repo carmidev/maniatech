@@ -9,10 +9,10 @@ import { getImagePath } from "@/utils/imagePath";
 
 /* Colores por badge */
 const BADGE_STYLES: Record<string, string> = {
-  nuevo: "bg-blue-500 text-white",
-  bestseller: "bg-amber-400 text-white",
+  nuevo: "bg-brand-blue text-brand-darkgray",
+  bestseller: "bg-secondary text-white",
   viral: "bg-primary text-white",
-  exclusivo: "bg-purple-500 text-white",
+  exclusivo: "bg-brand-brown text-white",
 };
 
 const BADGE_LABELS: Record<string, string> = {
