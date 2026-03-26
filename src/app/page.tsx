@@ -70,7 +70,7 @@ export default function Home() {
             <img src="/images/letras-dolce-candy-blanco.png" alt="Dolce Candy" className="h-[34px] object-contain mt-1 invert opacity-90" />
           </Link>
 
-          <div className="hidden md:flex items-center gap-7 font-bold text-sm tracking-wide">
+          <div className="hidden lg:flex items-center gap-7 font-bold text-sm tracking-wide">
             <Link href="/catalogo" className="text-gray-600 hover:text-primary transition-colors">
               Catálogo
             </Link>
@@ -79,10 +79,10 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-2 lg:gap-3">
             <Link
               href="/catalogo"
-              className="bg-primary text-white px-5 py-2.5 rounded-full font-black text-sm hover:bg-primary/90 active:scale-95 transition-all shadow-md shadow-primary/30 hidden md:flex items-center gap-2"
+              className="bg-primary text-white px-5 py-2.5 rounded-full font-black text-sm hover:bg-primary/90 active:scale-95 transition-all shadow-md shadow-primary/30 hidden lg:flex items-center gap-2"
             >
               Ir al Catálogo <ArrowRight className="w-4 h-4 stroke-[3]" />
             </Link>
@@ -99,7 +99,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
               aria-label="Toggle Menu"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5 text-gray-900" /> : <Menu className="w-5 h-5 text-gray-900" />}
@@ -115,7 +115,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute top-[calc(100%+10px)] left-0 w-full bg-white/95 backdrop-blur-3xl rounded-3xl shadow-xl shadow-black/10 border border-black/5 overflow-hidden md:hidden flex flex-col p-6 gap-6"
+              className="absolute top-[calc(100%+10px)] left-0 w-full bg-white/95 backdrop-blur-3xl rounded-3xl shadow-xl shadow-black/10 border border-black/5 overflow-hidden lg:hidden flex flex-col p-6 gap-6"
             >
               <nav className="flex flex-col gap-5 text-center">
                 <Link 
@@ -154,7 +154,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[60%] md:top-[18%] left-[4%] opacity-60"
+            className="absolute top-[60%] lg:top-[18%] left-[4%] lg:left-[4%] opacity-60"
           >
             <svg width="130" height="72" viewBox="0 0 130 72" fill="none">
               <path d="M10,62 C10,62 0,60 0,52 C0,44 8,40 16,42 C16,30 26,22 38,24 C40,14 50,8 62,10 C70,4 82,4 90,12 C100,8 112,14 114,24 C122,24 130,32 128,40 C126,48 118,52 110,50 C110,58 100,64 90,62 Z" fill="white" />
@@ -165,7 +165,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, 10, 0], x: [0, -6, 0] }}
             transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className="absolute top-[52%] md:top-[12%] right-[6%] opacity-50"
+            className="absolute top-[52%] lg:top-[12%] right-[6%] lg:right-[6%] opacity-50"
           >
             <svg width="170" height="95" viewBox="0 0 170 95" fill="none">
               <path d="M14,82 C14,82 0,80 0,68 C0,56 10,50 22,53 C20,36 34,24 50,26 C52,14 66,6 82,8 C92,2 108,2 118,12 C130,6 146,14 148,28 C158,28 170,38 168,52 C166,64 156,70 144,68 C144,78 132,86 120,84 C116,92 104,96 94,88 C84,94 70,92 64,82 Z" fill="white" />
@@ -175,38 +175,40 @@ export default function Home() {
 
         {/* ── FLOATING CANDIES (Candy Crush Inspiration) (z-10) ── */}
         <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
-          {/* Caramelo elevado para que NO tape el texto de la izquierda */}
+          {/* Caramelo elevado (Rojo Principal) */}
           <motion.div
             animate={{ y: [0, -15, 0], x: [0, 10, 0], rotate: [0, 45, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[55%] md:top-[10%] left-[8%] md:left-[5%] text-5xl md:text-6xl drop-shadow-md"
+            className="absolute top-[55%] lg:top-[10%] left-[8%] lg:left-[5%] text-5xl lg:text-6xl z-20"
+            style={{ filter: "sepia(1) saturate(6) hue-rotate(-55deg) drop-shadow(0px 10px 10px rgba(0,0,0,0.15))" }}
           >
             🍬
           </motion.div>
 
-          {/* Paleta de colores gigante asomándose en la esquina derecha inferior */}
+          {/* Paleta gigante asomándose (Rojo Principal) */}
           <motion.div
             animate={{ y: [0, -8, 0], rotate: [15, 25, 15] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-[18%] md:bottom-[22%] right-[2%] md:right-[5%] text-[90px] md:text-[110px] drop-shadow-2xl z-20"
+            className="absolute bottom-[18%] lg:bottom-[22%] right-[2%] lg:right-[5%] text-[90px] lg:text-[110px] z-20"
+            style={{ filter: "sepia(1) saturate(6) hue-rotate(-55deg) drop-shadow(0px 25px 25px rgba(0,0,0,0.25))" }}
           >
             🍭
           </motion.div>
         </div>
 
         {/* ── CONTENIDO TEXTO (IZQUIERDA) - AL FRENTE (z-30) ── */}
-        <div className="flex-1 flex items-start md:items-center relative z-30 px-6 sm:px-8 md:px-[10%] lg:px-[12%] pt-28 sm:pt-32 md:pt-0 pointer-events-none">
+        <div className="flex-1 flex items-start lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-28 sm:pt-32 lg:pt-0 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, ease: "easeOut" }}
-            className="w-full max-w-[480px] md:mt-[-5%]"
+            className="w-full max-w-[480px] lg:mt-[-5%]"
           >
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-5xl sm:text-6xl md:text-6xl font-black text-gray-900 leading-[1.05] mb-4 sm:mb-6 tracking-tight"
+              className="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 leading-[1.05] mb-4 sm:mb-6 tracking-tight"
               style={{ fontFamily: "'Catamaran', system-ui, sans-serif" }}
             >
               ¡Vuelve a ser{" "}
@@ -242,12 +244,12 @@ export default function Home() {
         </div>
 
         {/* ── IMAGEN CENTRAL / PERSONAJE - BOTTOM STACK (z-20) ── */}
-        <div className="absolute bottom-[-10px] md:bottom-0 right-[-15%] sm:right-[-5%] md:right-[5%] z-20 pointer-events-none w-[115%] sm:w-[110%] lg:w-[50%] h-[48dvh] md:h-full flex justify-end md:justify-center items-end opacity-100">
+        <div className="absolute bottom-[-10px] sm:bottom-[0%] md:bottom-[4%] lg:bottom-0 right-[-15%] sm:right-[-5%] md:right-[0%] lg:right-[5%] z-20 pointer-events-none w-[115%] sm:w-[100%] md:w-[85%] lg:w-[50%] h-[49dvh] sm:h-[55dvh] md:h-[55dvh] lg:h-full flex justify-end items-end opacity-100">
           {/* NO AnimatePresence para lograr el efecto seco y rápido del flipbook */}
           <img
             key={HERO_IMAGES[currentImageIndex]}
             src={getImagePath(HERO_IMAGES[currentImageIndex]) || undefined}
-            className="w-full max-w-[420px] md:max-w-[600px] object-contain object-bottom block h-[105%] md:h-[85dvh] drop-shadow-2xl transition-none origin-bottom"
+            className="w-full max-w-[420px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block h-[105%] sm:h-[115%] md:h-[110%] lg:h-[85dvh] drop-shadow-2xl transition-none origin-bottom"
             alt="Dolce Candy Showcase Flipbook"
           />
         </div>
@@ -394,15 +396,19 @@ export default function Home() {
             {[
               {
                 city: "Caracas - Campo Claro",
-                address: "Av. Principal de Campo Claro &, Avenida D, Caracas 1071, Distrito Capital, Venezuela",
+                address: "Av. Principal de Campo Claro &, Avenida D, Caracas 1071",
                 schedule: ["Lun-Vier: 8AM - 6PM", "Sab: 10AM - 4PM", "Dom: Cerrado"],
-                color: "bg-brand-cream"
+                color: "bg-brand-cream",
+                image: "/images/locations/campo-claro.png",
+                blob: "60% 40% 30% 70% / 60% 30% 70% 40%"
               },
               {
                 city: "Caracas - El Bosque",
-                address: "Av Principal del Bosque",
-                schedule: ["Lun-Vier: 9AM - 7PM", "Sáb: 10AM - 6PM", "Domingos: 12PM - 6PM"],
-                color: "bg-brand-cream"
+                address: "Av Principal del Bosque, Caracas",
+                schedule: ["Lun-Vier: 9AM - 7PM", "Sáb: 10AM - 6PM", "Dom: 12PM - 6PM"],
+                color: "bg-brand-cream/80",
+                image: "/images/locations/el-bosque.png",
+                blob: "30% 70% 70% 30% / 30% 30% 70% 70%"
               }
             ].map((loc, idx) => (
               <motion.div
@@ -411,11 +417,13 @@ export default function Home() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className={`${loc.color} p-10 rounded-[3rem] text-left border border-black/5 hover:border-primary/20 transition-all group`}
+                className={`${loc.color} p-8 sm:p-12 text-left border border-black/5 hover:border-primary/20 transition-all duration-500 group flex flex-col hover:-translate-y-2`}
+                style={{ borderRadius: loc.blob }}
               >
                 <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
                   <span className="text-3xl">📍</span>
                 </div>
+                
                 <h3 className="text-3xl font-black mb-4 text-gray-900">{loc.city}</h3>
                 <p className="text-gray-600 font-bold mb-2 text-lg">{loc.address}</p>
                 <p className="text-primary font-black text-sm uppercase tracking-tighter italic">

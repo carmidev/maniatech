@@ -107,7 +107,7 @@ export const ProductCard = ({
                   className="flex items-center gap-2"
                 >
                   <Check className="w-5 h-5" />
-                  <span>¡Agregado al carrito!</span>
+                  <span>¡Agregado a la cesta!</span>
                 </motion.div>
               ) : (
                 <motion.div

@@ -14,7 +14,7 @@ El logo es una **Paleta redonda (Lollipop)** con un patrón de espiral (Swirl) e
 
 | Color | Hex | Uso |
 | :--- | :--- | :--- |
-| **Rojo Caramelo** | `#E31B23` | Logo principal, botones de acción, acentos vibrantes. |
+| **Rojo Caramelo** | `#EE3123` | Logo principal, botones de acción, acentos vibrantes. |
 | **Blanco Dulce** | `#FFFFFF` | Espiral del logo, fondos limpios, nubes. |
 | **Azul Pawsy** | `#B9C2F5` | Fondos secundarios para dar suavidad y alegría. |
 | **Rosa Chicle** | `#FFD1DC` | Acentos para tarjetas de productos "Cute" o dulces suaves. |

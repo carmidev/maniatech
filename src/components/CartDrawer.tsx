@@ -41,8 +41,8 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               {items.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center">
-                  <div className="text-6xl mb-4">🛒</div>
-                  <h3 className="text-xl font-bold mb-2">Tu carrito está vacío</h3>
+                  <div className="text-6xl mb-4">🧺</div>
+                  <h3 className="text-xl font-bold mb-2">Tu cesta está vacía</h3>
                   <p className="text-gray-500 mb-6">Parece que aún no has elegido nada dulce.</p>
                   <button 
                     onClick={onClose}
