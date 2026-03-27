@@ -14,16 +14,16 @@ export const WhatsAppWidget = () => {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      initial={{ scale: 0, opacity: 0, x: -20 }}
+      initial={{ scale: 0, opacity: 0, x: 20 }}
       animate={{ scale: 1, opacity: 1, x: 0 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className="fixed bottom-8 left-8 z-[50] w-14 h-14 bg-[#25D366] text-white rounded-full shadow-2xl flex items-center justify-center border-4 border-white group"
+      className="fixed bottom-6 right-6 lg:bottom-8 lg:right-8 z-[50] w-12 h-12 lg:w-14 lg:h-14 bg-[#25D366] text-white rounded-full shadow-2xl flex items-center justify-center border-4 border-white group"
     >
-      <MessageCircle className="w-7 h-7 fill-current" />
+      <MessageCircle className="w-6 h-6 lg:w-7 lg:h-7 fill-current" />
       
       {/* Tooltip hint */}
-      <div className="absolute left-full ml-4 bg-white text-slate-800 px-4 py-2 rounded-2xl shadow-xl text-xs font-black opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-slate-100">
+      <div className="absolute right-full mr-4 bg-white text-slate-800 px-4 py-2 rounded-2xl shadow-xl text-xs font-black opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-slate-100">
         ¡Hablemos por WhatsApp! 🍭
       </div>
 

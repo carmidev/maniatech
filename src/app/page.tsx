@@ -146,7 +146,7 @@ export default function Home() {
       </nav>
 
       {/* ── HERO SECTION - ESTILO PAWSY EXACTO + CANDY CRUSH ── */}
-      <section className="relative h-[100dvh] overflow-hidden flex flex-col"
+      <section className="relative min-h-[100dvh] lg:h-[100dvh] overflow-hidden flex flex-col"
         style={{ background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #EDCFC3 40%, #93CDEA 100%)' }}>
         {/* Layer 1: Nubes Blancas Flotantes Absolutas (z-0) */}
         <div className="absolute inset-0 z-0 pointer-events-none">
@@ -197,7 +197,7 @@ export default function Home() {
         </div>
 
         {/* ── CONTENIDO TEXTO (IZQUIERDA) - AL FRENTE (z-30) ── */}
-        <div className="flex-1 flex items-start lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-28 sm:pt-32 lg:pt-0 pointer-events-none">
+        <div className="flex-none lg:flex-1 flex items-start lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-32 pb-4 sm:pt-36 sm:pb-8 lg:pt-0 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
@@ -244,13 +244,13 @@ export default function Home() {
         </div>
 
         {/* ── IMAGEN CENTRAL / PERSONAJE - BOTTOM STACK (z-20) ── */}
-        <div className="absolute bottom-[-10px] sm:bottom-[0%] md:bottom-[4%] lg:bottom-0 right-[-15%] sm:right-[-5%] md:right-[0%] lg:right-[5%] z-20 pointer-events-none w-[115%] sm:w-[100%] md:w-[85%] lg:w-[50%] h-[49dvh] sm:h-[55dvh] md:h-[55dvh] lg:h-full flex justify-end items-end opacity-100">
+        <div className="relative flex-1 lg:absolute lg:bottom-0 lg:right-[5%] z-20 pointer-events-none w-full lg:w-[50%] mt-4 lg:mt-0 flex justify-center lg:justify-end items-end opacity-100">
           {/* NO AnimatePresence para lograr el efecto seco y rápido del flipbook */}
           <img
             key={HERO_IMAGES[currentImageIndex]}
             src={getImagePath(HERO_IMAGES[currentImageIndex]) || undefined}
-            className="w-full max-w-[420px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block h-[105%] sm:h-[115%] md:h-[110%] lg:h-[85dvh] drop-shadow-2xl transition-none origin-bottom"
-            alt="Dolce Candy Showcase Flipbook"
+            className="w-full max-w-[420px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block max-h-[50vh] lg:h-[85dvh] lg:max-h-none drop-shadow-2xl transition-none origin-bottom"
+            alt="Dolce Candy Showcase"
           />
         </div>
 
@@ -267,7 +267,7 @@ export default function Home() {
         <motion.div
           animate={{ y: [0, -10, 0], rotate: [-10, 5, -10] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[2%] md:bottom-[5%] left-[35%] md:left-[40%] text-[90px] md:text-[110px] drop-shadow-2xl z-40 pointer-events-none"
+          className="absolute bottom-[2%] md:bottom-[5%] left-[8%] md:left-[40%] text-[80px] md:text-[110px] drop-shadow-2xl z-40 pointer-events-none"
         >
           🍫
         </motion.div>
