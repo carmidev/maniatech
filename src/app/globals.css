@@ -4,7 +4,20 @@
 
 @layer base {
   body {
-    @apply bg-white text-gray-800 antialiased;
+    @apply bg-white text-gray-800 antialiased font-body;
+  }
+  h1 {
+    @apply font-display-main tracking-main leading-none;
+  }
+  h2, h3 {
+    @apply font-display font-bold;
+  }
+}
+
+@layer utilities {
+  .font-numbers {
+    font-family: var(--font-outfit-numbers), sans-serif !important;
+    @apply font-semibold;
   }
 }
 

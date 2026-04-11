@@ -60,6 +60,41 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white">
 
+      {/* ── SVG FILTERS COMPARTIDOS (GRADIENT MAPS PARA EMOJIS) ── */}
+      <svg className="hidden" aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0 }}>
+        <filter id="swirl-red-white" colorInterpolationFilters="sRGB">
+          {/* Grayscale map */}
+          <feColorMatrix type="matrix" values="
+            0.2126 0.7152 0.0722 0 0
+            0.2126 0.7152 0.0722 0 0
+            0.2126 0.7152 0.0722 0 0
+            0 0 0 1 0" in="SourceGraphic" result="grayscale"/>
+          
+          {/* Peppermint 2-color map (Shadows to Red, Mid-Highlights to White) */}
+          <feComponentTransfer in="grayscale" result="gradientMap">
+            <feFuncR type="table" tableValues="0.4 0.93 0.93 1.0 1.0"/>
+            <feFuncG type="table" tableValues="0.05 0.19 0.19 1.0 1.0"/>
+            <feFuncB type="table" tableValues="0.05 0.13 0.13 1.0 1.0"/>
+          </feComponentTransfer>
+          
+          {/* Re-apply alpha channel */}
+          <feComposite in="gradientMap" in2="SourceGraphic" operator="in" />
+        </filter>
+
+        <filter id="choco-wrap" colorInterpolationFilters="sRGB">
+          {/* Ecuación Algebraica de Coloración (Actualizada a Chocolate Oscuro #633c32):
+              Resoluvimos variables donde el eje central es el canal VERDE para no mezclar tintes en la Sombra vs Envoltorio.
+              1. R_out: Multiplica por 1.2 y empuja un micro-offset (-0.03) para oscurecer los marrones naturales sin apagar el Rojo.
+              2. G_out y B_out ignoran el canal Azul (anulando el magenta) y basan sus curvas puramente en G_in.
+              Con estos coeficientes, el envoltorio dispara exacto al Rojo (#EE3123) y el bloque central ancla en el Marrón Oscuro (#633c32). */}
+          <feColorMatrix type="matrix" values="
+            1.20  0.00  0  0 -0.03
+            0.00  0.90  0  0  0.10
+            0.00  0.96  0  0  0.06
+            0.00  0.00  0  1  0"/>
+        </filter>
+      </svg>
+
       {/* ── NAVBAR PÍLDORA FLOTANTE ── */}
       <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2.5rem)] max-w-5xl">
         <div className="bg-white/90 backdrop-blur-xl rounded-full shadow-lg shadow-black/8 px-6 h-16 flex items-center justify-between border border-white/60">
@@ -175,29 +210,35 @@ export default function Home() {
 
         {/* ── FLOATING CANDIES (Candy Crush Inspiration) (z-10) ── */}
         <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
-          {/* Caramelo elevado (Rojo Principal) */}
+          {/* Caramelo elevado (Rojo Principal + Detalles Coral nativos por luminancia) */}
           <motion.div
             animate={{ y: [0, -15, 0], x: [0, 10, 0], rotate: [0, 45, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[55%] lg:top-[10%] left-[8%] lg:left-[5%] text-5xl lg:text-6xl z-20"
-            style={{ filter: "sepia(1) saturate(6) hue-rotate(-55deg) drop-shadow(0px 10px 10px rgba(0,0,0,0.15))" }}
+            className="absolute top-[25%] lg:top-[10%] left-[8%] lg:left-[5%] text-5xl lg:text-6xl z-20"
+            style={{ 
+              /* Monocromía a Rojo Principal: sepia(1) unifica el tono y el hue-rotate ajusta al Rojo (#EE3123). Las partes brillantes nativas se leen como Coral. */
+              filter: "brightness(0.9) contrast(1.3) sepia(1) saturate(6) hue-rotate(-40deg) drop-shadow(0px 15px 15px rgba(238,49,35,0.4))" 
+            }}
           >
             🍬
           </motion.div>
 
-          {/* Paleta gigante asomándose (Rojo Principal) */}
+          {/* Paleta gigante asomándose (Efecto Swirl Estricto Rojo/Blanco) */}
           <motion.div
             animate={{ y: [0, -8, 0], rotate: [15, 25, 15] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
             className="absolute bottom-[18%] lg:bottom-[22%] right-[2%] lg:right-[5%] text-[90px] lg:text-[110px] z-20"
-            style={{ filter: "sepia(1) saturate(6) hue-rotate(-55deg) drop-shadow(0px 25px 25px rgba(0,0,0,0.25))" }}
+            style={{ 
+              /* Gradient Map inyectado para lograr el rojo primario y blanco puro */
+              filter: "url(#swirl-red-white) drop-shadow(0px 25px 25px rgba(238,49,35,0.3))" 
+            }}
           >
             🍭
           </motion.div>
         </div>
 
         {/* ── CONTENIDO TEXTO (IZQUIERDA) - AL FRENTE (z-30) ── */}
-        <div className="flex-none lg:flex-1 flex items-start lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-32 pb-4 sm:pt-36 sm:pb-8 lg:pt-0 pointer-events-none">
+        <div className="min-h-[100dvh] lg:min-h-0 flex-none lg:flex-1 flex items-center lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-16 lg:pt-0 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
@@ -209,7 +250,6 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
               className="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 leading-[1.05] mb-4 sm:mb-6 tracking-tight"
-              style={{ fontFamily: "'Catamaran', system-ui, sans-serif" }}
             >
               ¡Vuelve a ser{" "}
               <span className="font-script text-primary inline-block -rotate-2 drop-shadow-sm bg-white px-2 py-1 rounded-2xl border-2 border-primary/20">
@@ -223,7 +263,6 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
               className="text-[17px] sm:text-[18px] text-gray-800 mb-6 sm:mb-8 leading-relaxed font-semibold max-w-[380px]"
-              style={{ fontFamily: "Inter, system-ui, sans-serif" }}
             >
               Dulces raros, colaboraciones exclusivas y la magia de Dolce Candy en cada caja.
             </motion.p>
@@ -244,12 +283,12 @@ export default function Home() {
         </div>
 
         {/* ── IMAGEN CENTRAL / PERSONAJE - BOTTOM STACK (z-20) ── */}
-        <div className="relative flex-1 lg:absolute lg:bottom-0 lg:right-[5%] z-20 pointer-events-none w-full lg:w-[50%] mt-4 lg:mt-0 flex justify-center lg:justify-end items-end opacity-100">
+        <div className="relative min-h-[85dvh] lg:min-h-0 flex-none lg:absolute lg:bottom-0 lg:right-[5%] z-20 pointer-events-none w-full lg:w-[50%] flex justify-center lg:justify-end items-end opacity-100">
           {/* NO AnimatePresence para lograr el efecto seco y rápido del flipbook */}
           <img
             key={HERO_IMAGES[currentImageIndex]}
             src={getImagePath(HERO_IMAGES[currentImageIndex]) || undefined}
-            className="w-full max-w-[420px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block max-h-[50vh] lg:h-[85dvh] lg:max-h-none drop-shadow-2xl transition-none origin-bottom"
+            className="w-full max-w-[420px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block h-[85dvh] lg:h-[85dvh] drop-shadow-2xl transition-none origin-bottom"
             alt="Dolce Candy Showcase"
           />
         </div>
@@ -263,11 +302,15 @@ export default function Home() {
           />
         </div>
 
-        {/* Chocolate superpuesto (Sobreponiendo la nube) z-40 */}
+        {/* Chocolate superpuesto (Acento en empaque al Rojo Principal) z-40 */}
         <motion.div
           animate={{ y: [0, -10, 0], rotate: [-10, 5, -10] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           className="absolute bottom-[2%] md:bottom-[5%] left-[8%] md:left-[40%] text-[80px] md:text-[110px] drop-shadow-2xl z-40 pointer-events-none"
+          style={{
+             /* El filter SVG asigna Marrón exacto al chocolate nativo y colorea el envoltorio nativo (magenta/rojo) en Puro Rojo Logo */
+             filter: "url(#choco-wrap) drop-shadow(0px 20px 20px rgba(238,49,35,0.35))"
+          }}
         >
           🍫
         </motion.div>

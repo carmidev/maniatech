@@ -32,9 +32,14 @@ const config: Config = {
         }
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
-        display: ["var(--font-catamaran)", "sans-serif"],
+        'display-main': ["var(--font-cocogoose-main)", "sans-serif"],
+        display: ["var(--font-cocogoose-titles)", "sans-serif"],
+        body: ["var(--font-inter-display)", "system-ui", "sans-serif"],
+        numbers: ["var(--font-outfit-numbers)", "sans-serif"],
         script: ["var(--font-script)", "cursive"],
+      },
+      letterSpacing: {
+        main: '-0.05em', // -50pt en Illustrator equivale a -0.05em (tracking-main)
       },
       borderRadius: {
         "4xl": "2rem",
