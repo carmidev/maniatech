@@ -62,37 +62,6 @@ export default function Home() {
 
       {/* ── SVG FILTERS COMPARTIDOS (GRADIENT MAPS PARA EMOJIS) ── */}
       <svg className="hidden" aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0 }}>
-        <filter id="swirl-red-white" colorInterpolationFilters="sRGB">
-          {/* Grayscale map */}
-          <feColorMatrix type="matrix" values="
-            0.2126 0.7152 0.0722 0 0
-            0.2126 0.7152 0.0722 0 0
-            0.2126 0.7152 0.0722 0 0
-            0 0 0 1 0" in="SourceGraphic" result="grayscale"/>
-          
-          {/* Peppermint 2-color map (Shadows to Red, Mid-Highlights to White) */}
-          <feComponentTransfer in="grayscale" result="gradientMap">
-            <feFuncR type="table" tableValues="0.4 0.93 0.93 1.0 1.0"/>
-            <feFuncG type="table" tableValues="0.05 0.19 0.19 1.0 1.0"/>
-            <feFuncB type="table" tableValues="0.05 0.13 0.13 1.0 1.0"/>
-          </feComponentTransfer>
-          
-          {/* Re-apply alpha channel */}
-          <feComposite in="gradientMap" in2="SourceGraphic" operator="in" />
-        </filter>
-
-        <filter id="choco-wrap" colorInterpolationFilters="sRGB">
-          {/* Ecuación Algebraica de Coloración (Actualizada a Chocolate Oscuro #633c32):
-              Resoluvimos variables donde el eje central es el canal VERDE para no mezclar tintes en la Sombra vs Envoltorio.
-              1. R_out: Multiplica por 1.2 y empuja un micro-offset (-0.03) para oscurecer los marrones naturales sin apagar el Rojo.
-              2. G_out y B_out ignoran el canal Azul (anulando el magenta) y basan sus curvas puramente en G_in.
-              Con estos coeficientes, el envoltorio dispara exacto al Rojo (#EE3123) y el bloque central ancla en el Marrón Oscuro (#633c32). */}
-          <feColorMatrix type="matrix" values="
-            1.20  0.00  0  0 -0.03
-            0.00  0.90  0  0  0.10
-            0.00  0.96  0  0  0.06
-            0.00  0.00  0  1  0"/>
-        </filter>
       </svg>
 
       {/* ── NAVBAR PÍLDORA FLOTANTE ── */}
@@ -223,17 +192,20 @@ export default function Home() {
             🍬
           </motion.div>
 
-          {/* Paleta gigante asomándose (Efecto Swirl Estricto Rojo/Blanco) */}
+          {/* Paleta gigante asomándose (SVG Chupeta Custom - Ubicada bajo la nube derecha) */}
           <motion.div
-            animate={{ y: [0, -8, 0], rotate: [15, 25, 15] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-[18%] lg:bottom-[22%] right-[2%] lg:right-[5%] text-[90px] lg:text-[110px] z-20"
+            animate={{ y: [0, -12, 0], rotate: [10, 20, 10] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[32%] lg:top-[28%] right-[2%] lg:right-[3%] w-[180px] lg:w-[260px] z-20 pointer-events-none"
             style={{ 
-              /* Gradient Map inyectado para lograr el rojo primario y blanco puro */
-              filter: "url(#swirl-red-white) drop-shadow(0px 25px 25px rgba(238,49,35,0.3))" 
+              filter: "drop-shadow(0px 25px 35px rgba(238,49,35,0.25))" 
             }}
           >
-            🍭
+            <img 
+              src={getImagePath("/images/chupeta.svg")} 
+              alt="Chupeta Dolce" 
+              className="w-full h-full object-contain"
+            />
           </motion.div>
         </div>
 
@@ -302,17 +274,20 @@ export default function Home() {
           />
         </div>
 
-        {/* Chocolate superpuesto (Acento en empaque al Rojo Principal) z-40 */}
+        {/* Chocolate asomándose (SVG Chocolate Custom - Ubicado al centro sobre la nube) */}
         <motion.div
-          animate={{ y: [0, -10, 0], rotate: [-10, 5, -10] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[2%] md:bottom-[5%] left-[8%] md:left-[40%] text-[80px] md:text-[110px] drop-shadow-2xl z-40 pointer-events-none"
-          style={{
-             /* El filter SVG asigna Marrón exacto al chocolate nativo y colorea el envoltorio nativo (magenta/rojo) en Puro Rojo Logo */
-             filter: "url(#choco-wrap) drop-shadow(0px 20px 20px rgba(238,49,35,0.35))"
+          animate={{ y: [0, -12, 0], rotate: [-5, 5, -5] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          className="absolute bottom-[2%] lg:bottom-[4%] left-[42%] -translate-x-1/2 w-[220px] lg:w-[320px] z-40 pointer-events-none"
+          style={{ 
+            filter: "drop-shadow(0px 20px 30px rgba(99,60,50,0.4))" 
           }}
         >
-          🍫
+          <img 
+            src={getImagePath("/images/chocolate.svg")} 
+            alt="Chocolate Dolce" 
+            className="w-full h-full object-contain"
+          />
         </motion.div>
 
       </section>
