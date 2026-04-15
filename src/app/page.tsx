@@ -122,15 +122,15 @@ export default function Home() {
               className="absolute top-[calc(100%+10px)] left-0 w-full bg-white/95 backdrop-blur-3xl rounded-3xl shadow-xl shadow-black/10 border border-black/5 overflow-hidden lg:hidden flex flex-col p-6 gap-6"
             >
               <nav className="flex flex-col gap-5 text-center">
-                <Link 
-                  href="/catalogo" 
+                <Link
+                  href="/catalogo"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-xl font-bold text-gray-800 hover:text-primary transition-colors"
                 >
                   Catálogo
                 </Link>
-                <Link 
-                  href="#ubicaciones" 
+                <Link
+                  href="#ubicaciones"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-xl font-bold text-gray-800 hover:text-primary transition-colors"
                 >
@@ -184,9 +184,9 @@ export default function Home() {
             animate={{ y: [0, -15, 0], x: [0, 10, 0], rotate: [0, 45, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             className="absolute top-[25%] lg:top-[10%] left-[8%] lg:left-[5%] text-5xl lg:text-6xl z-20"
-            style={{ 
+            style={{
               /* Monocromía a Rojo Principal: sepia(1) unifica el tono y el hue-rotate ajusta al Rojo (#EE3123). Las partes brillantes nativas se leen como Coral. */
-              filter: "brightness(0.9) contrast(1.3) sepia(1) saturate(6) hue-rotate(-40deg) drop-shadow(0px 15px 15px rgba(238,49,35,0.4))" 
+              filter: "brightness(0.9) contrast(1.3) sepia(1) saturate(6) hue-rotate(-40deg) drop-shadow(0px 15px 15px rgba(238,49,35,0.4))"
             }}
           >
             🍬
@@ -197,13 +197,13 @@ export default function Home() {
             animate={{ y: [0, -12, 0], rotate: [10, 20, 10] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             className="absolute top-[32%] lg:top-[28%] right-[2%] lg:right-[3%] w-[180px] lg:w-[260px] z-20 pointer-events-none"
-            style={{ 
-              filter: "drop-shadow(0px 25px 35px rgba(238,49,35,0.25))" 
+            style={{
+              filter: "drop-shadow(0px 25px 35px rgba(238,49,35,0.25))"
             }}
           >
-            <img 
-              src={getImagePath("/images/chupeta.svg")} 
-              alt="Chupeta Dolce" 
+            <img
+              src={getImagePath("/images/chupeta.svg")}
+              alt="Chupeta Dolce"
               className="w-full h-full object-contain"
             />
           </motion.div>
@@ -215,26 +215,28 @@ export default function Home() {
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, ease: "easeOut" }}
-            className="w-full max-w-[480px] lg:mt-[-5%]"
+            className="w-full max-w-[650px] lg:max-w-[750px] lg:mt-[-5%]"
           >
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 leading-[1.05] mb-4 sm:mb-6 tracking-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.05] mb-4 sm:mb-6 tracking-tight flex flex-col items-start"
             >
-              ¡Vuelve a ser{" "}
-              <span className="font-script text-primary inline-block -rotate-2 drop-shadow-sm bg-white px-2 py-1 rounded-2xl border-2 border-primary/20">
-                un niño
+              <span className="whitespace-nowrap">¡Vuelve a ser</span>
+              <span className="mt-2 lg:mt-3 flex items-center flex-wrap gap-x-3">
+                <span className="font-script text-[1.05em] md:text-[1.15em] text-primary inline-flex items-center -rotate-2 drop-shadow-sm bg-white px-3 md:px-5 py-1 lg:py-2 rounded-[2rem] border-2 border-primary/20">
+                  un niño
+                </span>
+                <span>hoy!</span>
               </span>
-              {" "}hoy!
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
-              className="text-[17px] sm:text-[18px] text-gray-800 mb-6 sm:mb-8 leading-relaxed font-semibold max-w-[380px]"
+              className="text-[17px] sm:text-[18px] text-gray-800 mb-6 sm:mb-8 leading-relaxed font-semibold max-w-[420px] text-justify"
             >
               Dulces raros, colaboraciones exclusivas y la magia de Dolce Candy en cada caja.
             </motion.p>
@@ -279,13 +281,13 @@ export default function Home() {
           animate={{ y: [0, -12, 0], rotate: [-5, 5, -5] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
           className="absolute bottom-[2%] lg:bottom-[4%] left-[42%] -translate-x-1/2 w-[220px] lg:w-[320px] z-40 pointer-events-none"
-          style={{ 
-            filter: "drop-shadow(0px 20px 30px rgba(99,60,50,0.4))" 
+          style={{
+            filter: "drop-shadow(0px 20px 30px rgba(99,60,50,0.4))"
           }}
         >
-          <img 
-            src={getImagePath("/images/chocolate.svg")} 
-            alt="Chocolate Dolce" 
+          <img
+            src={getImagePath("/images/chocolate.svg")}
+            alt="Chocolate Dolce"
             className="w-full h-full object-contain"
           />
         </motion.div>
@@ -441,7 +443,7 @@ export default function Home() {
                 <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
                   <span className="text-3xl">📍</span>
                 </div>
-                
+
                 <h3 className="text-3xl font-black mb-4 text-gray-900">{loc.city}</h3>
                 <p className="text-gray-600 font-bold mb-2 text-lg">{loc.address}</p>
                 <p className="text-primary font-black text-sm uppercase tracking-tighter italic">
