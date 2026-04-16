@@ -304,7 +304,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-[84px] sm:text-6xl lg:text-6xl font-display-main font-bold text-brand-darkgray leading-[1.1] lg:leading-[1.05] mb-4 lg:mb-4 tracking-tight text-center lg:text-left flex flex-col items-center lg:items-start px-2"
+              className="text-[42px] sm:text-6xl lg:text-6xl font-display-main font-bold text-brand-darkgray leading-[1.1] lg:leading-[1.05] mb-4 lg:mb-4 tracking-tight text-center lg:text-left flex flex-col items-center lg:items-start px-2"
             >
               <span className="block lg:inline whitespace-nowrap lg:whitespace-normal">¡Vuelve a ser</span>
               <span className="flex items-center justify-center lg:justify-start gap-2 flex-wrap -mt-1 lg:mt-3">
