@@ -204,15 +204,16 @@ export default function Home() {
         <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden">
 
           {/* Chupeta Hero (chupeta1.png) - Plantada en la nube de la derecha */}
+          {/* Chupeta - Escritorio (Se mantiene independiente para no romper el layout web) */}
           <motion.div
             animate={{ y: [0, -12, 0], rotate: [5, -5, 5] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[38%] lg:top-[10%] right-[-12%] lg:right-[5%] z-10"
+            className="absolute top-[10%] right-[5%] z-10 hidden lg:block"
           >
             <img
               src={getImagePath("/images/chupeta1.png")}
               alt="Chupeta Dolce"
-              className="w-40 lg:w-48 h-auto drop-shadow-2xl filter brightness-110 rotate-6 lg:rotate-12 opacity-95 lg:opacity-100"
+              className="w-48 h-auto drop-shadow-2xl filter brightness-110 rotate-12 opacity-100"
             />
           </motion.div>
 
@@ -238,17 +239,7 @@ export default function Home() {
         </div>
 
         {/* Chocolate Reubicado (Sólo Móvil - Sobre la nube inferior izquierda) */}
-        <motion.div
-          animate={{ y: [0, -8, 0], rotate: [-15, -10, -15] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[44%] left-[1%] z-10 lg:hidden pointer-events-none"
-        >
-          <img
-            src={getImagePath("/images/chocolate.svg")}
-            alt="Chocolate Decorativo"
-            className="w-36 h-auto drop-shadow-2xl filter contrast-[1.05]"
-          />
-        </motion.div>
+
 
         {/* Caramelo Sorpresa (Escritorio) */}
         <motion.div
@@ -293,7 +284,7 @@ export default function Home() {
         </motion.div>
 
         {/* ── CONTENIDO TEXTO (IZQUIERDA) - AL FRENTE (z-30) ── */}
-        <div className="min-h-[100dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-[132px] lg:pt-0 pointer-events-none">
+        <div className="min-h-[100dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-[160px] lg:pt-0 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
@@ -328,7 +319,33 @@ export default function Home() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
+              className="relative inline-block"
             >
+              {/* Chupeta Anclada (Solo Móvil) */}
+              <motion.div
+                animate={{ y: [0, -10, 0], rotate: [5, -5, 5] }}
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-12 -right-8 z-10 lg:hidden pointer-events-none"
+              >
+                <img
+                  src={getImagePath("/images/chupeta1.png")}
+                  alt="Chupeta"
+                  className="w-32 h-auto drop-shadow-2xl rotate-12"
+                />
+              </motion.div>
+
+              {/* Chocolate Anclado (Solo Móvil) */}
+              <motion.div
+                animate={{ y: [0, -6, 0], rotate: [-10, -5, -10] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-10 -left-10 z-10 lg:hidden pointer-events-none"
+              >
+                <img
+                  src={getImagePath("/images/chocolate.svg")}
+                  alt="Chocolate"
+                  className="w-36 h-auto drop-shadow-2xl"
+                />
+              </motion.div>
               <Link
                 href="/catalogo"
                 className="bg-brand-red text-white px-8 lg:px-8 py-3 lg:py-3.5 rounded-full font-bold text-[16px] lg:text-[16px] inline-flex items-center gap-1.5 lg:gap-2 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-red/50 active:scale-95 transition-all duration-300 shadow-lg shadow-brand-red/40 group pointer-events-auto"
