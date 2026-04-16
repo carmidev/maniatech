@@ -181,7 +181,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[44%] lg:top-[18%] left-[4%] lg:left-[4%] opacity-60"
+            className="absolute top-[46%] lg:top-[18%] left-[4%] lg:left-[4%] opacity-60"
           >
             <svg width="130" height="72" viewBox="0 0 130 72" fill="none">
               <path d="M10,62 C10,62 0,60 0,52 C0,44 8,40 16,42 C16,30 26,22 38,24 C40,14 50,8 62,10 C70,4 82,4 90,12 C100,8 112,14 114,24 C122,24 130,32 128,40 C126,48 118,52 110,50 C110,58 100,64 90,62 Z" fill="white" />
@@ -192,7 +192,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, 10, 0], x: [0, -6, 0] }}
             transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className="absolute top-[36%] lg:top-[12%] right-[6%] lg:right-[6%] opacity-50"
+            className="absolute top-[38%] lg:top-[12%] right-[6%] lg:right-[6%] opacity-50"
           >
             <svg width="170" height="95" viewBox="0 0 170 95" fill="none">
               <path d="M14,82 C14,82 0,80 0,68 C0,56 10,50 22,53 C20,36 34,24 50,26 C52,14 66,6 82,8 C92,2 108,2 118,12 C130,6 146,14 148,28 C158,28 170,38 168,52 C166,64 156,70 144,68 C144,78 132,86 120,84 C116,92 104,96 94,88 C84,94 70,92 64,82 Z" fill="white" />
@@ -310,7 +310,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
-              className="text-[16px] sm:text-[18px] text-brand-darkgray/90 mb-2 sm:mb-8 lg:mb-3 leading-[1.4] lg:leading-relaxed font-body font-normal mx-auto lg:mx-0 w-full max-w-none sm:max-w-[480px] lg:max-w-[420px] text-center lg:text-justify px-2"
+              className="text-[16px] sm:text-[18px] text-brand-darkgray/90 mb-6 lg:mb-3 leading-[1.4] lg:leading-relaxed font-body font-normal mx-auto lg:mx-0 w-full max-w-[310px] sm:max-w-[480px] lg:max-w-[420px] text-center lg:text-justify px-2 line-clamp-2 overflow-hidden"
             >
               Dulces raros, colaboraciones exclusivas y la magia de Dolce Candy en cada caja.
             </motion.p>
@@ -325,7 +325,7 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, -10, 0], rotate: [5, -5, 5] }}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-12 -right-8 z-10 lg:hidden pointer-events-none"
+                className="absolute top-1 -right-20 z-10 lg:hidden pointer-events-none"
               >
                 <img
                   src={getImagePath("/images/chupeta1.png")}
@@ -338,7 +338,7 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, -6, 0], rotate: [-10, -5, -10] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-10 -left-10 z-10 lg:hidden pointer-events-none"
+                className="absolute top-14 -left-16 z-10 lg:hidden pointer-events-none"
               >
                 <img
                   src={getImagePath("/images/chocolate.svg")}
@@ -384,7 +384,7 @@ export default function Home() {
 
       {/* ── DULCES DESTACADOS ── */}
       <section className="relative bg-white z-10 pt-4 lg:pt-4 pb-8 px-6 mt-0 lg:mt-0">
-        
+
         <div className="max-w-7xl mx-auto">
 
           {/* Encabezado */}
