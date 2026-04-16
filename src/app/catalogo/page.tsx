@@ -46,52 +46,68 @@ export default function CatalogoPage() {
   return (
     <div className="min-h-screen bg-[#f8f6f6]">
 
-      {/* ── NAVBAR ── */}
-      <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2.5rem)] max-w-5xl">
-        <div className="bg-white/90 backdrop-blur-xl rounded-full shadow-lg shadow-black/8 px-6 h-16 flex items-center justify-between border border-white/60">
-          <Link href="/" className="flex items-center gap-1 md:gap-2">
-            <div className="w-[44px] h-[44px] flex items-center justify-center overflow-hidden shrink-0 -ml-2 rounded-full">
-              <img src={getImagePath("/images/espiral-dolce.png")} alt="Dolce Isotipo" className="w-full h-full object-cover scale-[1.3] drop-shadow-sm" />
+      {/* ── NAVBAR PÍLDORA FLOTANTE (REDUCCIÓN EXTREMA PREVENCIÓN OVERFLOW) ── */}
+      <div className="fixed top-4 inset-x-0 z-[99] flex justify-center pointer-events-none px-3 sm:px-6 lg:px-0">
+        <nav className="pointer-events-auto w-full lg:w-max lg:min-w-[800px] max-w-4xl bg-white/95 backdrop-blur-xl rounded-full shadow-xl shadow-black/10 h-[58px] lg:h-16 flex items-center justify-between border border-white/60 px-3 sm:px-5 lg:px-8">
+          <Link href="/" className="flex items-center gap-1 md:gap-2 cursor-pointer p-0 relative shrink-0">
+            {/* Logo Móvil - Escalado para contrarrestar el padding transparente de la imagen */}
+            <div className="relative lg:hidden w-[48px] h-[48px] flex items-center justify-center shrink-0 -ml-1">
+              <img
+                src={getImagePath("/images/espiraldolce-con-nombre.png")}
+                alt="Dolce Candy Oficial"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-[2px] w-[118px] h-[118px] max-w-none object-contain pointer-events-none drop-shadow-sm"
+              />
             </div>
-            <img src={getImagePath("/images/letras-dolce-candy-blanco.png")} alt="Dolce Candy" className="h-[34px] object-contain mt-1 invert opacity-90" />
+
+            {/* Logo Desktop */}
+            <div className="hidden lg:flex items-center gap-1 lg:gap-2">
+              <div className="relative pointer-events-none w-[46px] h-[46px] flex items-center justify-center shrink-0 -mr-2 -ml-2">
+                <img src={getImagePath("/images/espiral-dolce.png")} alt="Dolce Isotipo" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] max-w-none object-contain drop-shadow-sm pointer-events-none" />
+              </div>
+              <img src={getImagePath("/images/letras-dolce-candy-blanco.png")} alt="Dolce Candy" className="h-[34px] object-contain mt-1 invert opacity-90 pointer-events-none" />
+            </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-7 font-bold text-sm tracking-wide">
-            <Link href="/catalogo" className="text-primary">
-              Catálogo
-            </Link>
-            <Link href="/#ubicaciones" className="text-gray-600 hover:text-primary transition-colors">
-              Ubicaciones
-            </Link>
-          </div>
+          <div className="flex items-center gap-1 sm:gap-4 lg:gap-8 shrink-0">
+            <div className="hidden lg:flex items-center gap-7 font-display text-sm tracking-wide">
+              <Link href="/catalogo" className="text-primary">
+                Catálogo
+              </Link>
+              <Link href="/#ubicaciones" className="text-gray-600 hover:text-primary transition-colors">
+                Ubicaciones
+              </Link>
+            </div>
 
-          <div className="flex items-center gap-2 md:gap-3">
-            <Link
-              href="/"
-              className="bg-brand-red text-white px-5 py-2.5 rounded-full font-black text-sm hover:scale-105 active:scale-95 transition-all shadow-md shadow-brand-red/30 hidden md:flex items-center gap-2"
-            >
-              Volver al Inicio <ArrowRight className="w-4 h-4 stroke-[3]" />
-            </Link>
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
-            >
-              <ShoppingBasket className="w-5 h-5 text-gray-700" />
-              {totalItems > 0 && (
-                <span className="absolute top-0 right-0 bg-brand-red text-white text-[10px] font-black w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">
-                  {totalItems}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
-              aria-label="Toggle Menu"
-            >
-              {isMobileMenuOpen ? <X className="w-5 h-5 text-gray-900" /> : <Menu className="w-5 h-5 text-gray-900" />}
-            </button>
+            <div className="flex items-center gap-0.5 sm:gap-2 lg:gap-3">
+              <Link
+                href="/"
+                className="flex bg-brand-red text-white px-2.5 sm:px-4 lg:px-5 py-1.5 lg:py-2.5 rounded-full font-black text-[9px] lg:text-sm hover:scale-105 transition-all shadow-md shadow-brand-red/30 items-center gap-0.5 sm:gap-1 shrink-0"
+              >
+                <span className="hidden lg:inline">Volver al Inicio</span>
+                <span className="lg:hidden uppercase tracking-tighter">Inicio</span>
+                <ArrowRight className="w-2.5 h-2.5 lg:w-4 lg:h-4 stroke-[3]" />
+              </Link>
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+              >
+                <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-gray-700" />
+                {totalItems > 0 && (
+                  <span className="absolute top-0 right-0 bg-primary text-white text-[9px] lg:text-[10px] font-black w-3.5 h-3.5 lg:w-4 lg:h-4 flex items-center justify-center rounded-full border-2 border-white">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="lg:hidden p-1.5 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+                aria-label="Toggle Menu"
+              >
+                {isMobileMenuOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900" />}
+              </button>
+            </div>
           </div>
-        </div>
+        </nav>
 
         {/* MENÚ MÓVIL DESPLEGABLE */}
         <AnimatePresence>
@@ -101,20 +117,20 @@ export default function CatalogoPage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute top-[calc(100%+10px)] left-0 w-full bg-white/95 backdrop-blur-3xl rounded-3xl shadow-xl shadow-black/10 border border-black/5 overflow-hidden md:hidden flex flex-col p-6 gap-6"
+              className="absolute top-[calc(100%+10px)] left-0 w-full bg-white/95 backdrop-blur-3xl rounded-[24px] shadow-xl shadow-black/10 border border-black/5 overflow-hidden md:hidden flex flex-col p-5 gap-4 pointer-events-auto"
             >
-              <nav className="flex flex-col gap-5 text-center">
+              <nav className="flex flex-col gap-3 text-center">
                 <Link 
                   href="/" 
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-xl font-bold text-gray-800 hover:text-primary transition-colors"
+                  className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
                 >
                   Inicio
                 </Link>
                 <Link 
                   href="/#ubicaciones" 
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-xl font-bold text-gray-800 hover:text-primary transition-colors"
+                  className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
                 >
                   Ubicaciones
                 </Link>
@@ -122,14 +138,14 @@ export default function CatalogoPage() {
               <Link
                 href="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-brand-red text-white w-full py-4 rounded-full font-black text-lg hover:bg-brand-red/90 active:scale-95 transition-all text-center flex items-center justify-center gap-2 shadow-md"
+                className="bg-brand-red text-white w-full py-3 rounded-full font-black text-[14px] tracking-wide hover:scale-105 active:scale-95 transition-all text-center flex items-center justify-center gap-1.5 shadow-md shadow-brand-red/30 mt-1"
               >
-                Volver al Inicio <ArrowRight className="w-5 h-5 stroke-[3]" />
+                Volver al Inicio <ArrowRight className="w-4 h-4 stroke-[3]" />
               </Link>
             </motion.div>
           )}
         </AnimatePresence>
-      </nav>
+      </div>
 
       {/* ── CONTENIDO ── */}
       <main className="max-w-7xl mx-auto px-6 pt-32 pb-20">
@@ -171,9 +187,6 @@ export default function CatalogoPage() {
               <div>
                 <h3 className="text-sm font-display text-brand-darkgray uppercase tracking-widest">Categorías</h3>
               </div>
-              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">
-                {filteredCandies.length} productos encontrados
-              </p>
             </div>
 
             <div className="flex overflow-x-auto pb-4 -mx-6 px-6 gap-3 no-scrollbar scroll-smooth">
