@@ -64,21 +64,21 @@ export default function Home() {
       <svg className="hidden" aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0 }}>
       </svg>
 
-      {/* ── NAVBAR PÍLDORA FLOTANTE ── */}
-      <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2.5rem)] max-w-4xl">
-        <div className="bg-white/90 backdrop-blur-xl rounded-full shadow-lg shadow-black/8 px-6 lg:px-8 h-16 flex items-center justify-between border border-white/60">
+      {/* ── NAVBAR PÍLDORA FLOTANTE (REFACTORIZADO PARA ESTABILIDAD TOTAL) ── */}
+      <div className="fixed top-4 left-0 right-0 z-50 px-5 flex justify-center pointer-events-none">
+        <nav className="w-full max-w-4xl max-w-[calc(100vw-40px)] bg-white/95 backdrop-blur-xl rounded-full shadow-xl shadow-black/10 px-3 lg:px-8 h-16 flex items-center justify-between border border-white/60 pointer-events-auto overflow-hidden">
           <button
             type="button"
-            className="flex items-center gap-1 md:gap-2 cursor-pointer p-1 -m-1 relative z-10"
+            className="flex items-center gap-1 md:gap-2 cursor-pointer p-0 relative"
             onClick={() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
-            {/* Logo Móvil */}
+            {/* Logo Móvil - Compactado */}
             <img
               src={getImagePath("/images/logo-oficial.png")}
               alt="Dolce Candy Logo"
-              className="h-16 lg:hidden object-contain translate-y-1.5"
+              className="h-11 lg:hidden object-contain"
             />
 
             {/* Logo Desktop (Restaurado) */}
@@ -90,7 +90,7 @@ export default function Home() {
             </div>
           </button>
 
-          <div className="flex items-center gap-6 lg:gap-8">
+          <div className="flex items-center gap-1.5 lg:gap-8">
             <div className="hidden lg:flex items-center gap-7 font-display text-sm tracking-wide">
               <Link href="#lab" className="text-brand-darkgray/80 hover:text-primary transition-colors">
                 Candy Lab
@@ -100,10 +100,10 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="flex items-center gap-2 lg:gap-3">
+            <div className="flex items-center gap-1 lg:gap-3">
               <Link
                 href="/catalogo"
-                className="flex bg-brand-red text-white px-3 lg:px-5 py-1.5 lg:py-2.5 rounded-full font-black text-[10px] lg:text-sm hover:scale-105 transition-all shadow-md shadow-brand-red/30 items-center gap-1.5"
+                className="flex bg-brand-red text-white px-2 lg:px-5 py-1.5 lg:py-2.5 rounded-full font-black text-[9px] lg:text-sm hover:scale-105 transition-all shadow-md shadow-brand-red/30 items-center gap-1"
               >
                 <span className="hidden lg:inline">Ir al Catálogo</span>
                 <span className="lg:hidden uppercase tracking-tighter">Catálogo</span>
@@ -129,7 +129,7 @@ export default function Home() {
               </button>
             </div>
           </div>
-        </div>
+        </nav>
 
         {/* MENÚ MÓVIL DESPLEGABLE */}
         <AnimatePresence>
@@ -167,7 +167,7 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
-      </nav>
+      </div>
 
       {/* ── HERO SECTION - ESTILO PAWSY EXACTO + CANDY CRUSH ── */}
       <section className="relative min-h-[85dvh] lg:h-[100dvh] flex flex-col overflow-hidden"
