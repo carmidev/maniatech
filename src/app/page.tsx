@@ -106,11 +106,11 @@ export default function Home() {
             <div className="flex items-center gap-0.5 sm:gap-2 lg:gap-3">
               <Link
                 href="/catalogo"
-                className="flex bg-brand-red text-white px-2.5 sm:px-4 lg:px-5 py-1.5 lg:py-2.5 rounded-full font-black text-[9px] lg:text-sm hover:scale-105 transition-all shadow-md shadow-brand-red/30 items-center gap-0.5 sm:gap-1 shrink-0"
+                className="flex bg-brand-red text-white px-4 sm:px-4 lg:px-5 py-2 lg:py-2.5 rounded-full font-black text-[11px] lg:text-sm hover:scale-105 transition-all shadow-md shadow-brand-red/30 items-center gap-1 sm:gap-1 shrink-0"
               >
                 <span className="hidden lg:inline">Ir al Catálogo</span>
                 <span className="lg:hidden uppercase tracking-tighter">Catálogo</span>
-                <ArrowRight className="w-2.5 h-2.5 lg:w-4 lg:h-4 stroke-[3]" />
+                <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4 stroke-[3]" />
               </Link>
               <button
                 onClick={() => setIsCartOpen(true)}
@@ -181,7 +181,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[42%] lg:top-[18%] left-[4%] lg:left-[4%] opacity-60"
+            className="absolute top-[44%] lg:top-[18%] left-[4%] lg:left-[4%] opacity-60"
           >
             <svg width="130" height="72" viewBox="0 0 130 72" fill="none">
               <path d="M10,62 C10,62 0,60 0,52 C0,44 8,40 16,42 C16,30 26,22 38,24 C40,14 50,8 62,10 C70,4 82,4 90,12 C100,8 112,14 114,24 C122,24 130,32 128,40 C126,48 118,52 110,50 C110,58 100,64 90,62 Z" fill="white" />
@@ -192,7 +192,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, 10, 0], x: [0, -6, 0] }}
             transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className="absolute top-[34%] lg:top-[12%] right-[6%] lg:right-[6%] opacity-50"
+            className="absolute top-[36%] lg:top-[12%] right-[6%] lg:right-[6%] opacity-50"
           >
             <svg width="170" height="95" viewBox="0 0 170 95" fill="none">
               <path d="M14,82 C14,82 0,80 0,68 C0,56 10,50 22,53 C20,36 34,24 50,26 C52,14 66,6 82,8 C92,2 108,2 118,12 C130,6 146,14 148,28 C158,28 170,38 168,52 C166,64 156,70 144,68 C144,78 132,86 120,84 C116,92 104,96 94,88 C84,94 70,92 64,82 Z" fill="white" />
@@ -207,12 +207,12 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, -12, 0], rotate: [5, -5, 5] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[36%] lg:top-[10%] right-[-12%] lg:right-[5%] z-10"
+            className="absolute top-[38%] lg:top-[10%] right-[-12%] lg:right-[5%] z-10"
           >
             <img
               src={getImagePath("/images/chupeta1.png")}
               alt="Chupeta Dolce"
-              className="w-40 lg:w-48 h-auto drop-shadow-2xl filter brightness-110 rotate-12 opacity-95 lg:opacity-100"
+              className="w-40 lg:w-48 h-auto drop-shadow-2xl filter brightness-110 rotate-6 lg:rotate-12 opacity-95 lg:opacity-100"
             />
           </motion.div>
 
@@ -241,12 +241,12 @@ export default function Home() {
         <motion.div
           animate={{ y: [0, -8, 0], rotate: [-15, -10, -15] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[42%] left-[4%] z-10 lg:hidden pointer-events-none"
+          className="absolute top-[44%] left-[1%] z-10 lg:hidden pointer-events-none"
         >
           <img
             src={getImagePath("/images/chocolate.svg")}
             alt="Chocolate Decorativo"
-            className="w-32 h-auto drop-shadow-xl rotate-6 brightness-110 opacity-90"
+            className="w-36 h-auto drop-shadow-2xl filter contrast-[1.05]"
           />
         </motion.div>
 
@@ -283,7 +283,7 @@ export default function Home() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute bottom-[20px] left-[8%] z-40 pointer-events-none md:hidden"
+          className="absolute bottom-[15px] left-[8%] z-40 pointer-events-none md:hidden"
         >
           <img
             src={getImagePath("/images/caramelodolce.png")}
@@ -293,7 +293,7 @@ export default function Home() {
         </motion.div>
 
         {/* ── CONTENIDO TEXTO (IZQUIERDA) - AL FRENTE (z-30) ── */}
-        <div className="min-h-[100dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-[114px] lg:pt-0 pointer-events-none">
+        <div className="min-h-[100dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-[132px] lg:pt-0 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
@@ -304,7 +304,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-[36px] sm:text-6xl lg:text-6xl font-display-main font-bold text-brand-darkgray leading-[1.1] lg:leading-[1.05] mb-4 lg:mb-4 tracking-tight text-center lg:text-left flex flex-col items-center lg:items-start px-2"
+              className="text-[42px] sm:text-6xl lg:text-6xl font-display-main font-bold text-brand-darkgray leading-[1.1] lg:leading-[1.05] mb-4 lg:mb-4 tracking-tight text-center lg:text-left flex flex-col items-center lg:items-start px-2"
             >
               <span className="block lg:inline whitespace-nowrap lg:whitespace-normal">¡Vuelve a ser</span>
               <span className="flex items-center justify-center lg:justify-start gap-2 flex-wrap -mt-1 lg:mt-3">
@@ -319,9 +319,9 @@ export default function Home() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
-              className="text-[14px] sm:text-[18px] text-brand-darkgray/90 mb-2 sm:mb-8 lg:mb-3 leading-[1.4] lg:leading-relaxed font-body font-normal mx-auto lg:mx-0 w-[95%] max-w-[380px] sm:max-w-[480px] lg:max-w-[420px] text-center lg:text-justify px-1"
+              className="text-[16px] sm:text-[18px] text-brand-darkgray/90 mb-2 sm:mb-8 lg:mb-3 leading-[1.4] lg:leading-relaxed font-body font-normal mx-auto lg:mx-0 w-full max-w-none sm:max-w-[480px] lg:max-w-[420px] text-center lg:text-justify px-2"
             >
-              Dulces raros, colaboraciones exclusivas <br className="lg:hidden" /> y la magia de Dolce Candy en cada caja.
+              Dulces raros, colaboraciones exclusivas y la magia de Dolce Candy en cada caja.
             </motion.p>
 
             <motion.div
@@ -331,7 +331,7 @@ export default function Home() {
             >
               <Link
                 href="/catalogo"
-                className="bg-brand-red text-white px-6 lg:px-8 py-2.5 lg:py-3.5 rounded-full font-bold text-[14px] lg:text-[16px] inline-flex items-center gap-1.5 lg:gap-2 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-red/50 active:scale-95 transition-all duration-300 shadow-lg shadow-brand-red/40 group pointer-events-auto"
+                className="bg-brand-red text-white px-8 lg:px-8 py-3 lg:py-3.5 rounded-full font-bold text-[16px] lg:text-[16px] inline-flex items-center gap-1.5 lg:gap-2 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-red/50 active:scale-95 transition-all duration-300 shadow-lg shadow-brand-red/40 group pointer-events-auto"
               >
                 Ver todos los dulces <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
