@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBasket, ArrowRight, Menu, X } from "lucide-react";
+import { ShoppingBasket, ArrowRight, Menu, X, MapPin } from "lucide-react";
 import { LollipopLogo } from "@/components/LollipopLogo";
 import { CloudDivider } from "@/components/CloudDivider";
 import { useCart } from "@/context/CartContext";
@@ -65,49 +65,69 @@ export default function Home() {
       </svg>
 
       {/* ── NAVBAR PÍLDORA FLOTANTE ── */}
-      <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2.5rem)] max-w-5xl">
-        <div className="bg-white/90 backdrop-blur-xl rounded-full shadow-lg shadow-black/8 px-6 h-16 flex items-center justify-between border border-white/60">
-          <Link href="/" className="flex items-center gap-1 md:gap-2">
-            <div className="w-[44px] h-[44px] flex items-center justify-center overflow-hidden shrink-0 -ml-2 rounded-full">
-              <img src={getImagePath("/images/espiral-dolce.png")} alt="Dolce Isotipo" className="w-full h-full object-cover scale-[1.3] drop-shadow-sm" />
+      <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2.5rem)] max-w-4xl">
+        <div className="bg-white/90 backdrop-blur-xl rounded-full shadow-lg shadow-black/8 px-6 lg:px-8 h-16 flex items-center justify-between border border-white/60">
+          <button
+            type="button"
+            className="flex items-center gap-1 md:gap-2 cursor-pointer p-1 -m-1 relative z-10"
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            {/* Logo Móvil */}
+            <img
+              src={getImagePath("/images/logo-oficial.png")}
+              alt="Dolce Candy Logo"
+              className="h-16 lg:hidden object-contain translate-y-1.5"
+            />
+
+            {/* Logo Desktop (Restaurado) */}
+            <div className="hidden lg:flex items-center gap-1 lg:gap-2">
+              <div className="relative pointer-events-none w-[46px] h-[46px] flex items-center justify-center shrink-0 -mr-2 -ml-2">
+                <img src={getImagePath("/images/espiral-dolce.png")} alt="Dolce Isotipo" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] max-w-none object-contain drop-shadow-sm pointer-events-none" />
+              </div>
+              <img src={getImagePath("/images/letras-dolce-candy-blanco.png")} alt="Dolce Candy" className="h-[34px] object-contain mt-1 invert opacity-90 pointer-events-none" />
             </div>
-            <img src={getImagePath("/images/letras-dolce-candy-blanco.png")} alt="Dolce Candy" className="h-[34px] object-contain mt-1 invert opacity-90" />
-          </Link>
+          </button>
 
-          <div className="hidden lg:flex items-center gap-7 font-bold text-sm tracking-wide">
-            <Link href="/catalogo" className="text-gray-600 hover:text-primary transition-colors">
-              Catálogo
-            </Link>
-            <Link href="#ubicaciones" className="text-gray-600 hover:text-primary transition-colors">
-              Ubicaciones
-            </Link>
-          </div>
+          <div className="flex items-center gap-6 lg:gap-8">
+            <div className="hidden lg:flex items-center gap-7 font-display text-sm tracking-wide">
+              <Link href="#lab" className="text-brand-darkgray/80 hover:text-primary transition-colors">
+                Candy Lab
+              </Link>
+              <Link href="#ubicaciones" className="text-brand-darkgray/80 hover:text-primary transition-colors">
+                Ubicaciones
+              </Link>
+            </div>
 
-          <div className="flex items-center gap-2 lg:gap-3">
-            <Link
-              href="/catalogo"
-              className="bg-primary text-white px-5 py-2.5 rounded-full font-black text-sm hover:bg-primary/90 active:scale-95 transition-all shadow-md shadow-primary/30 hidden lg:flex items-center gap-2"
-            >
-              Ir al Catálogo <ArrowRight className="w-4 h-4 stroke-[3]" />
-            </Link>
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
-            >
-              <ShoppingBasket className="w-5 h-5 text-gray-700" />
-              {totalItems > 0 && (
-                <span className="absolute top-0 right-0 bg-primary text-white text-[10px] font-black w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">
-                  {totalItems}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
-              aria-label="Toggle Menu"
-            >
-              {isMobileMenuOpen ? <X className="w-5 h-5 text-gray-900" /> : <Menu className="w-5 h-5 text-gray-900" />}
-            </button>
+            <div className="flex items-center gap-2 lg:gap-3">
+              <Link
+                href="/catalogo"
+                className="flex bg-brand-red text-white px-3 lg:px-5 py-1.5 lg:py-2.5 rounded-full font-black text-[10px] lg:text-sm hover:scale-105 transition-all shadow-md shadow-brand-red/30 items-center gap-1.5"
+              >
+                <span className="hidden lg:inline">Ir al Catálogo</span>
+                <span className="lg:hidden uppercase tracking-tighter">Catálogo</span>
+                <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4 stroke-[3]" />
+              </Link>
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="relative p-1.5 lg:p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <ShoppingBasket className="w-4 h-4 lg:w-5 lg:h-5 text-gray-700" />
+                {totalItems > 0 && (
+                  <span className="absolute top-0 right-0 bg-primary text-white text-[9px] lg:text-[10px] font-black w-3.5 h-3.5 lg:w-4 lg:h-4 flex items-center justify-center rounded-full border-2 border-white">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="lg:hidden p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Toggle Menu"
+              >
+                {isMobileMenuOpen ? <X className="w-5 h-5 text-gray-900" /> : <Menu className="w-5 h-5 text-gray-900" />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -123,16 +143,16 @@ export default function Home() {
             >
               <nav className="flex flex-col gap-5 text-center">
                 <Link
-                  href="/catalogo"
+                  href="#lab"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-xl font-bold text-gray-800 hover:text-primary transition-colors"
+                  className="text-xl font-bold text-brand-darkgray hover:text-primary transition-colors"
                 >
-                  Catálogo
+                  Candy Lab
                 </Link>
                 <Link
                   href="#ubicaciones"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-xl font-bold text-gray-800 hover:text-primary transition-colors"
+                  className="text-xl font-bold text-brand-darkgray hover:text-primary transition-colors"
                 >
                   Ubicaciones
                 </Link>
@@ -140,7 +160,7 @@ export default function Home() {
               <Link
                 href="/catalogo"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-primary text-white w-full py-4 rounded-full font-black text-lg hover:bg-primary/90 active:scale-95 transition-all text-center flex items-center justify-center gap-2 shadow-md"
+                className="bg-brand-red text-white w-full py-4 rounded-full font-black text-lg hover:scale-105 active:scale-95 transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-brand-red/40"
               >
                 Ir al Catálogo <ArrowRight className="w-5 h-5 stroke-[3]" />
               </Link>
@@ -150,15 +170,15 @@ export default function Home() {
       </nav>
 
       {/* ── HERO SECTION - ESTILO PAWSY EXACTO + CANDY CRUSH ── */}
-      <section className="relative min-h-[100dvh] lg:h-[100dvh] overflow-hidden flex flex-col"
-        style={{ background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #EDCFC3 40%, #93CDEA 100%)' }}>
+      <section className="relative min-h-[85dvh] lg:h-[100dvh] flex flex-col overflow-hidden"
+        style={{ background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #eab8ac 45%, #86ccef 100%)' }}>
         {/* Layer 1: Nubes Blancas Flotantes Absolutas (z-0) */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           {/* Nube flotante decorativa - izquierda */}
           <motion.div
             animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[60%] lg:top-[18%] left-[4%] lg:left-[4%] opacity-60"
+            className="absolute top-[42%] lg:top-[18%] left-[4%] lg:left-[4%] opacity-60"
           >
             <svg width="130" height="72" viewBox="0 0 130 72" fill="none">
               <path d="M10,62 C10,62 0,60 0,52 C0,44 8,40 16,42 C16,30 26,22 38,24 C40,14 50,8 62,10 C70,4 82,4 90,12 C100,8 112,14 114,24 C122,24 130,32 128,40 C126,48 118,52 110,50 C110,58 100,64 90,62 Z" fill="white" />
@@ -169,7 +189,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, 10, 0], x: [0, -6, 0] }}
             transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className="absolute top-[52%] lg:top-[12%] right-[6%] lg:right-[6%] opacity-50"
+            className="absolute top-[34%] lg:top-[12%] right-[6%] lg:right-[6%] opacity-50"
           >
             <svg width="170" height="95" viewBox="0 0 170 95" fill="none">
               <path d="M14,82 C14,82 0,80 0,68 C0,56 10,50 22,53 C20,36 34,24 50,26 C52,14 66,6 82,8 C92,2 108,2 118,12 C130,6 146,14 148,28 C158,28 170,38 168,52 C166,64 156,70 144,68 C144,78 132,86 120,84 C116,92 104,96 94,88 C84,94 70,92 64,82 Z" fill="white" />
@@ -177,55 +197,94 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* ── FLOATING CANDIES (Candy Crush Inspiration) (z-10) ── */}
-        <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
-          {/* Caramelo elevado (Rojo Principal + Detalles Coral nativos por luminancia) */}
-          <motion.div
-            animate={{ y: [0, -15, 0], x: [0, 10, 0], rotate: [0, 45, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[25%] lg:top-[10%] left-[8%] lg:left-[5%] text-5xl lg:text-6xl z-20"
-            style={{
-              /* Monocromía a Rojo Principal: sepia(1) unifica el tono y el hue-rotate ajusta al Rojo (#EE3123). Las partes brillantes nativas se leen como Coral. */
-              filter: "brightness(0.9) contrast(1.3) sepia(1) saturate(6) hue-rotate(-40deg) drop-shadow(0px 15px 15px rgba(238,49,35,0.4))"
-            }}
-          >
-            🍬
-          </motion.div>
+        {/* ── FLOATING CANDIES (z-50) - Elevado para visibilidad máxima ── */}
+        <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden">
 
-          {/* Paleta gigante asomándose (SVG Chupeta Custom - Ubicada bajo la nube derecha) */}
+          {/* Chupeta Hero (chupeta1.png) - Plantada en la nube de la derecha */}
           <motion.div
-            animate={{ y: [0, -12, 0], rotate: [10, 20, 10] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[32%] lg:top-[28%] right-[2%] lg:right-[3%] w-[180px] lg:w-[260px] z-20 pointer-events-none"
-            style={{
-              filter: "drop-shadow(0px 25px 35px rgba(238,49,35,0.25))"
-            }}
+            animate={{ y: [0, -12, 0], rotate: [5, -5, 5] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[31%] lg:top-[10%] right-[-8%] lg:right-[5%] z-10"
           >
             <img
-              src={getImagePath("/images/chupeta.svg")}
+              src={getImagePath("/images/chupeta1.png")}
               alt="Chupeta Dolce"
-              className="w-full h-full object-contain"
+              className="w-40 lg:w-48 h-auto drop-shadow-2xl filter brightness-110 rotate-12 opacity-95 lg:opacity-100"
+            />
+          </motion.div>
+
+          {/* Barra de Chocolate (Izquierda) */}
+          <motion.div
+            animate={{
+              y: [0, -10, 0],
+              rotate: [-8, 2, -8]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-[12%] lg:top-[12%] left-[-2%] lg:left-[2%] z-10 hidden lg:block"
+          >
+            <img
+              src={getImagePath("/images/chocolate.svg")}
+              alt="Chocolate Dolce"
+              className="w-28 lg:w-48 h-auto drop-shadow-2xl -rotate-6 brightness-110 opacity-90 lg:opacity-100"
             />
           </motion.div>
         </div>
 
+        {/* Chocolate Reubicado (Sólo Móvil - Sobre la nube inferior izquierda) */}
+        <motion.div
+          animate={{ y: [0, -8, 0], rotate: [-15, -10, -15] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[44%] left-[8%] z-10 lg:hidden pointer-events-none"
+        >
+          <img
+            src={getImagePath("/images/chocolate.svg")}
+            alt="Chocolate Decorativo"
+            className="w-28 h-auto drop-shadow-xl rotate-6 brightness-110 opacity-90"
+          />
+        </motion.div>
+
+        {/* Caramelo Sorpresa (Asset Personalizado: caramelodolce.png - Detrás de la nube z-30) */}
+        <motion.div
+          animate={{
+            y: [55, -90, 55], // Sube más alto para despegarse de la nube
+            rotate: [15, 375],
+            scale: [0.8, 1.3, 0.8] // Un pelín más grande al subir
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute bottom-[30px] md:bottom-[90px] left-[38%] md:left-[44%] z-25 pointer-events-none"
+        >
+          <img
+            src={getImagePath("/images/caramelodolce.png")}
+            alt="Caramelo Dolce"
+            className="w-28 md:w-32 h-auto drop-shadow-2xl brightness-110"
+          />
+        </motion.div>
+
         {/* ── CONTENIDO TEXTO (IZQUIERDA) - AL FRENTE (z-30) ── */}
-        <div className="min-h-[100dvh] lg:min-h-0 flex-none lg:flex-1 flex items-center lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-16 lg:pt-0 pointer-events-none">
+        <div className="min-h-[100dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-[114px] lg:pt-0 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, ease: "easeOut" }}
-            className="w-full max-w-[650px] lg:max-w-[750px] lg:mt-[-5%]"
+            className="w-full max-w-[650px] lg:max-w-[550px] text-center lg:text-left lg:items-start lg:-mt-8"
           >
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.05] mb-4 sm:mb-6 tracking-tight flex flex-col items-start"
+              className="text-[36px] sm:text-6xl lg:text-6xl font-display-main font-bold text-brand-darkgray leading-[1.1] lg:leading-[1.05] mb-4 lg:mb-4 tracking-tight text-center lg:text-left flex flex-col items-center lg:items-start px-2"
             >
-              <span className="whitespace-nowrap">¡Vuelve a ser</span>
-              <span className="mt-2 lg:mt-3 flex items-center flex-wrap gap-x-3">
-                <span className="font-script text-[1.05em] md:text-[1.15em] text-primary inline-flex items-center -rotate-2 drop-shadow-sm bg-white px-3 md:px-5 py-1 lg:py-2 rounded-[2rem] border-2 border-primary/20">
+              <span className="block lg:inline whitespace-nowrap lg:whitespace-normal">¡Vuelve a ser</span>
+              <span className="flex items-center justify-center lg:justify-start gap-2 flex-wrap -mt-1 lg:mt-3">
+                <span className="font-script text-[0.85em] md:text-[0.95em] text-primary relative -rotate-2 drop-shadow-md bg-white px-4 md:px-6 py-1 lg:py-2 rounded-[2rem] border-2 border-primary/20 mx-1 shadow-sm">
                   un niño
                 </span>
                 <span>hoy!</span>
@@ -236,7 +295,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
-              className="text-[17px] sm:text-[18px] text-gray-800 mb-6 sm:mb-8 leading-relaxed font-semibold max-w-[420px] text-justify"
+              className="text-[15px] sm:text-[18px] text-brand-darkgray/90 mb-2 sm:mb-8 lg:mb-3 leading-relaxed font-body font-normal mx-auto lg:mx-0 max-w-[280px] sm:max-w-[480px] lg:max-w-[420px] text-center lg:text-justify px-2"
             >
               Dulces raros, colaboraciones exclusivas y la magia de Dolce Candy en cada caja.
             </motion.p>
@@ -248,59 +307,44 @@ export default function Home() {
             >
               <Link
                 href="/catalogo"
-                className="bg-primary text-white px-8 py-3.5 rounded-full font-bold text-[16px] inline-flex items-center gap-2 hover:bg-[#c9181e] active:scale-95 transition-all shadow-lg shadow-primary/40 group pointer-events-auto"
+                className="bg-brand-red text-white px-8 py-3.5 rounded-full font-bold text-[16px] inline-flex items-center gap-2 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-red/50 active:scale-95 transition-all duration-300 shadow-lg shadow-brand-red/40 group pointer-events-auto"
               >
-                Ver todos los dulces <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                Ver todos los dulces <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </motion.div>
           </motion.div>
         </div>
 
         {/* ── IMAGEN CENTRAL / PERSONAJE - BOTTOM STACK (z-20) ── */}
-        <div className="relative min-h-[85dvh] lg:min-h-0 flex-none lg:absolute lg:bottom-0 lg:right-[5%] z-20 pointer-events-none w-full lg:w-[50%] flex justify-center lg:justify-end items-end opacity-100">
-          {/* NO AnimatePresence para lograr el efecto seco y rápido del flipbook */}
+        <div className="relative min-h-[55dvh] lg:min-h-0 flex-none lg:absolute lg:bottom-0 lg:right-[5%] z-20 pointer-events-none w-full lg:w-[50%] flex justify-center lg:justify-end items-end opacity-100 mt-[-45dvh] lg:mt-0">
           <img
             key={HERO_IMAGES[currentImageIndex]}
             src={getImagePath(HERO_IMAGES[currentImageIndex]) || undefined}
-            className="w-full max-w-[420px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block h-[85dvh] lg:h-[85dvh] drop-shadow-2xl transition-none origin-bottom"
+            className="w-full max-w-[280px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block h-[60dvh] lg:h-[85dvh] drop-shadow-2xl transition-none origin-bottom"
             alt="Dolce Candy Showcase"
           />
         </div>
 
-        {/* Layer 3: Pawsy Foreground Transition Strip EXACT MATCH (z-30) */}
-        <div className="absolute bottom-[-1px] left-0 w-full z-30 pointer-events-none">
+        {/* Layer 3: Pawsy Foreground Transition Strip (Método de Escritorio: Alineación Natural) */}
+        <div className="absolute bottom-[-1px] lg:bottom-[-1px] left-0 w-full lg:left-0 lg:w-full z-30 pointer-events-none">
           <img
             src="https://framerusercontent.com/images/t49nGcvSU3RT2ngSvvjRRajdes4.png"
             alt="Cloud Transition Strip"
-            className="w-full h-[120px] md:h-[222px] object-cover object-bottom"
+            className="w-full h-[160px] md:h-[222px] object-cover object-bottom origin-bottom"
           />
         </div>
 
-        {/* Chocolate asomándose (SVG Chocolate Custom - Ubicado al centro sobre la nube) */}
-        <motion.div
-          animate={{ y: [0, -12, 0], rotate: [-5, 5, -5] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          className="absolute bottom-[2%] lg:bottom-[4%] left-[42%] -translate-x-1/2 w-[220px] lg:w-[320px] z-40 pointer-events-none"
-          style={{
-            filter: "drop-shadow(0px 20px 30px rgba(99,60,50,0.4))"
-          }}
-        >
-          <img
-            src={getImagePath("/images/chocolate.svg")}
-            alt="Chocolate Dolce"
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
+
 
       </section>
 
 
       {/* ── DULCES DESTACADOS ── */}
-      <section className="relative bg-white z-10 py-20 px-6">
+      <section className="relative bg-white z-10 pt-4 lg:pt-4 pb-8 px-6 mt-0 lg:mt-0">
         <div className="max-w-7xl mx-auto">
 
           {/* Encabezado */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
             <div>
               <motion.p
                 initial={{ opacity: 0, y: 8 }}
@@ -315,7 +359,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
-                className="text-4xl md:text-5xl font-black tracking-tight text-gray-900 leading-tight"
+                className="text-4xl md:text-5xl font-display text-brand-darkgray leading-tight"
               >
                 Dulces <span className="text-primary">Destacados</span>
               </motion.h2>
@@ -357,18 +401,18 @@ export default function Home() {
                     </span>
                   )}
                   {/* Precio sobre la imagen */}
-                  <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur text-primary font-black text-lg px-3 py-1 rounded-2xl shadow-sm">
+                  <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur text-primary font-numbers font-semibold text-xl px-3 py-1 rounded-2xl shadow-sm">
                     ${candy.price.toFixed(2)}
                   </span>
                 </div>
 
                 {/* Info */}
                 <div className="p-5 flex flex-col flex-1">
-                  <h3 className="text-lg font-black text-gray-900 mb-1 leading-snug">{candy.name}</h3>
-                  <p className="text-sm text-gray-400 line-clamp-2 flex-1 leading-relaxed">{candy.description}</p>
+                  <h3 className="text-lg font-display text-brand-darkgray mb-1 leading-snug">{candy.name}</h3>
+                  <p className="text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 flex-1 leading-relaxed">{candy.description}</p>
                   <Link
                     href="/catalogo"
-                    className="mt-4 w-full py-2.5 rounded-xl bg-primary/8 text-primary font-bold text-sm hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 group/btn"
+                    className="mt-4 w-full py-2.5 rounded-xl bg-brand-red/8 text-brand-red font-bold text-sm hover:bg-brand-red hover:text-white transition-all flex items-center justify-center gap-2 group/btn"
                   >
                     <ShoppingBasket className="w-4 h-4 transition-transform group-hover/btn:scale-110" />
                     Ver en catálogo
@@ -381,7 +425,7 @@ export default function Home() {
       </section>
 
       {/* ── CANDY LAB ── */}
-      <section id="lab" className="relative bg-[#FDF4F5] z-10 pt-40 min-h-screen">
+      <section id="lab" className="relative bg-[#FDF4F5] z-10 pt-[110px] lg:pt-40 min-h-screen">
         <div className="absolute top-0 left-0 w-full -translate-y-[2px]">
           <CloudDivider color="fill-white" flip />
         </div>
@@ -407,50 +451,67 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-black tracking-tight text-gray-900 mb-20"
+            className="text-4xl md:text-6xl font-display text-brand-darkgray mb-20"
           >
             Nuestras <span className="text-primary">Sedes</span>
           </motion.h2>
 
-          <div className="grid md:grid-cols-2 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
             {[
               {
-                city: "Caracas - Campo Claro",
+                city: "Campo Claro",
+                area: "Caracas",
                 address: "Av. Principal de Campo Claro &, Avenida D, Caracas 1071",
                 schedule: ["Lun-Vier: 8AM - 6PM", "Sab: 10AM - 4PM", "Dom: Cerrado"],
-                color: "bg-brand-cream",
-                image: "/images/locations/campo-claro.png",
-                blob: "60% 40% 30% 70% / 60% 30% 70% 40%"
+                image: "/images/tiendadolce.png",
               },
               {
-                city: "Caracas - El Bosque",
+                city: "El Bosque",
+                area: "Caracas",
                 address: "Av Principal del Bosque, Caracas",
                 schedule: ["Lun-Vier: 9AM - 7PM", "Sáb: 10AM - 6PM", "Dom: 12PM - 6PM"],
-                color: "bg-brand-cream/80",
-                image: "/images/locations/el-bosque.png",
-                blob: "30% 70% 70% 30% / 30% 30% 70% 70%"
+                image: "/images/tiendadolce.png",
               }
             ].map((loc, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ y: 20 }}
+                whileInView={{ y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className={`${loc.color} p-8 sm:p-12 text-left border border-black/5 hover:border-primary/20 transition-all duration-500 group flex flex-col hover:-translate-y-2`}
-                style={{ borderRadius: loc.blob }}
+                className="group rounded-[2.5rem] lg:rounded-[3rem] overflow-hidden flex flex-col lg:flex-row h-full min-h-[320px] relative z-20"
+                style={{ backgroundColor: 'rgb(245, 226, 221)' }}
               >
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
-                  <span className="text-3xl">📍</span>
+                {/* Imagen de la Sede */}
+                <div className="w-full lg:w-2/5 relative overflow-hidden bg-white h-64 lg:h-auto">
+                  <img
+                    src={getImagePath(loc.image)}
+                    alt={loc.city}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  {/* Overlay sutil solo para que no brille demasiado la foto, pero MUY neutro */}
+                  <div className="absolute inset-0 bg-black/5" />
                 </div>
 
-                <h3 className="text-3xl font-black mb-4 text-gray-900">{loc.city}</h3>
-                <p className="text-gray-600 font-bold mb-2 text-lg">{loc.address}</p>
-                <p className="text-primary font-black text-sm uppercase tracking-tighter italic">
-                  {loc.schedule.map((line, i) => (
-                    <span key={i} className="block">{line}</span>
-                  ))}
-                </p>
+                {/* Info de la Sede */}
+                <div className="w-full lg:w-3/5 p-6 sm:p-8 lg:p-10 flex flex-col justify-center text-left">
+                  <div className="flex items-center gap-2 mb-3">
+                    <MapPin className="w-4 h-4 text-brand-darkred" />
+                    <span className="text-[10px] font-display text-brand-darkred uppercase tracking-widest bg-brand-darkred/10 px-2 py-0.5 rounded-full">{loc.area}</span>
+                  </div>
+
+                  <h3 className="text-3xl font-display mb-4 text-brand-darkgray leading-tight">{loc.city}</h3>
+                  <p className="text-brand-darkgray/60 font-body font-normal mb-8 text-sm leading-relaxed">{loc.address}</p>
+
+                  <div className="space-y-2 pt-6 border-t border-brand-brown/10">
+                    <p className="text-[10px] font-display text-brand-darkgray/40 uppercase tracking-widest mb-3">Horarios</p>
+                    {loc.schedule.map((line, i) => (
+                      <div key={i} className="flex items-center justify-between text-[11px] font-body">
+                        <span className="text-brand-darkgray/50 font-normal uppercase">{line.split(': ')[0]}</span>
+                        <span className="text-brand-darkgray/80 font-bold uppercase">{line.split(': ')[1]}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>

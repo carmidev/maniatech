@@ -9,20 +9,27 @@ Crear una experiencia de e-commerce que haga sentir al cliente como un "niño en
 3.  **Cercanía Humana:** Integración de la dueña del negocio como la "curadora" y cara de la tienda.
 4.  **Fluidez y "Vibe":** Movimientos suaves, nubes y transiciones orgánicas inspiradas en Pawsy.
 
-## 🎨 Paleta de Colores y Logo
-El logo es una **Paleta redonda (Lollipop)** con un patrón de espiral (Swirl) en blanco y rojo caramelo.
+## 🎨 Paleta de Colores Oficial
+Sustraída explícitamente del manual de marca:
 
-| Color | Hex | Uso |
-| :--- | :--- | :--- |
-| **Rojo Caramelo** | `#EE3123` | Logo principal, botones de acción, acentos vibrantes. |
-| **Blanco Dulce** | `#FFFFFF` | Espiral del logo, fondos limpios, nubes. |
-| **Azul Pawsy** | `#B9C2F5` | Fondos secundarios para dar suavidad y alegría. |
-| **Rosa Chicle** | `#FFD1DC` | Acentos para tarjetas de productos "Cute" o dulces suaves. |
+| Color | Nombre | Hex | RGB |
+| :--- | :--- | :--- | :--- |
+| <div style="width:20px;height:20px;background:#bd2926;border-radius:4px;"></div> | **Rojo - Logo** | `#bd2926` | R 189, G 41, B 38 |
+| <div style="width:20px;height:20px;background:#e81e25;border-radius:4px;"></div> | **Rojo - Principal** | `#e81e25` | R 232, G 30, B 37 |
+| <div style="width:20px;height:20px;background:#ea9000;border-radius:4px;"></div> | **Ocre** | `#ea9000` | R 234, G 144, B 0 |
+| <div style="width:20px;height:20px;background:#633c32;border-radius:4px;"></div> | **Marrón Osc.** | `#633c32` | R 99, G 60, B 50 |
+| <div style="width:20px;height:20px;background:#9b6a59;border-radius:4px;"></div> | **Marrón Claro** | `#9b6a59` | R 155, G 106, B 89 |
+| <div style="width:20px;height:20px;background:#ea6060;border-radius:4px;"></div> | **Coral** | `#ea6060` | R 234, G 96, B 96 |
+| <div style="width:20px;height:20px;background:#a50404;border-radius:4px;"></div> | **Rojo oscuro** | `#a50404` | R 165, G 4, B 4 |
+| <div style="width:20px;height:20px;background:#eab8ac;border-radius:4px;"></div> | **Crema** | `#eab8ac` | R 234, G 184, B 172 |
+| <div style="width:20px;height:20px;background:#86ccef;border-radius:4px;"></div> | **Azul claro** | `#86ccef` | R 134, G 204, B 239 |
+| <div style="width:20px;height:20px;background:#231f20;border-radius:4px;"></div> | **Gris Oscuro** | `#231f20` | R 35, G 31, B 32 |
 
-## ✍️ Tipografía (Crítico)
-- **Logotipo/Énfasis:** `Pacifico` o `Lobster Two`. Tipografías de estilo Script/Cursiva, gruesas y juguetonas que imitan la fluidez del caramelo y el logo.
-- **Títulos de Sección:** `Plus Jakarta Sans` (ExtraBold). Geométrica y moderna para contraste.
-- **Cuerpo:** `Inter` (Medium). Legibilidad máxima para descripciones de productos exóticos.
+## ✍️ Tipografía (Crítico - Manual Oficial)
+- **Título Principal:** `Cocogoose` (Regular) | Tracking (-50pt) | Leading (=size).
+- **Títulos:** `Cocogoose` (DemiBold) | Tracking (0pt) | Leading (Auto).
+- **Texto / Cuerpo:** `Inter Display` (Regular) | Tracking (0pt) | Leading (Auto).
+- **Números / Precios:** `Outfit` (SemiBold) | Tracking (0pt) | Leading (Auto).
 
 ## ☁️ Inspiración Visual (Pawsy)
 - **Divisores de Nube:** Separación de secciones usando formas onduladas orgánicas.

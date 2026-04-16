@@ -32,7 +32,7 @@ export const FloatingCart = ({ onClick }: { onClick: () => void }) => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={onClick}
-          className="fixed bottom-8 right-8 z-[50] w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center border-4 border-white group"
+          className="fixed bottom-8 right-8 z-[50] w-16 h-16 bg-brand-red text-white rounded-full shadow-2xl flex items-center justify-center border-4 border-white group"
         >
           <div className="relative">
             <ShoppingBasket className="w-7 h-7" />
@@ -49,7 +49,7 @@ export const FloatingCart = ({ onClick }: { onClick: () => void }) => {
           </div>
 
           {/* Glow effect */}
-          <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping -z-10 group-hover:hidden" />
+          <div className="absolute inset-0 rounded-full bg-brand-red/20 animate-ping -z-10 group-hover:hidden" />
         </motion.button>
       )}
     </AnimatePresence>

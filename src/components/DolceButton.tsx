@@ -17,11 +17,11 @@ const dolceButtonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-gradient-to-br from-[#E31B23] via-[#E31B23] to-[#B91419] text-white shadow-xl shadow-[#E31B23]/40 before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/30 before:via-white/10 before:to-transparent before:opacity-0 before:transition-opacity hover:shadow-2xl hover:shadow-[#E31B23]/50 hover:before:opacity-100 active:shadow-lg",
+          "bg-brand-red text-white shadow-xl shadow-brand-red/40 before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/30 before:via-white/10 before:to-transparent before:opacity-0 before:transition-opacity hover:shadow-2xl hover:shadow-brand-red/50 hover:before:opacity-100 active:shadow-lg",
         secondary:
-          "border-[3px] border-[#E31B23] bg-white text-[#E31B23] shadow-lg shadow-[#E31B23]/10 backdrop-blur-sm hover:bg-[#E31B23] hover:text-white hover:shadow-xl hover:shadow-[#E31B23]/40 active:shadow-md",
+          "border-[3px] border-brand-red bg-white text-brand-red shadow-lg shadow-brand-red/10 backdrop-blur-sm hover:bg-brand-red hover:text-white hover:shadow-xl hover:shadow-brand-red/40 active:shadow-md",
         ghost:
-          "text-[#E31B23] backdrop-blur-sm hover:bg-[#E31B23]/10 hover:shadow-lg hover:shadow-[#E31B23]/20 active:bg-[#E31B23]/20",
+          "text-brand-red backdrop-blur-sm hover:bg-brand-red/10 hover:shadow-lg hover:shadow-brand-red/20 active:bg-brand-red/20",
       },
       size: {
         default: "h-14 px-8 py-4 rounded-full",

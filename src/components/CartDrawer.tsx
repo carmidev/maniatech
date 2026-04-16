@@ -30,7 +30,7 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
             <div className="p-6 border-b flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <ShoppingBasket className="text-primary" />
-                <h2 className="text-xl font-bold">Tu Cesta ({totalItems})</h2>
+                <h2 className="text-xl font-display text-brand-darkgray uppercase">Tu Cesta ({totalItems})</h2>
               </div>
               <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
                 <X className="w-6 h-6" />
@@ -46,7 +46,7 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                   <p className="text-gray-500 mb-6">Parece que aún no has elegido nada dulce.</p>
                   <button 
                     onClick={onClose}
-                    className="bg-primary text-white px-8 py-3 rounded-full font-bold shadow-lg"
+                    className="bg-brand-red text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-brand-red/20"
                   >
                     Ver Dulces
                   </button>
@@ -58,8 +58,8 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                       <img src={getImagePath(item.images?.[0] || (item as any).image) || undefined} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-bold text-gray-800">{item.name}</h4>
-                      <p className="text-primary font-black">{item.price.toFixed(2)} €</p>
+                      <h4 className="font-display text-brand-darkgray">{item.name}</h4>
+                      <p className="text-primary font-numbers font-semibold">{item.price.toFixed(2)} €</p>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center gap-3 bg-gray-100 rounded-full px-2 py-1">
                           <button 
@@ -98,7 +98,7 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                 </div>
                 <button 
                   onClick={onCheckout}
-                  className="w-full bg-primary text-white py-4 rounded-full font-bold text-lg shadow-lg shadow-primary/30 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                  className="w-full bg-brand-red text-white py-4 rounded-full font-bold text-lg shadow-lg shadow-brand-red/30 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-transform"
                 >
                   Continuar al Pago <ArrowRight className="w-5 h-5" />
                 </button>

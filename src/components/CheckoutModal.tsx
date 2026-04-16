@@ -59,8 +59,8 @@ export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: (
               
               <div className="space-y-4 relative z-10">
                 <div className="bg-white/10 p-5 rounded-3xl backdrop-blur-md border border-white/20">
-                  <p className="text-xs text-white/60 mb-1 uppercase tracking-widest font-black">Total a pagar</p>
-                  <p className="text-4xl font-black">{totalPrice.toFixed(2)} €</p>
+                  <p className="text-[10px] text-white/60 mb-1 uppercase tracking-widest font-body font-bold">Total a pagar</p>
+                  <p className="text-4xl font-numbers font-semibold">{totalPrice.toFixed(2)} €</p>
                   <p className="text-[10px] text-white/40 mt-2 leading-tight">Monto sujeto a tasa oficial BCV del día.</p>
                 </div>
                 
@@ -94,8 +94,8 @@ export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: (
                 {step === 1 && (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
                     <div className="space-y-1">
-                      <h3 className="text-2xl font-black text-slate-800">¿Cómo lo recibes?</h3>
-                      <p className="text-slate-400 text-sm">Selecciona tu método de entrega preferido.</p>
+                      <h3 className="text-2xl font-display text-brand-darkgray">¿Cómo lo recibes?</h3>
+                      <p className="text-brand-darkgray/60 font-body font-normal text-sm">Selecciona tu método de entrega preferido.</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -138,7 +138,7 @@ export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: (
                     <button 
                       onClick={nextStep}
                       disabled={deliveryMethod === 'delivery' && address.length < 10}
-                      className="w-full bg-primary text-white py-4 rounded-full font-black flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100"
+                      className="w-full bg-brand-red text-white py-4 rounded-full font-black flex items-center justify-center gap-2 shadow-lg shadow-brand-red/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100"
                     >
                       Continuar al Pago <ChevronRight className="w-5 h-5" />
                     </button>
@@ -185,7 +185,7 @@ export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: (
                       <button onClick={prevStep} className="flex-1 py-4 font-black text-slate-400 hover:text-slate-600 transition-colors">Atrás</button>
                       <button 
                         onClick={nextStep}
-                        className="flex-[2] bg-primary text-white py-4 rounded-full font-black flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        className="flex-[2] bg-brand-red text-white py-4 rounded-full font-black flex items-center justify-center gap-2 shadow-lg shadow-brand-red/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
                       >
                         Siguiente <ChevronRight className="w-5 h-5" />
                       </button>
@@ -268,7 +268,7 @@ export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: (
                       <button onClick={prevStep} className="flex-1 py-4 font-black text-slate-400 hover:text-slate-600 transition-colors">Atrás</button>
                       <button 
                         onClick={nextStep}
-                        className="flex-[2] bg-primary text-white py-4 rounded-full font-black flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        className="flex-[2] bg-brand-red text-white py-4 rounded-full font-black flex items-center justify-center gap-2 shadow-lg shadow-brand-red/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
                       >
                         Confirmar Pedido <CheckCircle className="w-5 h-5" />
                       </button>
@@ -286,7 +286,7 @@ export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: (
                     >
                       <CheckCircle className="w-16 h-16 text-green-500" />
                     </motion.div>
-                    <h3 className="text-3xl font-black mb-3 text-slate-800 leading-tight">¡Pedido Recibido! ✨</h3>
+                    <h3 className="text-3xl font-display mb-3 text-brand-darkgray leading-tight">¡Pedido Recibido! ✨</h3>
                     <p className="text-slate-500 mb-10 max-w-[280px] text-sm leading-relaxed">
                       {deliveryMethod === 'delivery' 
                         ? "Estamos preparando tus dulces. Pulsa abajo para enviar el reporte de pago por WhatsApp ."

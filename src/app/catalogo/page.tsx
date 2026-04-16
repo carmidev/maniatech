@@ -68,7 +68,7 @@ export default function CatalogoPage() {
           <div className="flex items-center gap-2 md:gap-3">
             <Link
               href="/"
-              className="bg-primary text-white px-5 py-2.5 rounded-full font-black text-sm hover:bg-primary/90 active:scale-95 transition-all shadow-md shadow-primary/30 hidden md:flex items-center gap-2"
+              className="bg-brand-red text-white px-5 py-2.5 rounded-full font-black text-sm hover:scale-105 active:scale-95 transition-all shadow-md shadow-brand-red/30 hidden md:flex items-center gap-2"
             >
               Volver al Inicio <ArrowRight className="w-4 h-4 stroke-[3]" />
             </Link>
@@ -78,7 +78,7 @@ export default function CatalogoPage() {
             >
               <ShoppingBasket className="w-5 h-5 text-gray-700" />
               {totalItems > 0 && (
-                <span className="absolute top-0 right-0 bg-primary text-white text-[10px] font-black w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">
+                <span className="absolute top-0 right-0 bg-brand-red text-white text-[10px] font-black w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">
                   {totalItems}
                 </span>
               )}
@@ -122,7 +122,7 @@ export default function CatalogoPage() {
               <Link
                 href="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-primary text-white w-full py-4 rounded-full font-black text-lg hover:bg-primary/90 active:scale-95 transition-all text-center flex items-center justify-center gap-2 shadow-md"
+                className="bg-brand-red text-white w-full py-4 rounded-full font-black text-lg hover:bg-brand-red/90 active:scale-95 transition-all text-center flex items-center justify-center gap-2 shadow-md"
               >
                 Volver al Inicio <ArrowRight className="w-5 h-5 stroke-[3]" />
               </Link>
@@ -142,11 +142,11 @@ export default function CatalogoPage() {
                 initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-4xl md:text-5xl font-black tracking-tight text-slate-900"
+                className="text-4xl md:text-5xl font-display-main font-bold tracking-main text-brand-darkgray"
               >
                 Colección de <span className="text-primary text-glow-sm">Dulces Exclusivos</span>
               </motion.h1>
-              <p className="text-slate-500 mt-3 max-w-xl text-sm md:text-base leading-relaxed">
+              <p className="text-brand-darkgray/70 mt-3 max-w-xl text-sm md:text-base leading-relaxed font-body font-normal">
                 Selección única de dulces importados directo de USA. Cada semana nuevos tesoros azucarados.
               </p>
             </div>
@@ -169,7 +169,7 @@ export default function CatalogoPage() {
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Categorías</h3>
+                <h3 className="text-sm font-display text-brand-darkgray uppercase tracking-widest">Categorías</h3>
               </div>
               <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">
                 {filteredCandies.length} productos encontrados
@@ -190,8 +190,8 @@ export default function CatalogoPage() {
                   key={cat.key}
                   onClick={() => setActiveCategory(cat.key)}
                   className={`flex items-center gap-2.5 px-6 py-3 rounded-full border shrink-0 transition-all ${activeCategory === cat.key
-                      ? "bg-primary border-primary text-white shadow-xl shadow-primary/20 scale-105"
-                      : "bg-white border-slate-100 text-slate-700 hover:border-primary/30"
+                      ? "bg-brand-red border-brand-red text-white shadow-xl shadow-brand-red/20 scale-105"
+                      : "bg-white border-slate-100 text-slate-700 hover:border-brand-red/30"
                     }`}
                 >
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center ${activeCategory === cat.key ? "bg-white/20" : cat.color}`}>

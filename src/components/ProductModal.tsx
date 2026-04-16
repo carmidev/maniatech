@@ -85,18 +85,18 @@ export const ProductModal = ({ candy, isOpen, onClose }: ProductModalProps) => {
             <div className="md:w-1/2 p-6 md:p-10 bg-white flex flex-col overflow-hidden">
               <div className="flex-1 overflow-y-auto no-scrollbar">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="bg-primary/10 text-primary px-3 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest">
+                  <span className="bg-primary/10 text-primary px-3 py-0.5 rounded-full text-[9px] font-display uppercase tracking-widest">
                     {candy.category === "tendencias" ? "🔥 Los más buscados" : candy.category}
                   </span>
                   <span className="text-slate-300">|</span>
-                  <span className="text-primary font-black text-xl">{candy.price.toFixed(2)}€</span>
+                  <span className="text-primary font-numbers font-semibold text-2xl">{candy.price.toFixed(2)}€</span>
                 </div>
                 
-                <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight mb-3">
+                <h2 className="text-3xl md:text-4xl font-display text-brand-darkgray leading-tight mb-3">
                   {candy.name}
                 </h2>
                 
-                <p className="text-slate-500 text-base leading-relaxed italic mb-6">
+                <p className="text-brand-darkgray/70 text-base font-body font-normal leading-relaxed mb-6">
                   {candy.description}
                 </p>
 

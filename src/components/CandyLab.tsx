@@ -12,29 +12,59 @@ const LAB_VIDEOS = [
 
 export const CandyLab = () => {
   return (
-    <div className="py-24 bg-transparent overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-16">
-          <div className="max-w-xl text-center md:text-left">
+    <div className="pt-0 pb-20 bg-transparent overflow-visible relative">
+      {/* Decoración: Chupeta 2 (Oculta en móvil para mudarse a la tarjeta de abajo) */}
+      <div className="hidden lg:block absolute lg:top-[0%] lg:right-[2%] pointer-events-none z-0">
+        <motion.div
+          animate={{ y: [0, 20, 0], rotate: [0, -5, 5, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="relative"
+        >
+          <img 
+            src={getImagePath("/images/chupeta3.png")} 
+            alt="Decoración Chupeta" 
+            className="w-48 lg:w-72 h-auto drop-shadow-2xl opacity-100"
+          />
+        </motion.div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-30">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-8 mb-16">
+          <div className="max-w-xl text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-accent/30 text-primary-foreground px-4 py-2 rounded-full mb-4">
               <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm font-bold uppercase tracking-wider text-primary">El Laboratorio de Dolce</span>
+              <span className="text-xs lg:text-sm font-bold uppercase tracking-wider text-primary">El Laboratorio de Dolce</span>
             </div>
-            <h2 className="text-5xl md:text-6xl font-black mb-6">
-              ¿Quieres ver <span className="text-primary italic font-script">cómo saben</span>?
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display text-brand-darkgray mb-6 leading-[1.1]">
+              ¿Quieres ver <br />
+              <span className="text-primary italic font-script">cómo saben</span>?
             </h2>
-            <p className="text-gray-500 text-lg">
-              Nuestra fundadora prueba cada dulce raro en Instagram. Mira sus reacciones reales antes de decidirte por tu próximo antojo.
+            <p className="text-brand-darkgray/80 text-base lg:text-lg font-body font-normal">
+              Nuestra fundadora prueba cada dulce raro en Instagram. Mira sus reacciones reales antes de decidirte.
             </p>
           </div>
           
-          <div className="flex flex-col items-center gap-4 bg-secondary/5 p-8 rounded-5xl border-2 border-dashed border-secondary/30">
+          <div className="relative w-full sm:w-auto flex flex-col items-center gap-4 bg-secondary/5 p-6 lg:p-8 rounded-[2rem] lg:rounded-5xl border-2 border-dashed border-secondary/30">
+             {/* Chupeta Móvil (Mudada aquí - Solo visible en móvil) */}
+             <div className="absolute -top-7 -right-16 lg:hidden pointer-events-none z-20">
+               <motion.div
+                 animate={{ y: [0, 10, 0], rotate: [0, -5, 5, 0] }}
+                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+               >
+                 <img 
+                   src={getImagePath("/images/chupeta3.png")} 
+                   alt="Decoración Chupeta" 
+                   className="w-60 h-auto drop-shadow-xl"
+                 />
+               </motion.div>
+             </div>
+
              <Instagram className="w-12 h-12 text-primary mb-2" />
-             <p className="font-bold text-gray-800">Síguenos para los lives</p>
+             <p className="font-body font-normal text-brand-darkgray">Síguenos para los lives</p>
              <a 
                href="https://www.instagram.com/dolce.candy.boutique/" 
                target="_blank" 
-               className="bg-primary text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
+               className="bg-brand-red text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-brand-red/20 hover:scale-105 transition-transform"
              >
                @dolce.candy.boutique
              </a>
@@ -42,7 +72,7 @@ export const CandyLab = () => {
         </div>
 
         {/* Reels-style Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {LAB_VIDEOS.map((video, idx) => (
             <motion.div
               key={video.id}
@@ -74,7 +104,7 @@ export const CandyLab = () => {
                     <Star className="w-3 h-3 fill-white" /> {video.likes}
                   </div>
                 </div>
-                <h3 className="text-xl font-bold text-white leading-tight group-hover:text-accent transition-colors">
+                <h3 className="text-xl font-display text-white leading-tight group-hover:text-accent transition-colors">
                   {video.title}
                 </h3>
               </div>
@@ -92,9 +122,9 @@ export const CandyLab = () => {
         </div>
 
         {/* CTA Bottom */}
-        <div className="mt-20 text-center">
-           <p className="text-gray-400 font-bold uppercase tracking-widest text-sm mb-4">Más de 50 dulces probados en vivo</p>
-           <div className="flex justify-center gap-4">
+        <div className="mt-16 lg:mt-20 text-center">
+           <p className="text-brand-darkgray/60 font-body font-normal uppercase tracking-widest text-[10px] lg:text-xs mb-4">Más de 50 dulces probados en vivo</p>
+           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 lg:gap-4">
               <div className="flex -space-x-4">
                 {[...Array(5)].map((_, i) => (
                   <div key={i} className="w-12 h-12 rounded-full border-4 border-white bg-gray-200 overflow-hidden">

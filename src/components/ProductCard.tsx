@@ -75,17 +75,17 @@ export const ProductCard = ({
 
           {/* Precio Flotante */}
           <div className="absolute top-5 right-5 bg-white/95 backdrop-blur px-3 py-1 rounded-2xl shadow-md border border-white/50">
-            <span className="text-primary font-black text-lg">${candy.price.toFixed(2)}</span>
+            <span className="text-primary font-numbers font-semibold text-xl">${candy.price.toFixed(2)}</span>
           </div>
         </div>
 
         {/* Info */}
         <div className="p-7 flex flex-col flex-1 gap-2 bg-white">
-          <h3 className="text-xl font-black text-slate-900 leading-tight group-hover:text-primary transition-colors">
+          <h3 className="text-xl font-display text-brand-darkgray leading-tight group-hover:text-primary transition-colors">
             {candy.name}
           </h3>
-          <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1 italic font-medium">
-            "{candy.description}"
+          <p className="text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 leading-relaxed flex-1">
+            {candy.description}
           </p>
           
           <motion.button
@@ -94,7 +94,7 @@ export const ProductCard = ({
             className={`mt-4 w-full py-4 rounded-[2rem] font-black text-sm transition-all duration-300 flex items-center justify-center gap-3 shadow-lg ${
               isAdded 
                 ? "bg-green-500 text-white shadow-green-500/30" 
-                : "bg-primary text-white hover:bg-primary/90 shadow-primary/20"
+                : "bg-brand-red text-white hover:opacity-90 shadow-brand-red/20"
             }`}
           >
             <AnimatePresence mode="wait">

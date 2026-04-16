@@ -10,25 +10,25 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#EE3123", // Rojo Principal
+          DEFAULT: "#e81e25", // Rojo Principal (Vibrant)
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#F7941D", // Ocre
+          DEFAULT: "#ea9000", // Ocre
           foreground: "#FFFFFF",
         },
         accent: {
-          DEFAULT: "#ED5565", // Coral
+          DEFAULT: "#ea6060", // Coral
           foreground: "#1F2937",
         },
         brand: {
-          red: "#ED1C24",
-          darkred: "#B10D1F",
-          brown: "#603813",
-          lightbrown: "#C49A6C",
-          cream: "#EDCFC3",
-          blue: "#93CDEA",
-          darkgray: "#212121",
+          red: "#bd2926", // Rojo-Logo (Darker)
+          darkred: "#a50404", // Rojo oscuro
+          brown: "#633c32", // Marrón Osc.
+          lightbrown: "#9b6a59", // Marrón Claro
+          cream: "#eab8ac", // Crema
+          blue: "#86ccef", // Azul claro
+          darkgray: "#231f20", // Gris Oscuro
         }
       },
       fontFamily: {
