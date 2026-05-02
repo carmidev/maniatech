@@ -36,7 +36,7 @@ export const Locations = () => {
               schedule: "Lun - Dom: 10:00 AM - 8:00 PM",
               color: "text-primary",
               bgColor: "bg-primary",
-              image: "/images/locations/campo-claro.png",
+              image: "/images/locations/dc-campoclaro.jpeg",
               clip: "polygon(0% 10%, 10% 0%, 90% 5%, 100% 15%, 95% 90%, 85% 100%, 10% 95%, 0% 85%)",
             },
             { 
@@ -47,7 +47,7 @@ export const Locations = () => {
               schedule: "Lun - Dom: 11:00 AM - 9:00 PM",
               color: "text-blue-500",
               bgColor: "bg-blue-500",
-              image: "/images/locations/el-bosque.png",
+              image: "/images/locations/dc-elbosque.jpeg",
               clip: "polygon(5% 0%, 95% 10%, 100% 85%, 90% 100%, 10% 90%, 0% 75%, 0% 15%)",
             }
           ].map((loc, idx) => (

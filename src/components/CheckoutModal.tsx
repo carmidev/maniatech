@@ -2,8 +2,11 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle, Upload, CreditCard, Copy, ChevronRight, Truck, Store, Wallet, MapPin, Smartphone, MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
+import { AuthModal } from "./AuthModal";
 
 type DeliveryMethod = "delivery" | "pickup";
 type PaymentMethod = "pm" | "card";
@@ -11,12 +14,15 @@ type PaymentMethod = "pm" | "card";
 export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
   const [step, setStep] = useState(1);
   const { totalPrice, clearCart } = useCart();
+  const { user } = useAuth();
+  const [showAuth, setShowAuth] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   
   // Selection states
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("delivery");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("pm");
   const [address, setAddress] = useState("");
+  const [isCheckingProfile, setIsCheckingProfile] = useState(false);
 
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -33,9 +39,35 @@ export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: (
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => prev - 1);
 
+  const handleStep1Next = async () => {
+    if (!user) {
+      setShowAuth(true);
+    } else {
+      setIsCheckingProfile(true);
+      try {
+        const { data, error } = await supabase
+          .from("customers")
+          .select("id")
+          .eq("id", user.id)
+          .single();
+
+        if (error || !data) {
+          setShowAuth(true); // User is logged in but has no profile, show AuthModal to complete it
+        } else {
+          nextStep();
+        }
+      } catch (err) {
+        console.error("Error checking profile:", err);
+      } finally {
+        setIsCheckingProfile(false);
+      }
+    }
+  };
+
   return (
-    <AnimatePresence>
-      {isOpen && (
+    <Fragment>
+      <AnimatePresence>
+      {isOpen && !showAuth && (
         <div className="fixed inset-0 flex items-center justify-center z-[100] p-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -136,11 +168,13 @@ export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: (
                     )}
 
                     <button 
-                      onClick={nextStep}
-                      disabled={deliveryMethod === 'delivery' && address.length < 10}
+                      onClick={handleStep1Next}
+                      disabled={(deliveryMethod === 'delivery' && address.length < 10) || isCheckingProfile}
                       className="w-full bg-brand-red text-white py-4 rounded-full font-black flex items-center justify-center gap-2 shadow-lg shadow-brand-red/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100"
                     >
-                      Continuar al Pago <ChevronRight className="w-5 h-5" />
+                      {isCheckingProfile ? "Cargando..." : (
+                        <>Continuar al Pago <ChevronRight className="w-5 h-5" /></>
+                      )}
                     </button>
                   </motion.div>
                 )}
@@ -314,5 +348,12 @@ export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: (
         </div>
       )}
     </AnimatePresence>
+    
+    <AuthModal 
+      isOpen={showAuth} 
+      onClose={() => setShowAuth(false)} 
+      onSuccess={() => { setShowAuth(false); nextStep(); }} 
+    />
+  </Fragment>
   );
 };

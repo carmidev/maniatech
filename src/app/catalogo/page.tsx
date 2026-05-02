@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LollipopLogo } from "@/components/LollipopLogo";
@@ -15,16 +15,22 @@ import { Footer } from "@/components/Footer";
 import { getImagePath } from "@/utils/imagePath";
 import { DolceButton } from "@/components/DolceButton";
 import { FloatingCart } from "@/components/FloatingCart";
-import { CheckoutModal } from "@/components/CheckoutModal";
+import { useRouter } from "next/navigation";
 
 export default function CatalogoPage() {
+  const router = useRouter();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const handleOpenCart = () => {
+    setIsCartOpen(true);
+  };
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Candy | null>(null);
   const { totalItems } = useCart();
+
+  // Local storage logic moved to checkout page
 
   const categories = [
     { id: "all", label: "Todos", icon: "⭐" },
@@ -48,7 +54,7 @@ export default function CatalogoPage() {
 
       {/* ── NAVBAR PÍLDORA FLOTANTE (REDUCCIÓN EXTREMA PREVENCIÓN OVERFLOW) ── */}
       <div className="fixed top-4 inset-x-0 z-[99] flex justify-center pointer-events-none px-3 sm:px-6 lg:px-0">
-        <nav className="pointer-events-auto w-full lg:w-max lg:min-w-[800px] max-w-4xl bg-white/95 backdrop-blur-xl rounded-full shadow-xl shadow-black/10 h-[58px] lg:h-16 flex items-center justify-between border border-white/60 px-3 sm:px-5 lg:px-8">
+        <nav className="pointer-events-auto w-full lg:w-max lg:min-w-[740px] max-w-4xl bg-white/95 backdrop-blur-xl rounded-full shadow-xl shadow-black/10 h-[58px] lg:h-20 flex items-center justify-between border border-white/60 px-3 sm:px-5 lg:px-8">
           <Link href="/" className="flex items-center gap-1 md:gap-2 cursor-pointer p-0 relative shrink-0">
             {/* Logo Móvil - Escalado para contrarrestar el padding transparente de la imagen */}
             <div className="relative lg:hidden w-[48px] h-[48px] flex items-center justify-center shrink-0 -ml-1">
@@ -60,11 +66,14 @@ export default function CatalogoPage() {
             </div>
 
             {/* Logo Desktop */}
-            <div className="hidden lg:flex items-center gap-1 lg:gap-2">
-              <div className="relative pointer-events-none w-[46px] h-[46px] flex items-center justify-center shrink-0 -mr-2 -ml-2">
-                <img src={getImagePath("/images/espiral-dolce.png")} alt="Dolce Isotipo" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] max-w-none object-contain drop-shadow-sm pointer-events-none" />
+            <div className="hidden lg:flex items-center shrink-0">
+              <div className="relative w-[52px] h-[52px] flex items-center justify-center -ml-3">
+                <img 
+                  src={getImagePath("/images/espiraldolce-con-nombre.png")} 
+                  alt="Dolce Candy Oficial" 
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-[3px] w-[175px] h-[175px] max-w-none object-contain pointer-events-none drop-shadow-sm" 
+                />
               </div>
-              <img src={getImagePath("/images/letras-dolce-candy-blanco.png")} alt="Dolce Candy" className="h-[34px] object-contain mt-1 invert opacity-90 pointer-events-none" />
             </div>
           </Link>
 
@@ -72,6 +81,9 @@ export default function CatalogoPage() {
             <div className="hidden lg:flex items-center gap-7 font-display text-sm tracking-wide">
               <Link href="/catalogo" className="text-primary">
                 Catálogo
+              </Link>
+              <Link href="/#lab" className="text-gray-600 hover:text-primary transition-colors">
+                Candy Lab
               </Link>
               <Link href="/#ubicaciones" className="text-gray-600 hover:text-primary transition-colors">
                 Ubicaciones
@@ -81,19 +93,19 @@ export default function CatalogoPage() {
             <div className="flex items-center gap-0.5 sm:gap-2 lg:gap-3">
               <Link
                 href="/"
-                className="flex bg-brand-red text-white px-2.5 sm:px-4 lg:px-5 py-1.5 lg:py-2.5 rounded-full font-black text-[9px] lg:text-sm hover:scale-105 transition-all shadow-md shadow-brand-red/30 items-center gap-0.5 sm:gap-1 shrink-0"
+                className="flex bg-brand-red text-white px-4 sm:px-4 lg:px-5 py-2 lg:py-2.5 rounded-full font-black text-[11px] lg:text-sm hover:scale-105 transition-all shadow-md shadow-brand-red/30 items-center gap-1 sm:gap-1 shrink-0"
               >
                 <span className="hidden lg:inline">Volver al Inicio</span>
                 <span className="lg:hidden uppercase tracking-tighter">Inicio</span>
-                <ArrowRight className="w-2.5 h-2.5 lg:w-4 lg:h-4 stroke-[3]" />
+                <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4 stroke-[3]" />
               </Link>
               <button
-                onClick={() => setIsCartOpen(true)}
+                onClick={handleOpenCart}
                 className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0"
               >
-                <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-gray-700" />
+                <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 text-gray-700" />
                 {totalItems > 0 && (
-                  <span className="absolute top-0 right-0 bg-primary text-white text-[9px] lg:text-[10px] font-black w-3.5 h-3.5 lg:w-4 lg:h-4 flex items-center justify-center rounded-full border-2 border-white">
+                  <span className="absolute top-0 right-0 bg-primary text-white text-[9px] lg:text-[12px] font-black w-3.5 h-3.5 lg:w-5 lg:h-5 flex items-center justify-center rounded-full border-2 border-white">
                     {totalItems}
                   </span>
                 )}
@@ -126,6 +138,13 @@ export default function CatalogoPage() {
                   className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
                 >
                   Inicio
+                </Link>
+                <Link 
+                  href="/#lab" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
+                >
+                  Candy Lab
                 </Link>
                 <Link 
                   href="/#ubicaciones" 
@@ -240,15 +259,10 @@ export default function CatalogoPage() {
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
-        onCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
+        onCheckout={() => { setIsCartOpen(false); router.push('/checkout'); }}
       />
 
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-      />
-
-      <FloatingCart onClick={() => setIsCartOpen(true)} />
+      <FloatingCart onClick={handleOpenCart} />
     </div>
   );
 }

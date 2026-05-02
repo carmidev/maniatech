@@ -15,6 +15,7 @@ import { CANDIES, Candy } from "@/app/mock-data";
 import { getImagePath } from "@/utils/imagePath";
 import { ProductModal } from "@/components/ProductModal";
 import { FloatingCart } from "@/components/FloatingCart";
+import { useRouter } from "next/navigation";
 
 /* Constantes de badge para los destacados */
 const BADGE_STYLES: Record<string, string> = {
@@ -42,6 +43,7 @@ const HERO_IMAGES = [
 const FEATURED_CANDIES = CANDIES.filter((c) => c.badge).slice(0, 3);
 
 export default function Home() {
+  const router = useRouter();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Candy | null>(null);
@@ -55,6 +57,9 @@ export default function Home() {
     }, 350); // Cambia cada 350 milisegundos
     return () => clearInterval(timer);
   }, []);
+
+  // Local storage logic moved to checkout page
+
   const { totalItems } = useCart();
 
   return (
@@ -66,7 +71,7 @@ export default function Home() {
 
       {/* ── NAVBAR PÍLDORA FLOTANTE (REDUCCIÓN EXTREMA PREVENCIÓN OVERFLOW) ── */}
       <div className="fixed top-4 inset-x-0 z-[99] flex justify-center pointer-events-none px-3 sm:px-6 lg:px-0">
-        <nav className="pointer-events-auto w-full lg:w-max lg:min-w-[800px] max-w-4xl bg-white/95 backdrop-blur-xl rounded-full shadow-xl shadow-black/10 h-[58px] lg:h-16 flex items-center justify-between border border-white/60 px-3 sm:px-5 lg:px-8">
+        <nav className="pointer-events-auto w-full lg:w-max lg:min-w-[740px] max-w-4xl bg-white/95 backdrop-blur-xl rounded-full shadow-xl shadow-black/10 h-[58px] lg:h-20 flex items-center justify-between border border-white/60 px-3 sm:px-5 lg:px-8">
 
           <button
             type="button"
@@ -85,11 +90,14 @@ export default function Home() {
             </div>
 
             {/* Logo Desktop */}
-            <div className="hidden lg:flex items-center gap-1 lg:gap-2">
-              <div className="relative pointer-events-none w-[46px] h-[46px] flex items-center justify-center shrink-0 -mr-2 -ml-2">
-                <img src={getImagePath("/images/espiral-dolce.png")} alt="Dolce Isotipo" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] max-w-none object-contain drop-shadow-sm pointer-events-none" />
+            <div className="hidden lg:flex items-center shrink-0">
+              <div className="relative w-[52px] h-[52px] flex items-center justify-center -ml-3">
+                <img
+                  src={getImagePath("/images/espiraldolce-con-nombre.png")}
+                  alt="Dolce Candy Oficial"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-[3px] w-[175px] h-[175px] max-w-none object-contain pointer-events-none drop-shadow-sm"
+                />
               </div>
-              <img src={getImagePath("/images/letras-dolce-candy-blanco.png")} alt="Dolce Candy" className="h-[34px] object-contain mt-1 invert opacity-90 pointer-events-none" />
             </div>
           </button>
 
@@ -116,9 +124,9 @@ export default function Home() {
                 onClick={() => setIsCartOpen(true)}
                 className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0"
               >
-                <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-gray-700" />
+                <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 text-gray-700" />
                 {totalItems > 0 && (
-                  <span className="absolute top-0 right-0 bg-primary text-white text-[9px] lg:text-[10px] font-black w-3.5 h-3.5 lg:w-4 lg:h-4 flex items-center justify-center rounded-full border-2 border-white">
+                  <span className="absolute top-0 right-0 bg-primary text-white text-[9px] lg:text-[12px] font-black w-3.5 h-3.5 lg:w-5 lg:h-5 flex items-center justify-center rounded-full border-2 border-white">
                     {totalItems}
                   </span>
                 )}
@@ -507,14 +515,14 @@ export default function Home() {
                 area: "Caracas",
                 address: "Av. Principal de Campo Claro &, Avenida D, Caracas 1071",
                 schedule: ["Lun-Vier: 8AM - 6PM", "Sab: 10AM - 4PM", "Dom: Cerrado"],
-                image: "/images/tiendadolce.png",
+                image: "/images/locations/dc-campoclaro.jpeg",
               },
               {
                 city: "El Bosque",
                 area: "Caracas",
                 address: "Av Principal del Bosque, Caracas",
                 schedule: ["Lun-Vier: 9AM - 7PM", "Sáb: 10AM - 6PM", "Dom: 12PM - 6PM"],
-                image: "/images/tiendadolce.png",
+                image: "/images/locations/dc-elbosque.jpeg",
               }
             ].map((loc, idx) => (
               <motion.div
@@ -569,11 +577,7 @@ export default function Home() {
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
-        onCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
-      />
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
+        onCheckout={() => { setIsCartOpen(false); router.push('/checkout'); }}
       />
       <ProductModal
         candy={selectedProduct}

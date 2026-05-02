@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ShoppingBasket, Trash2, Plus, Minus, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { getImagePath } from "@/utils/imagePath";
+import Link from "next/link";
 
 export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, onClose: () => void, onCheckout: () => void }) => {
   const { items, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
@@ -44,12 +45,13 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                   <div className="text-6xl mb-4">🧺</div>
                   <h3 className="text-xl font-bold mb-2">Tu cesta está vacía</h3>
                   <p className="text-gray-500 mb-6">Parece que aún no has elegido nada dulce.</p>
-                  <button 
+                  <Link 
+                    href="/catalogo"
                     onClick={onClose}
-                    className="bg-brand-red text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-brand-red/20"
+                    className="bg-brand-red text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-brand-red/20 transition-transform hover:scale-105 active:scale-95"
                   >
                     Ver Dulces
-                  </button>
+                  </Link>
                 </div>
               ) : (
                 items.map((item) => (

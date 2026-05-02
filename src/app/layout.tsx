@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { WhatsAppWidget } from "@/components/WhatsAppWidget";
 import SmoothScroll from "@/components/SmoothScroll";
 
@@ -44,6 +45,9 @@ const outfitNumbers = localFont({
 export const metadata: Metadata = {
   title: "Dolce Candy Boutique | Dulces Raros y Exclusivos",
   description: "Descubre los dulces más raros y deliciosos del mundo. Como un niño en una dulcería.",
+  icons: {
+    icon: "/images/Favicondolce.png",
+  },
 };
 
 export default function RootLayout({
@@ -57,10 +61,12 @@ export default function RootLayout({
         className={`${cocogooseMain.variable} ${cocogooseTitles.variable} ${interDisplay.variable} ${outfitNumbers.variable} ${pacifico.variable} font-body antialiased`}
       >
         <SmoothScroll>
-          <CartProvider>
-            {children}
-            <WhatsAppWidget />
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              {children}
+              <WhatsAppWidget />
+            </CartProvider>
+          </AuthProvider>
         </SmoothScroll>
       </body>
     </html>
