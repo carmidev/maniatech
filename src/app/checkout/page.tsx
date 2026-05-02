@@ -17,7 +17,7 @@ type AuthView = "login" | "otp" | "profile" | null;
 export default function CheckoutPage() {
   const router = useRouter();
   const { totalPrice, clearCart } = useCart();
-  const { user, loading: authLoading, loginWithWhatsApp, verifyOtp, signInWithGoogle } = useAuth();
+  const { user, loading: authLoading, signInWithGoogle } = useAuth();
   
   // Navigation & Checkout States
   const [step, setStep] = useState(1);
@@ -81,8 +81,15 @@ export default function CheckoutPage() {
     setIsSending(true);
     setAuthError("");
     try {
-      const fullPhone = `+${countryCode.replace(/\D/g, "")}${phoneNumber.replace(/\D/g, "")}`;
-      await loginWithWhatsApp(fullPhone);
+      const cleanPhone = phoneNumber.replace(/\D/g, "");
+      const cleanCode = countryCode.replace(/\D/g, "");
+      const fullPhone = `+${cleanCode}${cleanPhone}`;
+      
+      const { error } = await supabase.auth.signInWithOtp({
+        phone: fullPhone,
+      });
+      
+      if (error) throw error;
       setAuthView("otp");
     } catch (err: any) {
       console.error("Error logging in:", err);
@@ -97,15 +104,26 @@ export default function CheckoutPage() {
     setIsSending(true);
     setAuthError("");
     try {
-      const fullPhone = `+${countryCode.replace(/\D/g, "")}${phoneNumber.replace(/\D/g, "")}`;
-      const { user } = await verifyOtp(fullPhone, otpCode);
-      const { data } = await supabase.from("customers").select("id").eq("id", user?.id).single();
+      const cleanPhone = phoneNumber.replace(/\D/g, "");
+      const cleanCode = countryCode.replace(/\D/g, "");
+      const fullPhone = `+${cleanCode}${cleanPhone}`;
       
-      if (!data) {
-        setAuthView("profile");
-      } else {
-        setAuthView(null);
-        nextStep();
+      const { data, error } = await supabase.auth.verifyOtp({
+        phone: fullPhone,
+        token: otpCode,
+        type: "sms",
+      });
+      
+      if (error) throw error;
+
+      if (data.user) {
+        const { data: profile } = await supabase.from("customers").select("id").eq("id", data.user.id).single();
+        if (!profile) {
+          setAuthView("profile");
+        } else {
+          setAuthView(null);
+          nextStep();
+        }
       }
     } catch (err: any) {
       console.error("Error verifying OTP:", err);
