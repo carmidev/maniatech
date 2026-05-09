@@ -6,7 +6,7 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocom
 import { Search, Navigation, MapPin, Loader2, X, CheckCircle2, AlertCircle, Truck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const libraries: ("places" | "drawing" | "geometry" | "localContext" | "visualization")[] = ["places", "geometry"];
+const libraries: ("places" | "drawing" | "geometry" | "visualization")[] = ["places", "geometry"];
 
 const mapContainerStyle = {
   width: '100%',
