@@ -23,7 +23,7 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
   const { user } = useAuth();
   
   // Parse initial ID
-  const initialId = user?.id_number || "";
+  const initialId = (user as any)?.id_number || "";
   const prefixMatch = initialId.match(/^[VEJGP]/);
   const initPrefix = prefixMatch ? prefixMatch[0] : "V";
   const initNum = prefixMatch ? initialId.substring(1) : initialId;
