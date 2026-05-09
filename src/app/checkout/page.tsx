@@ -27,7 +27,7 @@ type Address = {
   formatted_address: string;
   lat: number;
   lng: number;
-  label: string;
+  label?: string;
   reference_point?: string;
   zone?: string;
 };
