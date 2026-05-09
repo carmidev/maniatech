@@ -29,6 +29,7 @@ type Address = {
   lng: number;
   label: string;
   reference_point?: string;
+  zone?: string;
 };
 type PaymentMethod = "zelle" | "pm" | "cash" | "paypal";
 type AuthView = "login" | "otp" | "profile" | null;
