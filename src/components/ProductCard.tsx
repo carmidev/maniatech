@@ -13,6 +13,7 @@ const BADGE_STYLES: Record<string, string> = {
   bestseller: "bg-secondary text-white",
   viral: "bg-primary text-white",
   exclusivo: "bg-brand-brown text-white",
+  top: "bg-primary text-white",
 };
 
 const BADGE_LABELS: Record<string, string> = {
@@ -20,6 +21,7 @@ const BADGE_LABELS: Record<string, string> = {
   bestseller: "Bestseller",
   viral: "Viral 🔥",
   exclusivo: "Exclusivo",
+  top: "TOP 🔥",
 };
 
 export const ProductCard = ({ 
@@ -33,10 +35,20 @@ export const ProductCard = ({
   const [isAdded, setIsAdded] = useState(false);
 
   const handleAdd = () => {
+    if (candy.stock === 0) return;
     addToCart(candy);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
+  
+  const isOutOfStock = candy.stock === 0;
+
+  // Determinar si el producto es "Top" para ponerle el badge automáticamente
+  const isTopProduct = Array.isArray(candy.category) 
+    ? candy.category.includes("top") 
+    : candy.category === "top";
+  
+  const activeBadge = candy.badge || (isTopProduct ? "top" : null);
 
   return (
     <motion.div
@@ -54,22 +66,22 @@ export const ProductCard = ({
         
         {/* Imagen con Aspect Ratio divertido */}
         <div 
-          className="relative h-64 overflow-hidden bg-slate-50 cursor-pointer"
+          className="relative h-64 overflow-hidden bg-white p-6 cursor-pointer"
           onClick={() => onOpenDetails?.(candy)}
         >
           <img
             src={getImagePath(candy.images[0]) || undefined}
             alt={candy.name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
           {/* Badge flotante */}
-          {candy.badge && (
+          {activeBadge && (
             <span
-              className={`absolute top-5 left-5 text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-lg ${BADGE_STYLES[candy.badge]}`}
+              className={`absolute top-5 left-5 text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-lg ${BADGE_STYLES[activeBadge]}`}
             >
-              {BADGE_LABELS[candy.badge]}
+              {BADGE_LABELS[activeBadge]}
             </span>
           )}
 
@@ -89,16 +101,29 @@ export const ProductCard = ({
           </p>
           
           <motion.button
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: isOutOfStock ? 1 : 0.95 }}
             onClick={handleAdd}
+            disabled={isOutOfStock}
             className={`mt-4 w-full py-4 rounded-[2rem] font-black text-sm transition-all duration-300 flex items-center justify-center gap-3 shadow-lg ${
-              isAdded 
-                ? "bg-green-500 text-white shadow-green-500/30" 
-                : "bg-brand-red text-white hover:opacity-90 shadow-brand-red/20"
+              isOutOfStock
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+                : isAdded 
+                  ? "bg-green-500 text-white shadow-green-500/30" 
+                  : "bg-brand-red text-white hover:opacity-90 shadow-brand-red/20"
             }`}
           >
             <AnimatePresence mode="wait">
-              {isAdded ? (
+              {isOutOfStock ? (
+                <motion.div
+                  key="out"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="flex items-center gap-2"
+                >
+                  <span>Agotado</span>
+                </motion.div>
+              ) : isAdded ? (
                 <motion.div
                   key="check"
                   initial={{ opacity: 0, scale: 0.5 }}

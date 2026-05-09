@@ -71,6 +71,9 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
       const finalPhone = formatPhone(phoneNumber, countryCode);
       const { error } = await supabase.auth.signInWithOtp({
         phone: finalPhone,
+        options: {
+          channel: 'whatsapp',
+        },
       });
 
       if (error) throw error;
@@ -131,12 +134,12 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
               >
                 <X size={20} />
               </button>
-              <h2 className="font-cocogoose-titles text-2xl uppercase tracking-wider">
+              <h2 className="font-display text-2xl uppercase tracking-wider">
                 {view === "login" && "¡Hola, Dulce Amigo!"}
                 {view === "otp" && "Verifica tu WhatsApp"}
                 {view === "profile" && "¡Bienvenido!"}
               </h2>
-              <p className="mt-2 font-inter-display opacity-90 text-sm">
+              <p className="mt-2 font-body opacity-90 text-sm">
                 {view === "login" && "Inicia sesión para continuar con tu pedido."}
                 {view === "otp" && `Ingresa el código que enviamos al +58 ${phoneNumber}`}
                 {view === "profile" && "Por favor, completa tu perfil para continuar."}
@@ -172,14 +175,14 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                           placeholder="Número de teléfono"
                           value={phoneNumber}
                           onChange={(e) => setPhoneNumber(e.target.value)}
-                          className="w-full rounded-2xl bg-gray-200 py-4 font-inter-display px-4 outline-none ring-primary/30 transition-all focus:ring-2"
+                          className="w-full rounded-2xl bg-gray-200 py-4 font-body px-4 outline-none ring-primary/30 transition-all focus:ring-2"
                           required
                         />
                       </div>
                       <button
                         type="submit"
                         disabled={isSending}
-                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] py-4 font-inter-display font-bold text-white shadow-lg shadow-[#25D366]/20 transition-all hover:bg-[#20ba5a] active:scale-[0.98] disabled:opacity-50"
+                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] py-4 font-body font-bold text-white shadow-lg shadow-[#25D366]/20 transition-all hover:bg-[#20ba5a] active:scale-[0.98] disabled:opacity-50"
                       >
                         <MessageCircle size={24} />
                         {isSending ? "Enviando..." : "Enviar código por WhatsApp"}
@@ -198,7 +201,7 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                     {/* Google Button */}
                     <button
                       onClick={signInWithGoogle}
-                      className="flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-gray-100 py-4 font-inter-display font-medium transition-all hover:bg-gray-50 active:scale-[0.98]"
+                      className="flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-gray-100 py-4 font-body font-medium transition-all hover:bg-gray-50 active:scale-[0.98]"
                     >
                       <svg className="w-6 h-6" viewBox="0 0 24 24">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -226,20 +229,20 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                         placeholder="0 0 0 0 0 0"
                         value={otpCode}
                         onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                        className="w-full text-center text-3xl tracking-[0.5em] font-cocogoose-titles rounded-2xl bg-gray-200 py-6 outline-none ring-primary/30 transition-all focus:ring-2"
+                        className="w-full text-center text-3xl tracking-[0.5em] font-numbers rounded-2xl bg-gray-200 py-6 outline-none ring-primary/30 transition-all focus:ring-2"
                         required
                       />
                       <button
                         type="submit"
                         disabled={isSending || otpCode.length < 6}
-                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary py-4 font-inter-display font-bold text-white shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary py-4 font-body font-bold text-white shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
                       >
                         {isSending ? "Verificando..." : "Verificar Código"}
                       </button>
                     </form>
                     <button
                       onClick={() => setView("login")}
-                      className="w-full text-center text-sm font-inter-display text-gray-400 hover:text-primary transition-colors"
+                      className="w-full text-center text-sm font-body text-gray-400 hover:text-primary transition-colors"
                     >
                       ¿Número incorrecto? Volver atrás
                     </button>
@@ -257,7 +260,7 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                 )}
               </AnimatePresence>
 
-              <p className="mt-8 text-center text-[10px] text-gray-400 font-inter-display uppercase tracking-widest">
+              <p className="mt-8 text-center text-[10px] text-gray-400 font-body uppercase tracking-widest">
                 Dolce Candy Boutique © 2026
               </p>
             </div>

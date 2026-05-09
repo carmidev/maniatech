@@ -1,13 +1,25 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ShoppingBasket, Trash2, Plus, Minus, ArrowRight } from "lucide-react";
+import { X, ShoppingBasket, Trash2, Plus, Minus, ArrowRight, Loader2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { getImagePath } from "@/utils/imagePath";
-import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 
 export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, onClose: () => void, onCheckout: () => void }) => {
-  const { items, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
+  const { items, removeFromCart, updateQuantity, totalPrice, totalItems, clearCart } = useCart();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  // Prefetch preventivo del catálogo y checkout al abrir el carrito para carga instantánea
+  useEffect(() => {
+    if (isOpen) {
+      router.prefetch("/catalogo");
+      router.prefetch("/checkout");
+    }
+  }, [isOpen, router]);
 
   return (
     <AnimatePresence>
@@ -18,20 +30,31 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60]"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
           />
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 h-full w-full max-w-md bg-white z-[70] shadow-2xl flex flex-col"
+            className="fixed right-0 top-0 h-full w-full max-w-md bg-white z-[110] shadow-2xl flex flex-col"
           >
             {/* Header */}
             <div className="p-6 border-b flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <ShoppingBasket className="text-primary" />
-                <h2 className="text-xl font-display text-brand-darkgray uppercase">Tu Cesta ({totalItems})</h2>
+                {items.length > 0 && (
+                  <button 
+                    onClick={clearCart}
+                    className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-full transition-colors mr-1"
+                    title="Vaciar carrito"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                )}
+                <div className="flex items-center gap-2">
+                  <ShoppingBasket className="text-primary" />
+                  <h2 className="text-xl font-display text-brand-darkgray uppercase">Tu Cesta</h2>
+                </div>
               </div>
               <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
                 <X className="w-6 h-6" />
@@ -45,13 +68,17 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                   <div className="text-6xl mb-4">🧺</div>
                   <h3 className="text-xl font-bold mb-2">Tu cesta está vacía</h3>
                   <p className="text-gray-500 mb-6">Parece que aún no has elegido nada dulce.</p>
-                  <Link 
-                    href="/catalogo"
-                    onClick={onClose}
+                  <button 
+                    onClick={() => {
+                      onClose();
+                      if (pathname !== "/catalogo") {
+                        router.push("/catalogo");
+                      }
+                    }}
                     className="bg-brand-red text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-brand-red/20 transition-transform hover:scale-105 active:scale-95"
                   >
                     Ver Dulces
-                  </Link>
+                  </button>
                 </div>
               ) : (
                 items.map((item) => (
@@ -99,10 +126,18 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                   <span className="text-3xl font-black text-primary">{totalPrice.toFixed(2)} €</span>
                 </div>
                 <button 
-                  onClick={onCheckout}
-                  className="w-full bg-brand-red text-white py-4 rounded-full font-bold text-lg shadow-lg shadow-brand-red/30 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                  disabled={isNavigating}
+                  onClick={() => {
+                    setIsNavigating(true);
+                    onCheckout();
+                  }}
+                  className="w-full bg-brand-red text-white py-4 rounded-full font-bold text-lg shadow-lg shadow-brand-red/30 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-transform disabled:opacity-70 disabled:cursor-wait"
                 >
-                  Continuar al Pago <ArrowRight className="w-5 h-5" />
+                  {isNavigating ? (
+                    <>Cargando... <Loader2 className="w-5 h-5 animate-spin" /></>
+                  ) : (
+                    <>Continuar al Pago <ArrowRight className="w-5 h-5" /></>
+                  )}
                 </button>
               </div>
             )}

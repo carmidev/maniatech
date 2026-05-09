@@ -66,7 +66,7 @@ export const CountryCodeSelect = ({ value, onChange, className = "" }: CountryCo
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 rounded-2xl bg-gray-200 py-3 lg:py-4 px-4 font-inter-display font-medium outline-none ring-primary/30 transition-all focus:ring-2 h-full w-full justify-between"
+        className="flex items-center gap-2 rounded-2xl bg-gray-200 py-3 lg:py-4 px-4 font-body font-medium outline-none ring-primary/30 transition-all focus:ring-2 h-full w-full justify-between"
       >
         <div className="flex items-center gap-2">
           <img
@@ -95,7 +95,7 @@ export const CountryCodeSelect = ({ value, onChange, className = "" }: CountryCo
                 placeholder="Buscar..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full rounded-xl bg-white border border-gray-200 py-1.5 px-3 text-[11px] font-inter-display outline-none focus:border-primary/30 transition-all"
+                className="w-full rounded-xl bg-white border border-gray-200 py-1.5 px-3 text-[11px] font-body outline-none focus:border-primary/30 transition-all"
                 autoFocus
               />
             </div>
@@ -123,7 +123,7 @@ export const CountryCodeSelect = ({ value, onChange, className = "" }: CountryCo
                     />
                     <div className="flex flex-col min-w-0">
                       <span className="text-[10px] font-black uppercase tracking-tight truncate">{country.name}</span>
-                      <span className="text-xs font-inter-display opacity-60">{country.code}</span>
+                      <span className="text-xs font-body opacity-60">{country.code}</span>
                     </div>
                   </button>
                 ))

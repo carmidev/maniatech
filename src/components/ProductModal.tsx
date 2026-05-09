@@ -23,6 +23,8 @@ export const ProductModal = ({ candy, isOpen, onClose }: ProductModalProps) => {
   const nextImg = () => setCurrentImg((prev) => (prev + 1) % candy.images.length);
   const prevImg = () => setCurrentImg((prev) => (prev - 1 + candy.images.length) % candy.images.length);
 
+  const isOutOfStock = candy.stock === 0;
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -52,14 +54,14 @@ export const ProductModal = ({ candy, isOpen, onClose }: ProductModalProps) => {
             </button>
 
             {/* Galería de Imágenes */}
-            <div className="md:w-1/2 relative bg-slate-50 group h-[250px] md:h-full">
+            <div className="md:w-1/2 relative bg-white group h-[250px] md:h-full p-8 flex items-center justify-center">
               <motion.img
                 key={currentImg}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 src={getImagePath(candy.images[currentImg]) || undefined}
                 alt={candy.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
               
               {/* Controles Galería */}
@@ -86,7 +88,9 @@ export const ProductModal = ({ candy, isOpen, onClose }: ProductModalProps) => {
               <div className="flex-1 overflow-y-auto no-scrollbar">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="bg-primary/10 text-primary px-3 py-0.5 rounded-full text-[9px] font-display uppercase tracking-widest">
-                    {candy.category === "tendencias" ? "🔥 Los más buscados" : candy.category}
+                    {Array.isArray(candy.category) 
+                      ? (candy.category.includes("top") ? "🔥 Los más buscados" : candy.category.join(", ")) 
+                      : (candy.category === "top" ? "🔥 Los más buscados" : candy.category)}
                   </span>
                   <span className="text-slate-300">|</span>
                   <span className="text-primary font-numbers font-semibold text-2xl">{candy.price.toFixed(2)}€</span>
@@ -121,16 +125,25 @@ export const ProductModal = ({ candy, isOpen, onClose }: ProductModalProps) => {
 
               {/* Botón Añadir al Carrito - Fijo abajo */}
               <div className="mt-4 pt-4 border-t border-slate-100">
-                <DolceButton
-                  onClick={() => {
-                    addToCart(candy);
-                    onClose();
-                  }}
-                  icon={ShoppingBasket}
-                  className="w-full"
-                >
-                  Agregar al pedido
-                </DolceButton>
+                {isOutOfStock ? (
+                  <button
+                    disabled
+                    className="w-full py-4 rounded-[2rem] font-black text-sm bg-gray-300 text-gray-500 cursor-not-allowed shadow-none flex items-center justify-center gap-3 transition-all duration-300"
+                  >
+                    Agotado
+                  </button>
+                ) : (
+                  <DolceButton
+                    onClick={() => {
+                      addToCart(candy);
+                      onClose();
+                    }}
+                    icon={ShoppingBasket}
+                    className="w-full"
+                  >
+                    Agregar al pedido
+                  </DolceButton>
+                )}
               </div>
             </div>
           </motion.div>

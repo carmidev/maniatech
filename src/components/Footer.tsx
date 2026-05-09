@@ -1,7 +1,7 @@
 "use client";
 
 import { Instagram, Mail, Play, Zap, MapPin } from "lucide-react";
-import { LollipopLogo } from "./LollipopLogo";
+
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { getImagePath } from "@/utils/imagePath";
@@ -13,7 +13,11 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 items-start text-center lg:text-left mb-16">
           {/* Columna 1: Logo */}
           <div className="flex justify-center lg:justify-start">
-            <LollipopLogo className="w-[100px] h-[100px] lg:w-[120px] lg:h-[120px] shrink-0 drop-shadow-2xl" />
+            <img
+              src={getImagePath("/images/Logo completo letras blancas Dolce Candy.png")}
+              alt="Dolce Candy Logo"
+              className="w-[100px] h-[100px] lg:w-[120px] lg:h-[120px] object-contain shrink-0 drop-shadow-2xl"
+            />
           </div>
 
           {/* Columna 2: Slogan y Redes */}
@@ -75,7 +79,7 @@ export const Footer = () => {
         <div className="pt-10 border-t border-white/5 flex flex-col lg:flex-row items-center justify-between gap-6 text-gray-500 font-bold text-xs uppercase tracking-widest">
           <p>© 2026 Dolce Candy Boutique.</p>
           <p className="text-gray-600">
-            Design by <span className="text-gray-400">CarMiDev</span>
+            Desarrollado y Diseñado por <span className="text-gray-400">CarMiDev</span>
           </p>
         </div>
       </div>

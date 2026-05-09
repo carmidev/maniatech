@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie } from "lucide-react";
+import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LollipopLogo } from "@/components/LollipopLogo";
 import { ProductCard } from "@/components/ProductCard";
@@ -16,6 +16,7 @@ import { getImagePath } from "@/utils/imagePath";
 import { DolceButton } from "@/components/DolceButton";
 import { FloatingCart } from "@/components/FloatingCart";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function CatalogoPage() {
   const router = useRouter();
@@ -37,13 +38,73 @@ export default function CatalogoPage() {
     { id: "chocolates", label: "Chocolates", icon: "🍪" },
     { id: "gomitas", label: "Gomitas", icon: "🧬" },
     { id: "acidos", label: "Ácidos", icon: "⚡" },
-    { id: "pikantes", label: "Pikantes", icon: "🔥" },
+    { id: "picantes", label: "Picantes", icon: "🔥" },
     { id: "bebidas", label: "Bebidas", icon: "🥤" },
-    { id: "tendencias", label: "Tendencias", icon: "✨" },
+    { id: "galletas", label: "Galletas", icon: "🍪" },
+    { id: "juguetes", label: "Juguetes", icon: "🎁" },
+    { id: "top", label: "Top", icon: "✨" },
   ];
 
-  const filteredCandies = CANDIES.filter((c) => {
-    const matchesCategory = activeCategory === "all" || c.category === activeCategory;
+  const normalizeCategory = (cat: string | string[] | null): string[] => {
+    if (!cat) return ["top"];
+    const cats = Array.isArray(cat) ? cat : [cat];
+    return cats.map(c =>
+      String(c)
+        .toLowerCase()
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace("pikantes", "picantes")
+        .replace("tendencias", "top")
+    );
+  };
+
+  // Aplicar normalización a los datos mock iniciales para que sean coherentes con la DB
+  const normalizedMockCandies = CANDIES.map(c => ({
+    ...c,
+    category: normalizeCategory(c.category)
+  }));
+
+  const [candiesList, setCandiesList] = useState<Candy[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { getProductsWithInventory } = await import('./actions');
+        const result = await getProductsWithInventory();
+
+        if (!result.success || !result.data) {
+          console.error("Error fetching products:", result.error);
+          return;
+        }
+
+        const data = result.data;
+
+        if (data) {
+          const mappedCandies: Candy[] = data.map((item: any) => ({
+            id: item.id,
+            name: item.name,
+            description: item.description || "",
+            ownerReview: item.owner_review || "",
+            price: Number(item.price) || 0,
+            images: item.images && item.images.length > 0 ? item.images : [CANDIES[0].images[0]],
+            category: normalizeCategory(item.category),
+            stock: item.inventory?.reduce((sum: number, loc: any) => sum + (loc.quantity || 0), 0) || 0,
+          }));
+
+          setCandiesList(mappedCandies);
+        }
+      } catch (err) {
+        console.error("Error:", err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const filteredCandies = candiesList.filter((c) => {
+    const productCategories = Array.isArray(c.category) ? c.category : [c.category];
+    const matchesCategory = activeCategory === "all" || productCategories.includes(activeCategory);
     const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       c.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -68,10 +129,10 @@ export default function CatalogoPage() {
             {/* Logo Desktop */}
             <div className="hidden lg:flex items-center shrink-0">
               <div className="relative w-[52px] h-[52px] flex items-center justify-center -ml-3">
-                <img 
-                  src={getImagePath("/images/espiraldolce-con-nombre.png")} 
-                  alt="Dolce Candy Oficial" 
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-[3px] w-[175px] h-[175px] max-w-none object-contain pointer-events-none drop-shadow-sm" 
+                <img
+                  src={getImagePath("/images/espiraldolce-con-nombre.png")}
+                  alt="Dolce Candy Oficial"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-[3px] w-[175px] h-[175px] max-w-none object-contain pointer-events-none drop-shadow-sm"
                 />
               </div>
             </div>
@@ -132,22 +193,22 @@ export default function CatalogoPage() {
               className="absolute top-[calc(100%+10px)] left-0 w-full bg-white/95 backdrop-blur-3xl rounded-[24px] shadow-xl shadow-black/10 border border-black/5 overflow-hidden md:hidden flex flex-col p-5 gap-4 pointer-events-auto"
             >
               <nav className="flex flex-col gap-3 text-center">
-                <Link 
-                  href="/" 
+                <Link
+                  href="/"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
                 >
                   Inicio
                 </Link>
-                <Link 
-                  href="/#lab" 
+                <Link
+                  href="/#lab"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
                 >
                   Candy Lab
                 </Link>
-                <Link 
-                  href="/#ubicaciones" 
+                <Link
+                  href="/#ubicaciones"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
                 >
@@ -181,9 +242,6 @@ export default function CatalogoPage() {
               >
                 Colección de <span className="text-primary text-glow-sm">Dulces Exclusivos</span>
               </motion.h1>
-              <p className="text-brand-darkgray/70 mt-3 max-w-xl text-sm md:text-base leading-relaxed font-body font-normal">
-                Selección única de dulces importados directo de USA. Cada semana nuevos tesoros azucarados.
-              </p>
             </div>
 
             <div className="w-full md:w-80 shrink-0">
@@ -208,30 +266,35 @@ export default function CatalogoPage() {
               </div>
             </div>
 
-            <div className="flex overflow-x-auto pb-4 -mx-6 px-6 gap-3 no-scrollbar scroll-smooth">
-              {[
-                { key: "all", label: "Todos", icon: <Star className="w-4 h-4" />, color: "bg-slate-100 text-slate-600" },
-                { key: "chocolates", label: "Chocolates", icon: <Cookie className="w-4 h-4" />, color: "bg-brand-brown/10 text-brand-brown" },
-                { key: "gomitas", label: "Gomitas", icon: <CandyIcon className="w-4 h-4" />, color: "bg-accent/10 text-accent" },
-                { key: "acidos", label: "Ácidos", icon: <Zap className="w-4 h-4" />, color: "bg-secondary/10 text-secondary" },
-                { key: "pikantes", label: "Pikantes", icon: <Flame className="w-4 h-4" />, color: "bg-brand-darkred/10 text-brand-darkred" },
-                { key: "bebidas", label: "Bebidas", icon: <CupSoda className="w-4 h-4" />, color: "bg-brand-blue/10 text-brand-blue" },
-                { key: "tendencias", label: "Los más buscados", icon: <Star className="w-4 h-4" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
-              ].map((cat) => (
-                <button
-                  key={cat.key}
-                  onClick={() => setActiveCategory(cat.key)}
-                  className={`flex items-center gap-2.5 px-6 py-3 rounded-full border shrink-0 transition-all ${activeCategory === cat.key
-                      ? "bg-brand-red border-brand-red text-white shadow-xl shadow-brand-red/20 scale-105"
-                      : "bg-white border-slate-100 text-slate-700 hover:border-brand-red/30"
-                    }`}
-                >
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${activeCategory === cat.key ? "bg-white/20" : cat.color}`}>
-                    {cat.icon}
-                  </div>
-                  <span className="text-sm font-black whitespace-nowrap">{cat.label}</span>
-                </button>
-              ))}
+            <div className="relative">
+              <div className="flex overflow-x-auto py-4 -mx-6 px-6 gap-6 no-scrollbar scroll-smooth flex-nowrap items-start">
+                {[
+                  { key: "all", label: "Todos", icon: <Star className="w-6 h-6" />, color: "bg-slate-100 text-slate-600" },
+                  { key: "chocolates", label: "Chocolates", icon: <Cookie className="w-6 h-6" />, color: "bg-brand-brown/10 text-brand-brown" },
+                  { key: "gomitas", label: "Gomitas", icon: <CandyIcon className="w-6 h-6" />, color: "bg-accent/10 text-accent" },
+                  { key: "acidos", label: "Ácidos", icon: <Zap className="w-6 h-6" />, color: "bg-secondary/10 text-secondary" },
+                  { key: "picantes", label: "Picantes", icon: <Flame className="w-6 h-6" />, color: "bg-brand-darkred/10 text-brand-darkred" },
+                  { key: "bebidas", label: "Bebidas", icon: <CupSoda className="w-6 h-6" />, color: "bg-brand-blue/10 text-brand-blue" },
+                  { key: "galletas", label: "Galletas", icon: <Cookie className="w-6 h-6" />, color: "bg-orange-100 text-orange-600" },
+                  { key: "juguetes", label: "Juguetes", icon: <Gift className="w-6 h-6" />, color: "bg-purple-100 text-purple-600" },
+                  { key: "top", label: "Top", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
+                ].map((cat) => (
+                  <button
+                    key={cat.key}
+                    onClick={() => setActiveCategory(cat.key)}
+                    className="flex flex-col items-center gap-3 shrink-0 transition-all group/cat"
+                  >
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center border-2 transition-all p-1 ${activeCategory === cat.key ? "border-brand-red scale-110 shadow-lg shadow-brand-red/10" : "border-slate-100 group-hover/cat:border-brand-red/30"}`}>
+                      <div className={`w-full h-full rounded-full flex items-center justify-center transition-colors ${activeCategory === cat.key ? "bg-brand-red text-white" : cat.color}`}>
+                        {cat.icon}
+                      </div>
+                    </div>
+                    <span className={`text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${activeCategory === cat.key ? "text-brand-red" : "text-slate-500 group-hover/cat:text-brand-red"}`}>
+                      {cat.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -259,7 +322,7 @@ export default function CatalogoPage() {
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
-        onCheckout={() => { setIsCartOpen(false); router.push('/checkout'); }}
+        onCheckout={() => { router.push('/checkout'); }}
       />
 
       <FloatingCart onClick={handleOpenCart} />

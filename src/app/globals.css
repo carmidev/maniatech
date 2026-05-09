@@ -22,6 +22,26 @@
     font-family: var(--font-outfit-numbers), sans-serif !important;
     @apply font-semibold;
   }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+  .no-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .no-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+  }
+  .no-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .no-scrollbar {
+    -ms-overflow-style: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+  }
 }
 
 .cloud-mask {

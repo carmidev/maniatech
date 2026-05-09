@@ -5,9 +5,10 @@ export interface Candy {
   ownerReview: string;
   price: number;
   images: string[];
-  category: "chocolates" | "gomitas" | "acidos" | "pikantes" | "tendencias" | "bebidas" | "especiales";
+  category: string | string[];
   tag?: string;
   badge?: "nuevo" | "bestseller" | "viral" | "exclusivo";
+  stock?: number;
 }
 
 export const CANDIES: Candy[] = [
@@ -56,7 +57,7 @@ export const CANDIES: Candy[] = [
     ownerReview: "¡Son adictivos, en serio! Me encanta la textura: lo suavecito de la gomita en el centro y lo súper crujiente de los Nerds por fuera. Siempre que abro una bolsa en la oficina, desaparece en segundos.",
     price: 5.50,
     images: ["/images/catalog/nerds-clusters.jpg"],
-    category: "gomitas",
+    category: ["gomitas", "top"],
     badge: "bestseller",
   },
   {

@@ -23,6 +23,7 @@ const BADGE_STYLES: Record<string, string> = {
   bestseller: "bg-secondary text-white",
   viral: "bg-primary text-white",
   exclusivo: "bg-brand-brown text-white",
+  top: "bg-primary text-white",
 };
 
 const BADGE_LABELS: Record<string, string> = {
@@ -30,6 +31,22 @@ const BADGE_LABELS: Record<string, string> = {
   bestseller: "Bestseller",
   viral: "Viral",
   exclusivo: "Exclusivo",
+  top: "TOP 🔥",
+};
+
+/* Lógica de normalización de categorías consistente con el catálogo */
+const normalizeCategory = (cat: string | string[] | null): string[] => {
+  if (!cat) return ["top"];
+  const cats = Array.isArray(cat) ? cat : [cat];
+  return cats.map(c =>
+    String(c)
+      .toLowerCase()
+      .trim()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace("pikantes", "picantes")
+      .replace("tendencias", "top")
+  );
 };
 
 const HERO_IMAGES = [
@@ -39,8 +56,14 @@ const HERO_IMAGES = [
   "/images/anaksinfondo4.png",
 ];
 
-/* Seleccionamos los 3 productos con badge para mostrar como destacados */
-const FEATURED_CANDIES = CANDIES.filter((c) => c.badge).slice(0, 3);
+/* Fallback inicial con mock data filtrada por top/tendencias */
+const INITIAL_FEATURED = CANDIES.filter((c) => {
+  const categories = Array.isArray(c.category) ? c.category : [c.category];
+  return categories.some(cat => 
+    cat.toLowerCase() === 'top' || 
+    cat.toLowerCase() === 'tendencias'
+  );
+}).slice(0, 3);
 
 export default function Home() {
   const router = useRouter();
@@ -49,6 +72,42 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Candy | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [featuredCandies, setFeaturedCandies] = useState<Candy[]>(INITIAL_FEATURED);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const { getProductsWithInventory } = await import('./catalogo/actions');
+        const result = await getProductsWithInventory();
+        
+        if (result.success && result.data) {
+          const mapped = result.data
+            .map((item: any) => ({
+              id: item.id,
+              name: item.name,
+              description: item.description || "",
+              ownerReview: item.owner_review || "",
+              price: Number(item.price) || 0,
+              images: item.images && item.images.length > 0 ? item.images : ["/images/catalog/placeholder.png"],
+              category: normalizeCategory(item.category),
+              stock: item.inventory?.reduce((sum: number, loc: any) => sum + (loc.quantity || 0), 0) || 0,
+            }))
+            .filter((c: Candy) => {
+              const cats = Array.isArray(c.category) ? c.category : [c.category];
+              return cats.includes("top");
+            })
+            .slice(0, 3);
+
+          if (mapped.length > 0) {
+            setFeaturedCandies(mapped);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching featured products:", err);
+      }
+    };
+    fetchFeatured();
+  }, []);
 
   useEffect(() => {
     // STOP MOTION FLIPBOOK EFFECT (Cambiamos rápido sin esperas)
@@ -426,7 +485,7 @@ export default function Home() {
 
           {/* Grid de destacados */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURED_CANDIES.map((candy, i) => (
+            {featuredCandies.map((candy, i) => (
               <motion.div
                 key={candy.id}
                 initial={{ opacity: 0, y: 24 }}
@@ -438,20 +497,27 @@ export default function Home() {
                 className="group relative bg-white rounded-3xl overflow-hidden shadow-md shadow-gray-100 border border-gray-50 flex flex-col cursor-pointer"
               >
                 {/* Imagen */}
-                <div className="relative h-56 overflow-hidden bg-gray-50">
+                <div className="relative h-64 overflow-hidden bg-white p-6">
                   <img
                     src={getImagePath(candy.images?.[0]) || undefined}
                     alt={candy.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                   />
                   {/* Gradiente inferior */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   {/* Badge */}
-                  {candy.badge && (
-                    <span className={`absolute top-3 left-3 text-[10px] font-black uppercase px-3 py-1 rounded-full ${BADGE_STYLES[candy.badge]}`}>
-                      {BADGE_LABELS[candy.badge]}
-                    </span>
-                  )}
+                  {(() => {
+                    const isTop = Array.isArray(candy.category) 
+                      ? candy.category.includes("top") || candy.category.includes("tendencias")
+                      : candy.category === "top" || candy.category === "tendencias";
+                    const activeBadge = candy.badge || (isTop ? "top" : null);
+                    
+                    return activeBadge && (
+                      <span className={`absolute top-3 left-3 text-[10px] font-black uppercase px-3 py-1 rounded-full ${BADGE_STYLES[activeBadge]}`}>
+                        {BADGE_LABELS[activeBadge]}
+                      </span>
+                    );
+                  })()}
                   {/* Precio sobre la imagen */}
                   <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur text-primary font-numbers font-semibold text-xl px-3 py-1 rounded-2xl shadow-sm">
                     ${candy.price.toFixed(2)}
