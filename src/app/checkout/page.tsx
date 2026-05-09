@@ -1218,6 +1218,7 @@ export default function CheckoutPage() {
                       ? (isNational ? `Envío Nacional (MRW/Zoom) a: ${address}` : `Delivery a: ${address}`)
                       : `Pickup en: ${pickupStore === 'campoclaro' ? 'Dolce Candy Campo Claro' : 'Dolce Candy El Bosque'}\n📍 *Mapa Tienda:* ${storeMapLink}`;
                       
+                    let paymentText = '';
                     if (paymentMethod === 'zelle') paymentText = `Zelle (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
                     if (paymentMethod === 'pm') paymentText = `Pago Móvil - Ref: ${paymentReference || 'Ver Foto'}`;
                     if (paymentMethod === 'paypal') paymentText = `PayPal (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
