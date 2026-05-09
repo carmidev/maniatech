@@ -8,6 +8,7 @@ import { CustomSelect } from "./CustomSelect";
 
 interface ProfileFormProps {
   onComplete: () => void;
+  deliveryMethod?: "pickup" | "delivery";
 }
 
 const ID_RULES: Record<string, { min: number, max: number, placeholder: string, pattern: RegExp }> = {
@@ -18,7 +19,7 @@ const ID_RULES: Record<string, { min: number, max: number, placeholder: string, 
   P: { min: 5, max: 10, placeholder: "Ej. 12345678", pattern: /[^A-Z0-9]/g }, // Alfanumérico opcional
 };
 
-export const ProfileForm = ({ onComplete }: ProfileFormProps) => {
+export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) => {
   const { user } = useAuth();
   
   // Parse initial ID
