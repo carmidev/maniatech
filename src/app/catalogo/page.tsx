@@ -112,10 +112,10 @@ export default function CatalogoPage() {
   });
 
   const coffeeItems: Candy[] = [
-    { id: "cafe1", name: "Menú Café", description: "Explora nuestra variedad de cafés preparados con granos seleccionados.", price: 0, images: ["/images/cafe 1.jpeg"], category: ["cafe"], stock: 99, badge: "menu" },
-    { id: "cafe2", name: "Menú Café", description: "Disfruta de nuestras especialidades de la casa en un ambiente acogedor.", price: 0, images: ["/images/cafe 2.jpeg"], category: ["cafe"], stock: 99, badge: "menu" },
-    { id: "cafe3", name: "Menú Café", description: "Acompaña tu café con nuestra deliciosa selección de golosinas.", price: 0, images: ["/images/cafe 3.jpeg"], category: ["cafe"], stock: 99, badge: "menu" },
-    { id: "cafe4", name: "Menú Café", description: "El complemento perfecto para tu momento Dolce.", price: 0, images: ["/images/cafe 4.jpeg"], category: ["cafe"], stock: 99, badge: "menu" },
+    { id: "cafe1", name: "Menú Café", description: "Explora nuestra variedad de cafés preparados con granos seleccionados.", price: 0, images: ["/images/cafe 1.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
+    { id: "cafe2", name: "Menú Café", description: "Disfruta de nuestras especialidades de la casa en un ambiente acogedor.", price: 0, images: ["/images/cafe 2.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
+    { id: "cafe3", name: "Menú Café", description: "Acompaña tu café con nuestra deliciosa selección de golosinas.", price: 0, images: ["/images/cafe 3.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
+    { id: "cafe4", name: "Menú Café", description: "El complemento perfecto para tu momento Dolce.", price: 0, images: ["/images/cafe 4.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
   ];
 
   const displayedProducts = activeSection === 'cafe' ? coffeeItems : filteredCandies;
