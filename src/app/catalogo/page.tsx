@@ -17,6 +17,8 @@ import { DolceButton } from "@/components/DolceButton";
 import { FloatingCart } from "@/components/FloatingCart";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { getProductsWithInventory } from './actions';
+
 
 export default function CatalogoPage() {
   const router = useRouter();
@@ -71,7 +73,6 @@ export default function CatalogoPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { getProductsWithInventory } = await import('./actions');
         const result = await getProductsWithInventory();
 
         if (!result.success || !result.data) {
