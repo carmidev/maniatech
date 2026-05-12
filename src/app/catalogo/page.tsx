@@ -22,12 +22,13 @@ export default function CatalogoPage() {
   const router = useRouter();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const handleOpenCart = () => {
     setIsCartOpen(true);
   };
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<"golosinas" | "cafe">("golosinas");
   const [selectedProduct, setSelectedProduct] = useState<Candy | null>(null);
   const { totalItems } = useCart();
 
@@ -109,6 +110,15 @@ export default function CatalogoPage() {
       c.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  const coffeeItems: Candy[] = [
+    { id: "cafe1", name: "Menú Café", description: "Explora nuestra variedad de cafés preparados con granos seleccionados.", price: 0, images: ["/images/cafe 1.jpeg"], category: ["cafe"], stock: 99, badge: "menu" },
+    { id: "cafe2", name: "Menú Café", description: "Disfruta de nuestras especialidades de la casa en un ambiente acogedor.", price: 0, images: ["/images/cafe 2.jpeg"], category: ["cafe"], stock: 99, badge: "menu" },
+    { id: "cafe3", name: "Menú Café", description: "Acompaña tu café con nuestra deliciosa selección de golosinas.", price: 0, images: ["/images/cafe 3.jpeg"], category: ["cafe"], stock: 99, badge: "menu" },
+    { id: "cafe4", name: "Menú Café", description: "El complemento perfecto para tu momento Dolce.", price: 0, images: ["/images/cafe 4.jpeg"], category: ["cafe"], stock: 99, badge: "menu" },
+  ];
+
+  const displayedProducts = activeSection === 'cafe' ? coffeeItems : filteredCandies;
 
   return (
     <div className="min-h-screen bg-[#f8f6f6]">
@@ -231,83 +241,120 @@ export default function CatalogoPage() {
       <main className="max-w-7xl mx-auto px-6 pt-32 pb-20">
         <div className="flex flex-col gap-10">
 
-          {/* Header & Search */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div className="flex-1">
-              <motion.h1
-                initial={{ opacity: 0, x: -16 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="text-4xl md:text-5xl font-display-main font-bold tracking-main text-brand-darkgray"
-              >
-                Colección de <span className="text-primary text-glow-sm">Dulces Exclusivos</span>
-              </motion.h1>
-            </div>
+          {/* Header, Section Selector & Search */}
+          <div className="flex flex-col gap-6">
+            <motion.h1
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl md:text-5xl font-display-main font-bold tracking-main text-brand-darkgray"
+            >
+              Catálogo <span className="text-primary text-glow-sm">Dolce Candy</span>
+            </motion.h1>
 
-            <div className="w-full md:w-80 shrink-0">
-              <div className="relative group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
-                <input
-                  type="text"
-                  placeholder="Buscar dulce..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-11 pr-4 py-4 rounded-[2rem] bg-white border border-slate-200 shadow-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/5 outline-none transition-all font-bold text-sm"
-                />
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-6">
+              {/* Section Selector (Píldora) - Extremo Izquierdo */}
+              <div className="bg-white p-1.5 rounded-full shadow-lg shadow-black/5 border border-slate-100 flex gap-1 w-fit">
+                <button
+                  onClick={() => setActiveSection("golosinas")}
+                  className={`px-6 md:px-8 py-2.5 rounded-full font-black text-xs md:text-sm transition-all duration-300 ${activeSection === 'golosinas' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                  Golosinas
+                </button>
+                <button
+                  onClick={() => setActiveSection("cafe")}
+                  className={`px-6 md:px-8 py-2.5 rounded-full font-black text-xs md:text-sm transition-all duration-300 ${activeSection === 'cafe' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                  Café
+                </button>
               </div>
+
+              {/* Buscador - Extremo Derecho */}
+              {activeSection === 'golosinas' && (
+                <div className="w-full md:w-80">
+                  <div className="relative group">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+                    <input
+                      type="text"
+                      placeholder="Buscar..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-11 pr-4 py-4 rounded-[2rem] bg-white border border-slate-200 shadow-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/5 outline-none transition-all font-bold text-sm"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
+            
+            {activeSection === 'cafe' && (
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-brand-darkgray/60 font-body text-lg flex items-center gap-2 mt-2"
+              >
+                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                ¡Disfrútalos directamente en nuestra tienda!
+              </motion.p>
+            )}
           </div>
 
           {/* Categorías Horizontales */}
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-display text-brand-darkgray uppercase tracking-widest">Categorías</h3>
+          {activeSection === 'golosinas' && (
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-display text-brand-darkgray uppercase tracking-widest">Categorías</h3>
+                </div>
               </div>
-            </div>
 
-            <div className="relative">
-              <div className="flex overflow-x-auto py-4 -mx-6 px-6 gap-6 no-scrollbar scroll-smooth flex-nowrap items-start">
-                {[
-                  { key: "all", label: "Todos", icon: <Star className="w-6 h-6" />, color: "bg-slate-100 text-slate-600" },
-                  { key: "chocolates", label: "Chocolates", icon: <Cookie className="w-6 h-6" />, color: "bg-brand-brown/10 text-brand-brown" },
-                  { key: "gomitas", label: "Gomitas", icon: <CandyIcon className="w-6 h-6" />, color: "bg-accent/10 text-accent" },
-                  { key: "acidos", label: "Ácidos", icon: <Zap className="w-6 h-6" />, color: "bg-secondary/10 text-secondary" },
-                  { key: "picantes", label: "Picantes", icon: <Flame className="w-6 h-6" />, color: "bg-brand-darkred/10 text-brand-darkred" },
-                  { key: "bebidas", label: "Bebidas", icon: <CupSoda className="w-6 h-6" />, color: "bg-brand-blue/10 text-brand-blue" },
-                  { key: "galletas", label: "Galletas", icon: <Cookie className="w-6 h-6" />, color: "bg-orange-100 text-orange-600" },
-                  { key: "juguetes", label: "Juguetes", icon: <Gift className="w-6 h-6" />, color: "bg-purple-100 text-purple-600" },
-                  { key: "top", label: "Top", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
-                ].map((cat) => (
-                  <button
-                    key={cat.key}
-                    onClick={() => setActiveCategory(cat.key)}
-                    className="flex flex-col items-center gap-3 shrink-0 transition-all group/cat"
-                  >
-                    <div className={`w-16 h-16 rounded-full flex items-center justify-center border-2 transition-all p-1 ${activeCategory === cat.key ? "border-brand-red scale-110 shadow-lg shadow-brand-red/10" : "border-slate-100 group-hover/cat:border-brand-red/30"}`}>
-                      <div className={`w-full h-full rounded-full flex items-center justify-center transition-colors ${activeCategory === cat.key ? "bg-brand-red text-white" : cat.color}`}>
-                        {cat.icon}
+              <div className="relative">
+                <div className="flex overflow-x-auto py-4 -mx-6 px-6 gap-6 no-scrollbar scroll-smooth flex-nowrap items-start">
+                  {[
+                    { key: "all", label: "Todos", icon: <Star className="w-6 h-6" />, color: "bg-slate-100 text-slate-600" },
+                    { key: "chocolates", label: "Chocolates", icon: <Cookie className="w-6 h-6" />, color: "bg-brand-brown/10 text-brand-brown" },
+                    { key: "gomitas", label: "Gomitas", icon: <CandyIcon className="w-6 h-6" />, color: "bg-accent/10 text-accent" },
+                    { key: "acidos", label: "Ácidos", icon: <Zap className="w-6 h-6" />, color: "bg-secondary/10 text-secondary" },
+                    { key: "picantes", label: "Picantes", icon: <Flame className="w-6 h-6" />, color: "bg-brand-darkred/10 text-brand-darkred" },
+                    { key: "bebidas", label: "Bebidas", icon: <CupSoda className="w-6 h-6" />, color: "bg-brand-blue/10 text-brand-blue" },
+                    { key: "galletas", label: "Galletas", icon: <Cookie className="w-6 h-6" />, color: "bg-orange-100 text-orange-600" },
+                    { key: "juguetes", label: "Juguetes", icon: <Gift className="w-6 h-6" />, color: "bg-purple-100 text-purple-600" },
+                    { key: "top", label: "Top", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
+                  ].map((cat) => (
+                    <button
+                      key={cat.key}
+                      onClick={() => setActiveCategory(cat.key)}
+                      className="flex flex-col items-center gap-3 shrink-0 transition-all group/cat"
+                    >
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center border-2 transition-all p-1 ${activeCategory === cat.key ? "border-brand-red scale-110 shadow-lg shadow-brand-red/10" : "border-slate-100 group-hover/cat:border-brand-red/30"}`}>
+                        <div className={`w-full h-full rounded-full flex items-center justify-center transition-colors ${activeCategory === cat.key ? "bg-brand-red text-white" : cat.color}`}>
+                          {cat.icon}
+                        </div>
                       </div>
-                    </div>
-                    <span className={`text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${activeCategory === cat.key ? "text-brand-red" : "text-slate-500 group-hover/cat:text-brand-red"}`}>
-                      {cat.label}
-                    </span>
-                  </button>
-                ))}
+                      <span className={`text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${activeCategory === cat.key ? "text-brand-red" : "text-slate-500 group-hover/cat:text-brand-red"}`}>
+                        {cat.label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Grid de productos */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredCandies.map((candy) => (
-              <ProductCard
-                key={candy.id}
-                candy={candy}
-                onOpenDetails={(c) => setSelectedProduct(c)}
-              />
-            ))}
-          </div>
+          <motion.div 
+            layout
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            <AnimatePresence mode="popLayout">
+              {displayedProducts.map((candy) => (
+                <ProductCard
+                  key={candy.id}
+                  candy={candy}
+                  onOpenDetails={(c) => setSelectedProduct(c)}
+                />
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </main>
 
@@ -317,6 +364,11 @@ export default function CatalogoPage() {
         candy={selectedProduct}
         isOpen={!!selectedProduct}
         onClose={() => setSelectedProduct(null)}
+        onNavigateToGolosinas={(cat) => {
+          setActiveSection("golosinas");
+          if (cat) setActiveCategory(cat);
+          setSelectedProduct(null);
+        }}
       />
 
       <CartDrawer

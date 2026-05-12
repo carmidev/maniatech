@@ -162,7 +162,8 @@ export const CheckoutModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: (
                     ) : (
                       <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
                         <p className="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2"><MapPin className="w-4 h-4 text-primary" /> Tienda Campo Claro</p>
-                        <p className="text-xs text-slate-500 leading-relaxed">Av. Principal de Campo Claro, Edif. Dolce Candy. Caracas.</p>
+                        <p className="text-xs text-slate-500 leading-relaxed mb-1">Avenida Principal de Campo Claro, Edificio San Antonio</p>
+                        <p className="text-[10px] text-slate-400 italic leading-snug">Punto de Referencia: Bajando por la calle de la taberna el greco, en la siguiente esquina, frente a la Pescadería Puerto Santo. Local de toldos de rayas rojas.</p>
                         <p className="text-[10px] text-primary font-black mt-3 uppercase">Horario: 8AM - 6PM</p>
                       </div>
                     )}

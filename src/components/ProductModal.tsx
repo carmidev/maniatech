@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ShoppingBasket, ChevronLeft, ChevronRight, Heart } from "lucide-react";
+import { X, ShoppingBasket, ChevronLeft, ChevronRight, Heart, Cookie, Coffee } from "lucide-react";
 import { Candy } from "@/app/mock-data";
 import { useCart } from "@/context/CartContext";
 import { getImagePath } from "@/utils/imagePath";
@@ -12,9 +12,10 @@ interface ProductModalProps {
   candy: Candy | null;
   isOpen: boolean;
   onClose: () => void;
+  onNavigateToGolosinas?: (category?: string) => void;
 }
 
-export const ProductModal = ({ candy, isOpen, onClose }: ProductModalProps) => {
+export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: ProductModalProps) => {
   const { addToCart } = useCart();
   const [currentImg, setCurrentImg] = useState(0);
 
@@ -24,6 +25,7 @@ export const ProductModal = ({ candy, isOpen, onClose }: ProductModalProps) => {
   const prevImg = () => setCurrentImg((prev) => (prev - 1 + candy.images.length) % candy.images.length);
 
   const isOutOfStock = candy.stock === 0;
+  const isMenu = candy.badge === 'menu';
 
   return (
     <AnimatePresence>
@@ -92,40 +94,62 @@ export const ProductModal = ({ candy, isOpen, onClose }: ProductModalProps) => {
                       ? (candy.category.includes("top") ? "🔥 Los más buscados" : candy.category.join(", ")) 
                       : (candy.category === "top" ? "🔥 Los más buscados" : candy.category)}
                   </span>
-                  <span className="text-slate-300">|</span>
-                  <span className="text-primary font-numbers font-semibold text-2xl">{candy.price.toFixed(2)}€</span>
+                  {!isMenu && (
+                    <>
+                      <span className="text-slate-300">|</span>
+                      <span className="text-primary font-numbers font-semibold text-2xl">{candy.price.toFixed(2)}€</span>
+                    </>
+                  )}
                 </div>
                 
-                <h2 className="text-3xl md:text-4xl font-display text-brand-darkgray leading-tight mb-3">
+                <h2 className="text-3xl md:text-4xl font-sans font-bold text-brand-darkgray leading-tight mb-3 flex items-center gap-3">
                   {candy.name}
+                  {isMenu && <Coffee className="w-8 h-8 text-primary" />}
                 </h2>
                 
                 <p className="text-brand-darkgray/70 text-base font-body font-normal leading-relaxed mb-6">
                   {candy.description}
                 </p>
 
-                {/* Reseña Personal (Humanización) - Más compacta */}
-                <div className="relative bg-primary/5 p-6 rounded-[2rem] mb-6 border border-primary/10 mx-3 mt-3">
-                  <div className="absolute -top-3 -left-3 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center shadow-lg transform -rotate-12">
-                    <Heart className="w-4 h-4 fill-current" />
+                {/* Reseña Personal o Botón de Navegación */}
+                {isMenu ? (
+                  <div className="mt-8 flex flex-col items-center text-center px-4">
+                    <p className="text-sm font-medium text-slate-400 mb-4 uppercase tracking-widest">¿Buscas algo para acompañar?</p>
+                    <button
+                      onClick={() => onNavigateToGolosinas?.("galletas")}
+                      className="group flex items-center gap-3 bg-white border-2 border-primary text-primary px-8 py-4 rounded-full font-black text-sm hover:bg-primary hover:text-white transition-all shadow-lg shadow-primary/10 active:scale-95"
+                    >
+                      <Cookie className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                      Ver Golosinas (Galletas)
+                    </button>
                   </div>
-                  <h4 className="text-primary font-black uppercase tracking-tighter text-[10px] mb-2 font-mono">
-                    Reseña de Ana ✨
-                  </h4>
-                  <p className="text-slate-800 font-bold text-base leading-snug italic">
-                    "{candy.ownerReview}"
-                  </p>
-                  <div className="mt-3 flex items-center gap-2">
-                    <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest italic">
-                      — ANA
-                    </span>
+                ) : (
+                  <div className="relative bg-primary/5 p-6 rounded-[2rem] mb-6 border border-primary/10 mx-3 mt-3">
+                    <div className="absolute -top-3 -left-3 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center shadow-lg transform -rotate-12">
+                      <Heart className="w-4 h-4 fill-current" />
+                    </div>
+                    <h4 className="text-primary font-black uppercase tracking-tighter text-[10px] mb-2 font-body">
+                      Reseña de Ana ✨
+                    </h4>
+                    <p className="text-slate-800 font-bold text-base leading-snug italic">
+                      "{candy.ownerReview || "¡Un sabor único que tienes que probar!"}"
+                    </p>
+                    <div className="mt-3 flex items-center gap-2">
+                      <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest italic">
+                        — ANA
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Botón Añadir al Carrito - Fijo abajo */}
               <div className="mt-4 pt-4 border-t border-slate-100">
-                {isOutOfStock ? (
+                {isMenu ? (
+                  <div className="w-full py-4 rounded-[2rem] font-black text-sm bg-primary/5 text-primary border border-primary/20 flex items-center justify-center gap-3">
+                    ✨ ¡Disfrútalo en nuestra tienda!
+                  </div>
+                ) : isOutOfStock ? (
                   <button
                     disabled
                     className="w-full py-4 rounded-[2rem] font-black text-sm bg-gray-300 text-gray-500 cursor-not-allowed shadow-none flex items-center justify-center gap-3 transition-all duration-300"

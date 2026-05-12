@@ -163,7 +163,7 @@ export default function Home() {
           <div className="flex items-center gap-1 sm:gap-4 lg:gap-8 shrink-0">
             <div className="hidden lg:flex items-center gap-7 font-display text-sm tracking-wide">
               <Link href="/#lab" className="text-brand-darkgray/80 hover:text-primary transition-colors">
-                Candy Lab
+                Candy Reviews
               </Link>
               <Link href="/#ubicaciones" className="text-brand-darkgray/80 hover:text-primary transition-colors">
                 Ubicaciones
@@ -217,7 +217,7 @@ export default function Home() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
                 >
-                  Candy Lab
+                  Candy Reviews
                 </Link>
                 <Link
                   href="/#ubicaciones"
@@ -250,8 +250,8 @@ export default function Home() {
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
             className="absolute top-[46%] lg:top-[18%] left-[4%] lg:left-[4%] opacity-60"
           >
-            <svg width="130" height="72" viewBox="0 0 130 72" fill="none">
-              <path d="M10,62 C10,62 0,60 0,52 C0,44 8,40 16,42 C16,30 26,22 38,24 C40,14 50,8 62,10 C70,4 82,4 90,12 C100,8 112,14 114,24 C122,24 130,32 128,40 C126,48 118,52 110,50 C110,58 100,64 90,62 Z" fill="white" />
+            <svg width="130" height="72" viewBox="0 0 130 72" fill="none" className="overflow-visible">
+              <path d="M10,62 C10,62 0,60 0,52 C0,44 8,40 16,42 C16,30 26,22 38,24 C40,14 50,8 62,10 C70,4 82,4 90,12 C100,8 112,14 114,24 C122,24 130,32 128,40 C126,48 118,52 110,50 C110,60 100,68 85,65 C75,72 65,72 55,65 C40,72 25,70 10,62 Z" fill="white" />
             </svg>
           </motion.div>
 
@@ -262,7 +262,7 @@ export default function Home() {
             className="absolute top-[38%] lg:top-[12%] right-[6%] lg:right-[6%] opacity-50"
           >
             <svg width="170" height="95" viewBox="0 0 170 95" fill="none">
-              <path d="M14,82 C14,82 0,80 0,68 C0,56 10,50 22,53 C20,36 34,24 50,26 C52,14 66,6 82,8 C92,2 108,2 118,12 C130,6 146,14 148,28 C158,28 170,38 168,52 C166,64 156,70 144,68 C144,78 132,86 120,84 C116,92 104,96 94,88 C84,94 70,92 64,82 Z" fill="white" />
+              <path d="M20,75 C10,75 0,65 0,55 C0,40 15,30 30,35 C35,20 55,10 75,15 C85,5 105,5 115,15 C130,10 145,20 150,35 C165,35 175,45 170,60 C165,75 150,80 140,75 C135,85 120,95 105,90 C95,98 75,98 65,90 C55,98 35,95 25,85 C22,80 20,80 20,75 Z" fill="white" />
             </svg>
           </motion.div>
         </div>
@@ -351,7 +351,7 @@ export default function Home() {
         </motion.div>
 
         {/* ── CONTENIDO TEXTO (IZQUIERDA) - AL FRENTE (z-30) ── */}
-        <div className="min-h-[100dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start lg:items-center relative z-30 px-6 sm:px-8 lg:px-[12%] pt-[160px] lg:pt-0 pointer-events-none">
+        <div className="min-h-[100dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start relative z-30 px-6 sm:px-8 lg:px-[10%] pt-[140px] lg:pt-52 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
@@ -362,24 +362,27 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-[42px] sm:text-6xl lg:text-6xl font-display-main font-bold text-brand-darkgray leading-[1.1] lg:leading-[1.05] mb-4 lg:mb-4 tracking-tight text-center lg:text-left flex flex-col items-center lg:items-start px-2"
+              className="text-[30px] sm:text-5xl lg:text-[50px] font-display-main font-bold text-brand-darkgray leading-[1.1] lg:leading-[1.1] mb-1 lg:mb-1 tracking-tight text-center lg:text-left flex flex-col items-center lg:items-start px-2"
             >
-              <span className="block lg:inline whitespace-nowrap lg:whitespace-normal">¡Vuelve a ser</span>
-              <span className="flex items-center justify-center lg:justify-start gap-2 flex-wrap -mt-1 lg:mt-3">
-                <span className="font-script text-[0.85em] md:text-[0.95em] text-primary relative -rotate-2 drop-shadow-md bg-white px-4 md:px-6 py-1 lg:py-2 rounded-[2rem] border-2 border-primary/20 mx-1 shadow-sm">
-                  un niño
+              <span className="block">El primer Coffee</span>
+              <div className="flex items-center justify-center lg:justify-start gap-3 mt-1 lg:mt-1">
+                <span className="font-script text-[0.85em] md:text-[0.9em] text-primary relative -rotate-1 drop-shadow-md bg-white px-4 md:px-5 py-1 lg:py-1.5 rounded-[2rem] border-2 border-primary/20 shadow-sm">
+                  Candy Bar
                 </span>
-                <span>hoy!</span>
-              </span>
+                <span className="whitespace-nowrap">de</span>
+              </div>
+              <span className="block mt-1 lg:mt-1">Venezuela</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
-              className="text-[16px] sm:text-[18px] text-brand-darkgray/90 mb-6 lg:mb-3 leading-[1.4] lg:leading-relaxed font-body font-normal mx-auto lg:mx-0 w-full max-w-[310px] sm:max-w-[480px] lg:max-w-[420px] text-center lg:text-justify px-2 line-clamp-2 overflow-hidden"
+              className="text-[16px] sm:text-[17px] lg:text-[21px] text-brand-darkgray/90 mb-3 lg:mb-4 leading-[1.4] lg:leading-relaxed font-body font-normal mx-auto lg:mx-0 w-full max-w-[320px] sm:max-w-[480px] lg:max-w-[620px] text-center lg:text-left px-2"
             >
-              Dulces raros, colaboraciones exclusivas y la magia de Dolce Candy en cada caja.
+              La combinación perfecta entre el mejor café y las{' '}
+              <br className="hidden lg:block" />
+              golosinas más exclusivas en un solo lugar.
             </motion.p>
 
             <motion.div
@@ -417,7 +420,7 @@ export default function Home() {
                 href="/catalogo"
                 className="bg-brand-red text-white px-8 lg:px-8 py-3 lg:py-3.5 rounded-full font-bold text-[16px] lg:text-[16px] inline-flex items-center gap-1.5 lg:gap-2 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-red/50 active:scale-95 transition-all duration-300 shadow-lg shadow-brand-red/40 group pointer-events-auto"
               >
-                Ver todos los dulces <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                Ver todas las golosinas <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </motion.div>
           </motion.div>
@@ -433,18 +436,53 @@ export default function Home() {
           />
         </div>
 
-        {/* Layer 3: Pawsy Foreground Transition Strip (Método de Escritorio: Alineación Natural) */}
-        <div className="absolute bottom-[39px] lg:bottom-[-1px] left-0 w-full lg:left-0 lg:w-full z-30 pointer-events-none">
-          <img
-            src="https://framerusercontent.com/images/t49nGcvSU3RT2ngSvvjRRajdes4.png"
-            alt="Cloud Transition Strip"
-            className="w-full h-[160px] md:h-[222px] object-cover object-bottom origin-bottom"
-          />
+        {/* Layer 3: Organic Fluffy Cloud Border (Estilo Flat Shadow - Efecto Marco Profundo) */}
+        <div className="absolute bottom-[-1px] left-0 w-full z-30 pointer-events-none h-[140px] md:h-[220px]">
+          <svg viewBox="0 -20 1200 160" preserveAspectRatio="none" className="w-full h-full overflow-visible">
+            
+            {/* Capa Trasera (Sombra Plana / Flat Shadow) */}
+            <path 
+              fill="#ffffff" 
+              opacity="0.6" 
+              transform="translate(0, -15)"
+              d="M 0 140 L 0 35 
+                 C 10 7, 70 19, 80 46 
+                 C 100 11, 180 23, 200 62 
+                 C 210 54, 260 67, 270 89 
+                 C 290 52, 380 59, 400 96 
+                 C 420 77, 470 86, 490 107 
+                 C 510 73, 580 70, 600 100 
+                 C 615 90, 665 95, 680 113 
+                 C 710 62, 790 51, 820 94 
+                 C 840 72, 900 69, 920 86 
+                 C 935 54, 995 38, 1010 60 
+                 C 1030 41, 1100 31, 1120 51 
+                 C 1140 22, 1180 6, 1200 25 
+                 L 1200 140 Z" 
+            />
+
+            {/* Capa Frontal (Nube Principal) */}
+            <path 
+              fill="#ffffff" 
+              d="M 0 140 L 0 35 
+                 C 10 7, 70 19, 80 46 
+                 C 100 11, 180 23, 200 62 
+                 C 210 54, 260 67, 270 89 
+                 C 290 52, 380 59, 400 96 
+                 C 420 77, 470 86, 490 107 
+                 C 510 73, 580 70, 600 100 
+                 C 615 90, 665 95, 680 113 
+                 C 710 62, 790 51, 820 94 
+                 C 840 72, 900 69, 920 86 
+                 C 935 54, 995 38, 1010 60 
+                 C 1030 41, 1100 31, 1120 51 
+                 C 1140 22, 1180 6, 1200 25 
+                 L 1200 140 Z" 
+            />
+          </svg>
         </div>
         {/* Parche blanco móvil para sellar la transición al elevar el piso */}
         <div className="absolute bottom-[-2px] left-0 w-full h-[45px] bg-white z-20 lg:hidden pointer-events-none px-0 mx-0 mt-0"></div>
-
-
 
       </section>
 
@@ -472,7 +510,7 @@ export default function Home() {
                 transition={{ delay: 0.1 }}
                 className="text-4xl md:text-5xl font-display text-brand-darkgray leading-tight"
               >
-                Dulces <span className="text-primary">Destacados</span>
+                Golosinas <span className="text-primary">Destacadas</span>
               </motion.h2>
             </div>
             <Link
@@ -579,16 +617,20 @@ export default function Home() {
               {
                 city: "Campo Claro",
                 area: "Caracas",
-                address: "Av. Principal de Campo Claro &, Avenida D, Caracas 1071",
+                address: "Avenida Principal de Campo Claro, Edificio San Antonio",
+                reference: "Bajando por la calle de la taberna el greco, en la siguiente esquina, frente a la Pescadería Puerto Santo. Local de toldos de rayas rojas.",
                 schedule: ["Lun-Vier: 8AM - 6PM", "Sab: 10AM - 4PM", "Dom: Cerrado"],
                 image: "/images/locations/dc-campoclaro.jpeg",
+                mapUrl: "https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D",
               },
               {
                 city: "El Bosque",
                 area: "Caracas",
-                address: "Av Principal del Bosque, Caracas",
+                address: "Av Principal del Bosque, Edificio El Bosque",
+                reference: "Local de la Esquina con Santa Marias Rojas, Frente al módulo de policía, bajando hacia Chacaito.",
                 schedule: ["Lun-Vier: 9AM - 7PM", "Sáb: 10AM - 6PM", "Dom: 12PM - 6PM"],
                 image: "/images/locations/dc-elbosque.jpeg",
+                mapUrl: "https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D",
               }
             ].map((loc, idx) => (
               <motion.div
@@ -606,21 +648,24 @@ export default function Home() {
                     alt={loc.city}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  {/* Overlay sutil solo para que no brille demasiado la foto, pero MUY neutro */}
+                  {/* Overlay sutil */}
                   <div className="absolute inset-0 bg-black/5" />
                 </div>
 
                 {/* Info de la Sede */}
-                <div className="w-full lg:w-3/5 p-6 sm:p-8 lg:p-10 flex flex-col justify-center text-left">
-                  <div className="flex items-center gap-2 mb-3">
+                <div className="w-full lg:w-3/5 p-6 sm:p-8 lg:p-10 flex flex-col text-left flex-1">
+                  <div className="flex items-center gap-2 mb-4 shrink-0">
                     <MapPin className="w-4 h-4 text-brand-darkred" />
                     <span className="text-[10px] font-display text-brand-darkred uppercase tracking-widest bg-brand-darkred/10 px-2 py-0.5 rounded-full">{loc.area}</span>
                   </div>
 
-                  <h3 className="text-3xl font-display mb-4 text-brand-darkgray leading-tight">{loc.city}</h3>
-                  <p className="text-brand-darkgray/60 font-body font-normal mb-8 text-sm leading-relaxed">{loc.address}</p>
+                  <div className="flex-1">
+                    <h3 className="text-3xl font-display mb-3 text-brand-darkgray leading-tight">{loc.city}</h3>
+                    <p className="text-brand-darkgray/60 font-body font-normal text-sm leading-relaxed mb-2">{loc.address}</p>
+                    <p className="text-brand-darkgray/40 font-body font-medium text-xs leading-snug italic mb-4">Punto de Referencia: {loc.reference}</p>
+                  </div>
 
-                  <div className="space-y-2 pt-6 border-t border-brand-brown/10">
+                  <div className="space-y-2 py-6 border-t border-brand-brown/10 mb-6 shrink-0">
                     <p className="text-[10px] font-display text-brand-darkgray/40 uppercase tracking-widest mb-3">Horarios</p>
                     {loc.schedule.map((line, i) => (
                       <div key={i} className="flex items-center justify-between text-[11px] font-body">
@@ -628,6 +673,18 @@ export default function Home() {
                         <span className="text-brand-darkgray/80 font-bold uppercase">{line.split(': ')[1]}</span>
                       </div>
                     ))}
+                  </div>
+
+                  <div className="shrink-0">
+                    <a 
+                      href={loc.mapUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="w-full lg:w-max inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-white/50 hover:bg-white border border-brand-darkred/10 text-brand-darkred font-black text-[10px] uppercase tracking-widest rounded-full transition-all group/map"
+                    >
+                      <MapPin className="w-3.5 h-3.5 group-hover/map:scale-110 transition-transform" />
+                      Ver mapa en Google
+                    </a>
                   </div>
                 </div>
               </motion.div>

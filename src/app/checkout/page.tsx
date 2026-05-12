@@ -787,11 +787,12 @@ export default function CheckoutPage() {
                         onClick={() => setPickupStore("campoclaro")}
                         className={`p-5 rounded-3xl border-2 text-left transition-all relative cursor-pointer ${pickupStore === 'campoclaro' ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 bg-slate-50 hover:border-slate-200'}`}
                       >
-                        <p className="font-display text-slate-800 mb-2 flex items-center gap-2 text-base leading-tight">
+                        <p className="font-display text-slate-800 mb-1 flex items-center gap-2 text-base leading-tight">
                           <MapPin className={`w-4 h-4 shrink-0 ${pickupStore === 'campoclaro' ? 'text-primary' : 'text-slate-400'}`} />
                           Dolce Candy Campo Claro
                         </p>
-                        <p className="text-[10px] text-slate-500 mb-3 pl-6 leading-relaxed">Av. Principal de Campo Claro & Avenida D. Caracas 1071.</p>
+                        <p className="text-[10px] text-slate-500 mb-1 pl-6 leading-relaxed">Avenida Principal de Campo Claro, Edificio San Antonio</p>
+                        <p className="text-[9px] text-slate-400 italic mb-3 pl-6 leading-relaxed">Punto de Referencia: Bajando por la calle de la taberna el greco, en la siguiente esquina, frente a la Pescadería Puerto Santo. Local de toldos de rayas rojas.</p>
                         <div className="flex items-center justify-between pl-6 gap-2">
                           <p className="text-[9px] font-black text-primary uppercase tracking-widest flex flex-col gap-0.5">
                             <span>Lun - Vier: 8:00 AM - 6:00 PM</span>
@@ -800,7 +801,7 @@ export default function CheckoutPage() {
                           <button 
                             onClick={(e) => {
                               e.stopPropagation();
-                              window.open('https://www.google.com/maps/place/Dolce+Candy+boutique/@10.49191,-66.8312609,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq', '_blank');
+                              window.open('https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D', '_blank');
                             }}
                             className="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-primary transition-colors bg-white/50 py-1 px-2 rounded-lg"
                           >
@@ -813,11 +814,12 @@ export default function CheckoutPage() {
                         onClick={() => setPickupStore("elbosque")}
                         className={`p-5 rounded-3xl border-2 text-left transition-all relative cursor-pointer ${pickupStore === 'elbosque' ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 bg-slate-50 hover:border-slate-200'}`}
                       >
-                        <p className="font-display text-slate-800 mb-2 flex items-center gap-2 text-base leading-tight">
+                        <p className="font-display text-slate-800 mb-1 flex items-center gap-2 text-base leading-tight">
                           <MapPin className={`w-4 h-4 shrink-0 ${pickupStore === 'elbosque' ? 'text-primary' : 'text-slate-400'}`} />
                           Dolce Candy El Bosque
                         </p>
-                        <p className="text-[10px] text-slate-500 mb-3 pl-6 leading-relaxed">Av. Principal del Bosque. Caracas 1060, Miranda.</p>
+                        <p className="text-[10px] text-slate-500 mb-1 pl-6 leading-relaxed">Av. Principal del Bosque, Edificio El Bosque</p>
+                        <p className="text-[9px] text-slate-400 italic mb-3 pl-6 leading-relaxed">Punto de Referencia: Local de la Esquina con Santa Marias Rojas, Frente al módulo de policía, bajando hacia Chacaito.</p>
                         <div className="flex items-center justify-between pl-6 gap-2">
                           <p className="text-[9px] font-black text-primary uppercase tracking-widest flex flex-col gap-0.5">
                             <span>Lun - Vier: 9:00 AM - 7:00 PM</span>
@@ -826,7 +828,7 @@ export default function CheckoutPage() {
                           <button 
                             onClick={(e) => {
                               e.stopPropagation();
-                              window.open('https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry', '_blank');
+                              window.open('https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D', '_blank');
                             }}
                             className="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-primary transition-colors bg-white/50 py-1 px-2 rounded-lg"
                           >
@@ -1211,8 +1213,8 @@ export default function CheckoutPage() {
                     
                     const isNational = selectedAddr?.zone === 'NATIONAL';
                     const storeMapLink = pickupStore === 'campoclaro' 
-                      ? 'https://www.google.com/maps/place/Dolce+Candy+boutique/@10.49191,-66.8312609,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq' 
-                      : 'https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry';
+                      ? 'https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D' 
+                      : 'https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D';
 
                     const deliveryText = deliveryMethod === 'delivery' 
                       ? (isNational ? `Envío Nacional (MRW/Zoom) a: ${address}` : `Delivery a: ${address}`)
@@ -1247,8 +1249,8 @@ export default function CheckoutPage() {
                   <button
                     onClick={() => {
                       const mapLink = pickupStore === 'campoclaro' 
-                        ? 'https://www.google.com/maps/place/Dolce+Candy+boutique/@10.49191,-66.8312609,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq'
-                        : 'https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry';
+                        ? 'https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D'
+                        : 'https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D';
                       window.open(mapLink, '_blank');
                     }}
                     className="mt-4 flex items-center gap-2 text-slate-400 hover:text-primary transition-colors font-bold text-xs uppercase tracking-widest"

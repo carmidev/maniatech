@@ -30,9 +30,10 @@ export const Locations = () => {
           {[
             { 
               city: "Sede Campo Claro", 
-              address: "Av. Principal de Campo Claro & Avenida D. Caracas 1071.", 
+              address: "Avenida Principal de Campo Claro, Edificio San Antonio", 
+              reference: "Bajando por la calle de la taberna el greco, en la siguiente esquina, frente a la Pescadería Puerto Santo. Local de toldos de rayas rojas.",
               detail: "Ref: F5R9+QF",
-              mapsUrl: "https://www.google.com/maps/search/?api=1&query=Av.+Principal+de+Campo+Claro+&Avenida+D+Caracas+1071",
+              mapsUrl: "https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D",
               schedule: "Lun - Dom: 10:00 AM - 8:00 PM",
               color: "text-primary",
               bgColor: "bg-primary",
@@ -41,9 +42,10 @@ export const Locations = () => {
             },
             { 
               city: "Sede El Bosque", 
-              address: "Av. Principal del Bosque. Caracas 1060, Miranda.", 
+              address: "Av. Principal del Bosque, Edificio El Bosque", 
+              reference: "Local de la Esquina con Santa Marias Rojas, Frente al módulo de policía, bajando hacia Chacaito.",
               detail: "Ref: F4VJ+PVF",
-              mapsUrl: "https://www.google.com/maps/search/?api=1&query=Av.+Principal+del+Bosque+Caracas+1060+Miranda",
+              mapsUrl: "https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D",
               schedule: "Lun - Dom: 11:00 AM - 9:00 PM",
               color: "text-blue-500",
               bgColor: "bg-blue-500",
@@ -83,8 +85,13 @@ export const Locations = () => {
                   <div className={`h-2 w-2 rounded-full ${loc.bgColor} animate-pulse`} />
                 </div>
                 
-                <p className="text-slate-600 font-bold text-lg leading-snug mb-2 max-w-sm">
+                <p className="text-slate-600 font-bold text-lg leading-snug mb-1 max-w-sm">
                   {loc.address}
+                </p>
+
+                <p className="text-slate-500 font-medium text-sm leading-relaxed mb-4 max-w-sm">
+                  <span className="font-black text-[10px] uppercase tracking-tighter mr-1 opacity-50">Punto de Ref:</span>
+                  {loc.reference}
                 </p>
                 
                 <div className="flex flex-wrap items-center gap-4 mt-4">

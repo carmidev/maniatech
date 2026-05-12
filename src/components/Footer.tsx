@@ -1,6 +1,6 @@
 "use client";
 
-import { Instagram, Mail, Play, Zap, MapPin } from "lucide-react";
+import { Instagram, Mail, Play, Zap, MapPin, Phone } from "lucide-react";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -20,28 +20,7 @@ export const Footer = () => {
             />
           </div>
 
-          {/* Columna 2: Slogan y Redes */}
-          <div className="flex flex-col items-center lg:items-start gap-4">
-            <h3 className="text-white text-lg lg:text-xl leading-tight font-display font-bold tracking-tight lg:whitespace-nowrap">
-              Hacemos magia dulce⚡️
-            </h3>
-            <p className="text-white/40 text-sm lg:text-base font-body font-normal mb-4">
-              Directo de USA a tus manos en Venezuela.
-            </p>
-            <div className="flex justify-center lg:justify-start">
-              <motion.a
-                href="https://www.instagram.com/dolce.candy.boutique/"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-flex py-1.5 px-4 bg-white/5 rounded-full items-center gap-2 border border-white/10 text-xs font-bold"
-              >
-                <Instagram className="w-3 h-3 text-primary" />
-                <span>Instagram</span>
-              </motion.a>
-            </div>
-          </div>
+
 
           {/* Columna 3: Tienda */}
           <div className="lg:pl-8">
@@ -56,7 +35,13 @@ export const Footer = () => {
               <li>
                 <Link href="/#lab" className="hover:text-white transition-colors flex items-center gap-3 justify-center lg:justify-start group">
                   <Play className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
-                  Candy Lab
+                  Candy Reviews
+                </Link>
+              </li>
+              <li>
+                <Link href="/#ubicaciones" className="hover:text-white transition-colors flex items-center gap-3 justify-center lg:justify-start group">
+                  <MapPin className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+                  Ubicaciones
                 </Link>
               </li>
             </ul>
@@ -70,6 +55,18 @@ export const Footer = () => {
                 <Mail className="w-4 h-4 text-primary shrink-0" />
                 <a href="mailto:dolcecandyboutique@gmail.com" className="hover:text-white transition-colors text-xs lg:text-sm truncate max-w-[180px] lg:max-w-none">
                   dolcecandyboutique@gmail.com
+                </a>
+              </li>
+              <li className="flex items-center gap-4 justify-center lg:justify-start">
+                <Phone className="w-4 h-4 text-primary shrink-0" />
+                <a href="https://wa.me/584122861719" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-xs lg:text-sm">
+                  +58 412 2861719
+                </a>
+              </li>
+              <li className="flex items-center gap-4 justify-center lg:justify-start">
+                <Instagram className="w-4 h-4 text-primary shrink-0" />
+                <a href="https://www.instagram.com/dolce.candy.boutique/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-xs lg:text-sm">
+                  @dolce.candy.boutique
                 </a>
               </li>
             </ul>

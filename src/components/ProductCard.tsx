@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBasket, Plus, Check } from "lucide-react";
+import { ShoppingBasket, Plus, Check, Coffee } from "lucide-react";
 import { Candy } from "@/app/mock-data";
 import { useCart } from "@/context/CartContext";
 import { getImagePath } from "@/utils/imagePath";
@@ -14,6 +14,7 @@ const BADGE_STYLES: Record<string, string> = {
   viral: "bg-primary text-white",
   exclusivo: "bg-brand-brown text-white",
   top: "bg-primary text-white",
+  menu: "bg-brand-darkgray text-white",
 };
 
 const BADGE_LABELS: Record<string, string> = {
@@ -22,6 +23,7 @@ const BADGE_LABELS: Record<string, string> = {
   viral: "Viral 🔥",
   exclusivo: "Exclusivo",
   top: "TOP 🔥",
+  menu: "Menú",
 };
 
 export const ProductCard = ({ 
@@ -49,6 +51,7 @@ export const ProductCard = ({
     : candy.category === "top";
   
   const activeBadge = candy.badge || (isTopProduct ? "top" : null);
+  const isMenu = activeBadge === 'menu';
 
   return (
     <motion.div
@@ -85,69 +88,73 @@ export const ProductCard = ({
             </span>
           )}
 
-          {/* Precio Flotante */}
-          <div className="absolute top-5 right-5 bg-white/95 backdrop-blur px-3 py-1 rounded-2xl shadow-md border border-white/50">
-            <span className="text-primary font-numbers font-semibold text-xl">${candy.price.toFixed(2)}</span>
-          </div>
+          {!isMenu && (
+            <div className="absolute top-5 right-5 bg-white/95 backdrop-blur px-3 py-1 rounded-2xl shadow-md border border-white/50">
+              <span className="text-primary font-numbers font-semibold text-xl">${candy.price.toFixed(2)}</span>
+            </div>
+          )}
         </div>
 
         {/* Info */}
         <div className="p-7 flex flex-col flex-1 gap-2 bg-white">
-          <h3 className="text-xl font-display text-brand-darkgray leading-tight group-hover:text-primary transition-colors">
+          <h3 className="text-xl font-sans font-bold text-brand-darkgray leading-tight group-hover:text-primary transition-colors flex items-center gap-2">
             {candy.name}
+            {isMenu && <Coffee className="w-5 h-5 text-primary" />}
           </h3>
           <p className="text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 leading-relaxed flex-1">
             {candy.description}
           </p>
           
-          <motion.button
-            whileTap={{ scale: isOutOfStock ? 1 : 0.95 }}
-            onClick={handleAdd}
-            disabled={isOutOfStock}
-            className={`mt-4 w-full py-4 rounded-[2rem] font-black text-sm transition-all duration-300 flex items-center justify-center gap-3 shadow-lg ${
-              isOutOfStock
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
-                : isAdded 
-                  ? "bg-green-500 text-white shadow-green-500/30" 
-                  : "bg-brand-red text-white hover:opacity-90 shadow-brand-red/20"
-            }`}
-          >
-            <AnimatePresence mode="wait">
-              {isOutOfStock ? (
-                <motion.div
-                  key="out"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-2"
-                >
-                  <span>Agotado</span>
-                </motion.div>
-              ) : isAdded ? (
-                <motion.div
-                  key="check"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-2"
-                >
-                  <Check className="w-5 h-5" />
-                  <span>¡Agregado a la cesta!</span>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="basket"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  className="flex items-center gap-2"
-                >
-                  <ShoppingBasket className="w-5 h-5" />
-                  <span>¡Lo quiero!</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.button>
+          {!isMenu && (
+            <motion.button
+              whileTap={{ scale: isOutOfStock ? 1 : 0.95 }}
+              onClick={handleAdd}
+              disabled={isOutOfStock}
+              className={`mt-4 w-full py-4 rounded-[2rem] font-black text-sm transition-all duration-300 flex items-center justify-center gap-3 shadow-lg ${
+                isOutOfStock
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+                  : isAdded 
+                    ? "bg-green-500 text-white shadow-green-500/30" 
+                    : "bg-brand-red text-white hover:opacity-90 shadow-brand-red/20"
+              }`}
+            >
+              <AnimatePresence mode="wait">
+                {isOutOfStock ? (
+                  <motion.div
+                    key="out"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="flex items-center gap-2"
+                  >
+                    <span>Agotado</span>
+                  </motion.div>
+                ) : isAdded ? (
+                  <motion.div
+                    key="check"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="flex items-center gap-2"
+                  >
+                    <Check className="w-5 h-5" />
+                    <span>¡Agregado a la cesta!</span>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="basket"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="flex items-center gap-2"
+                  >
+                    <ShoppingBasket className="w-5 h-5" />
+                    <span>¡Lo quiero!</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          )}
         </div>
       </div>
     </motion.div>

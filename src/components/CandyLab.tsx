@@ -33,14 +33,14 @@ export const CandyLab = () => {
           <div className="max-w-xl text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-accent/30 text-primary-foreground px-4 py-2 rounded-full mb-4">
               <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-xs lg:text-sm font-bold uppercase tracking-wider text-primary">El Laboratorio de Dolce</span>
+              <span className="text-xs lg:text-sm font-bold uppercase tracking-wider text-primary">Reviews de Dolce</span>
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-display text-brand-darkgray mb-6 leading-[1.1]">
               ¿Quieres ver <br />
               <span className="text-primary italic font-script">cómo saben</span>?
             </h2>
             <p className="text-brand-darkgray/80 text-base lg:text-lg font-body font-normal">
-              Nuestra fundadora prueba cada dulce raro en Instagram. Mira sus reacciones reales antes de decidirte.
+              Nuestra fundadora prueba cada golosina en Instagram. Mira sus reacciones reales antes de decidirte.
             </p>
           </div>
           
@@ -123,7 +123,7 @@ export const CandyLab = () => {
 
         {/* CTA Bottom */}
         <div className="mt-16 lg:mt-20 text-center">
-           <p className="text-brand-darkgray/60 font-body font-normal uppercase tracking-widest text-[10px] lg:text-xs mb-4">Más de 50 dulces probados en vivo</p>
+           <p className="text-brand-darkgray/60 font-body font-normal uppercase tracking-widest text-[10px] lg:text-xs mb-4">Más de 50 golosinas probadas en vivo</p>
            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 lg:gap-4">
               <div className="flex -space-x-4">
                 {[...Array(5)].map((_, i) => (
