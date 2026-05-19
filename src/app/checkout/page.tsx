@@ -148,6 +148,7 @@ export default function CheckoutPage() {
   const [authError, setAuthError] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
+  const [createdOrderId, setCreatedOrderId] = useState<number | string | null>(null);
   const [firstName, setFirstName] = useState("");
   const [customerProfile, setCustomerProfile] = useState<any>(null);
 
@@ -248,8 +249,8 @@ export default function CheckoutPage() {
         throw new Error(result.error);
       }
 
-      // Limpiar el carrito una vez guardado con éxito
-      clearCart();
+      setCreatedOrderId(result.order?.id || "N/A");
+
       setIsSubmitting(false);
       nextStep();
     } catch (err: any) {
@@ -1234,7 +1235,22 @@ export default function CheckoutPage() {
                       ? `${selectedAddrObj.formatted_address}${referencePoint ? `\n📍 *Ref:* ${referencePoint}` : ''}`
                       : deliveryText;
 
-                    const orderSummary = `${scheduledBadge}¡Hola Dolce Candy! 🍭\n\n🎯 *Resumen de mi Pedido*\n━━━━━━━━━━━━━━\n💰 *Total:* ${totalPrice.toFixed(2)} €\n🚚 *Entrega:* ${finalDeliveryText}${mapsLink}\n💳 *Pago:* ${paymentText}${receiptLinkText}\n\n✨ ¡Gracias!`;
+                    const paymentMethodNames = {
+                      zelle: "Zelle",
+                      pm: "Pago Móvil",
+                      paypal: "PayPal",
+                      cash: "Efectivo"
+                    };
+                    const paymentMethodText = paymentMethodNames[paymentMethod as keyof typeof paymentMethodNames] || paymentMethod;
+
+                    const customerName = (hasProfile && customerProfile) 
+                      ? `${customerProfile.first_name} ${customerProfile.last_name}`.trim() 
+                      : (firstName || user?.phone || "Invitado");
+
+                    const orderId = createdOrderId || "N/A";
+                    const totalAmount = totalPrice.toFixed(2);
+
+                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\\n\\n🆔 Orden: #${orderId}\\n👤 Cliente: ${customerName}\\n💳 Método: ${paymentMethodText}\\n💰 Total: $${totalAmount}\\n\\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
                     const encodedMsg = encodeURIComponent(orderSummary);
                     window.open(`https://wa.me/${whatsappNumber}?text=${encodedMsg}`, "_blank");
                     handleFinish();

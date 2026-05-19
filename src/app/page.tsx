@@ -7,7 +7,7 @@ import { LollipopLogo } from "@/components/LollipopLogo";
 import { CloudDivider } from "@/components/CloudDivider";
 import { useCart } from "@/context/CartContext";
 import { CartDrawer } from "@/components/CartDrawer";
-import { CheckoutModal } from "@/components/CheckoutModal";
+
 import { Footer } from "@/components/Footer";
 import { CandyLab } from "@/components/CandyLab";
 import Link from "next/link";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift } from "lucide-react";
+import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift, Popcorn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LollipopLogo } from "@/components/LollipopLogo";
 import { ProductCard } from "@/components/ProductCard";
@@ -42,8 +42,9 @@ export default function CatalogoPage() {
     { id: "gomitas", label: "Gomitas", icon: "🧬" },
     { id: "acidos", label: "Ácidos", icon: "⚡" },
     { id: "picantes", label: "Picantes", icon: "🔥" },
-    { id: "bebidas", label: "Bebidas", icon: "🥤" },
     { id: "galletas", label: "Galletas", icon: "🍪" },
+    { id: "snacks", label: "Snacks", icon: "🍿" },
+    { id: "bebidas", label: "Bebidas", icon: "🥤" },
     { id: "juguetes", label: "Juguetes", icon: "🎁" },
     { id: "top", label: "Top", icon: "✨" },
   ];
@@ -316,8 +317,9 @@ export default function CatalogoPage() {
                     { key: "gomitas", label: "Gomitas", icon: <CandyIcon className="w-6 h-6" />, color: "bg-accent/10 text-accent" },
                     { key: "acidos", label: "Ácidos", icon: <Zap className="w-6 h-6" />, color: "bg-secondary/10 text-secondary" },
                     { key: "picantes", label: "Picantes", icon: <Flame className="w-6 h-6" />, color: "bg-brand-darkred/10 text-brand-darkred" },
-                    { key: "bebidas", label: "Bebidas", icon: <CupSoda className="w-6 h-6" />, color: "bg-brand-blue/10 text-brand-blue" },
                     { key: "galletas", label: "Galletas", icon: <Cookie className="w-6 h-6" />, color: "bg-orange-100 text-orange-600" },
+                    { key: "snacks", label: "Snacks", icon: <Popcorn className="w-6 h-6" />, color: "bg-yellow-100 text-yellow-600" },
+                    { key: "bebidas", label: "Bebidas", icon: <CupSoda className="w-6 h-6" />, color: "bg-brand-blue/10 text-brand-blue" },
                     { key: "juguetes", label: "Juguetes", icon: <Gift className="w-6 h-6" />, color: "bg-purple-100 text-purple-600" },
                     { key: "top", label: "Top", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
                   ].map((cat) => (

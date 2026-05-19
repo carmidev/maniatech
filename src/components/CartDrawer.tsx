@@ -77,7 +77,7 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                     }}
                     className="bg-brand-red text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-brand-red/20 transition-transform hover:scale-105 active:scale-95"
                   >
-                    Ver Dulces
+                    Ver Golosinas
                   </button>
                 </div>
               ) : (
