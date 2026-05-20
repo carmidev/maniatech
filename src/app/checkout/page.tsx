@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle, Upload, CreditCard, Copy, ChevronRight, ChevronDown, Truck, Store, Wallet, MapPin, Smartphone, Mail, Sparkles, User, Clock, Navigation, Map } from "lucide-react";
+import { X, CheckCircle, Upload, CreditCard, Copy, ChevronRight, ChevronDown, Truck, Store, Wallet, MapPin, Smartphone, Mail, Sparkles, User, Clock, Navigation, Map, MessageCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
