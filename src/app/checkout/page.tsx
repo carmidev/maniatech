@@ -71,13 +71,18 @@ export default function CheckoutPage() {
   useEffect(() => {
     const fetchBcvRate = async () => {
       try {
-        const res = await fetch('/api/bcv');
+        const res = await fetch('https://ve.dolarapi.com/v1/euros/oficial', {
+          headers: { 'Accept': 'application/json' }
+        });
         const data = await res.json();
-        if (data && data.rate) {
-          setBcvRate(data.rate);
+        if (data && data.promedio) {
+          setBcvRate(parseFloat(data.promedio));
+        } else {
+          setBcvRate(36.50); // Fallback seguro
         }
       } catch (err) {
         console.error("Error al obtener la tasa:", err);
+        setBcvRate(36.50); // Fallback en caso de error de red
       } finally {
         setIsFetchingRate(false);
       }
