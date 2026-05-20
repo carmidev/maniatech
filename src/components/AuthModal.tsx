@@ -2,11 +2,10 @@
 
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { X, MessageCircle } from "lucide-react";
+import { X, Mail, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
 import { ProfileForm } from "./ProfileForm";
-import { CountryCodeSelect } from "./CountryCodeSelect";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -16,8 +15,7 @@ interface AuthModalProps {
 
 export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
   const { signInWithGoogle, user } = useAuth();
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [countryCode, setCountryCode] = useState("+58");
+  const [email, setEmail] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState("");
@@ -50,37 +48,32 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
     // Reset view for next time
     setTimeout(() => {
       setView("login");
-      setPhoneNumber("");
+      setEmail("");
       setOtpCode("");
       setError("");
     }, 500);
   };
 
-  const formatPhone = (phone: string, code: string) => {
-    const clean = phone.replace(/\D/g, "");
-    const cleanCode = code.replace(/\D/g, "");
-    return clean.startsWith(cleanCode) ? `+${clean}` : `+${cleanCode}${clean}`;
-  };
-
-  const handleWhatsAppLogin = async (e: React.FormEvent) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSending(true);
     setError("");
-    
+
     try {
-      const finalPhone = formatPhone(phoneNumber, countryCode);
       const { error } = await supabase.auth.signInWithOtp({
-        phone: finalPhone,
-        options: {
-          channel: 'whatsapp',
-        },
+        email,
       });
 
       if (error) throw error;
       setView("otp");
     } catch (err: any) {
-      console.error("Error sending OTP:", err);
-      setError(err.message || "Error al enviar el código. Verifica el número.");
+      console.error("Error sending email OTP:", err);
+      const msg = err.message?.toLowerCase() || "";
+      if (msg.includes("rate limit")) {
+        setError("Has superado el límite de intentos. Espera 1 minuto o usa otro correo.");
+      } else {
+        setError("No pudimos enviar el código. Verifica el correo e intenta de nuevo.");
+      }
     } finally {
       setIsSending(false);
     }
@@ -92,18 +85,22 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
     setError("");
 
     try {
-      const finalPhone = formatPhone(phoneNumber, countryCode);
       const { error } = await supabase.auth.verifyOtp({
-        phone: finalPhone,
+        email,
         token: otpCode,
-        type: "sms",
+        type: "email",
       });
 
       if (error) throw error;
-      // The useEffect will catch the user update
+      // The useEffect will catch the user update and check profile
     } catch (err: any) {
       console.error("Error verifying OTP:", err);
-      setError("El código ingresado es incorrecto o ha expirado.");
+      const msg = err.message?.toLowerCase() || "";
+      if (msg.includes("invalid") || msg.includes("expired")) {
+        setError("El código ingresado es incorrecto o ha expirado.");
+      } else {
+        setError("Hubo un error al verificar el código. Intenta de nuevo.");
+      }
     } finally {
       setIsSending(false);
     }
@@ -136,12 +133,12 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
               </button>
               <h2 className="font-display text-2xl uppercase tracking-wider">
                 {view === "login" && "¡Hola, Dulce Amigo!"}
-                {view === "otp" && "Verifica tu WhatsApp"}
+                {view === "otp" && "Revisa tu Correo"}
                 {view === "profile" && "¡Bienvenido!"}
               </h2>
               <p className="mt-2 font-body opacity-90 text-sm">
                 {view === "login" && "Inicia sesión para continuar con tu pedido."}
-                {view === "otp" && `Ingresa el código que enviamos al +58 ${phoneNumber}`}
+                {view === "otp" && `Ingresa el código que enviamos a ${email}`}
                 {view === "profile" && "Por favor, completa tu perfil para continuar."}
               </p>
             </div>
@@ -162,30 +159,29 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                     exit={{ opacity: 0, x: 20 }}
                     className="space-y-6"
                   >
-                    {/* WhatsApp Form */}
-                    <form onSubmit={handleWhatsAppLogin} className="space-y-4">
-                      <div className="flex gap-2 relative">
-                        <CountryCodeSelect
-                          value={countryCode}
-                          onChange={setCountryCode}
-                          className="w-[110px]"
+                    {/* Email Form */}
+                    <form onSubmit={handleEmailLogin} className="space-y-4">
+                      <div className="relative">
+                        <Mail
+                          size={18}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                         />
                         <input
-                          type="tel"
-                          placeholder="Número de teléfono"
-                          value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
-                          className="w-full rounded-2xl bg-gray-200 py-4 font-body px-4 outline-none ring-primary/30 transition-all focus:ring-2"
+                          type="email"
+                          placeholder="tucorreo@ejemplo.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full rounded-2xl bg-gray-100 py-4 pl-12 pr-4 font-body outline-none ring-primary/30 transition-all focus:ring-2 focus:bg-white"
                           required
                         />
                       </div>
                       <button
                         type="submit"
                         disabled={isSending}
-                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] py-4 font-body font-bold text-white shadow-lg shadow-[#25D366]/20 transition-all hover:bg-[#20ba5a] active:scale-[0.98] disabled:opacity-50"
+                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary py-4 font-body font-bold text-white shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
                       >
-                        <MessageCircle size={24} />
-                        {isSending ? "Enviando..." : "Enviar código por WhatsApp"}
+                        <Sparkles size={20} />
+                        {isSending ? "Enviando código..." : "Enviar código"}
                       </button>
                     </form>
 
@@ -244,7 +240,7 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                       onClick={() => setView("login")}
                       className="w-full text-center text-sm font-body text-gray-400 hover:text-primary transition-colors"
                     >
-                      ¿Número incorrecto? Volver atrás
+                      ¿Correo incorrecto? Volver atrás
                     </button>
                   </motion.div>
                 )}

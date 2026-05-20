@@ -1,14 +1,14 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle, Upload, CreditCard, Copy, ChevronRight, ChevronDown, Truck, Store, Wallet, MapPin, Smartphone, MessageCircle, User, Clock, Navigation, Map } from "lucide-react";
+import { X, CheckCircle, Upload, CreditCard, Copy, ChevronRight, ChevronDown, Truck, Store, Wallet, MapPin, Smartphone, Mail, Sparkles, User, Clock, Navigation, Map } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { CountryCodeSelect } from "@/components/CountryCodeSelect";
 
 // Carga dinámica de componentes pesados para agilizar la navegación inicial
 const ProfileForm = dynamic(() => import("@/components/ProfileForm").then(mod => mod.ProfileForm), { 
@@ -65,6 +65,7 @@ export default function CheckoutPage() {
   const [isScheduledOrder, setIsScheduledOrder] = useState(false);
   const [bcvRate, setBcvRate] = useState<number | null>(null);
   const [isFetchingRate, setIsFetchingRate] = useState(true);
+  const [resendTimer, setResendTimer] = useState(0);
 
   // Carga de datos inicial
   useEffect(() => {
@@ -142,8 +143,7 @@ export default function CheckoutPage() {
 
   // Auth States
   const [authView, setAuthView] = useState<AuthView>(null);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [countryCode, setCountryCode] = useState("+58");
+  const [email, setEmail] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [authError, setAuthError] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -151,6 +151,17 @@ export default function CheckoutPage() {
   const [createdOrderId, setCreatedOrderId] = useState<number | string | null>(null);
   const [firstName, setFirstName] = useState("");
   const [customerProfile, setCustomerProfile] = useState<any>(null);
+
+  // Resend Timer Logic
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (authView === "otp" && resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [authView, resendTimer]);
 
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -315,27 +326,26 @@ export default function CheckoutPage() {
   };
 
   // Auth Handlers
-  const handleWhatsAppLogin = async (e: React.FormEvent) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSending(true);
     setAuthError("");
     try {
-      const cleanPhone = phoneNumber.replace(/\D/g, "");
-      const cleanCode = countryCode.replace(/\D/g, "");
-      const fullPhone = `+${cleanCode}${cleanPhone}`;
-
       const { error } = await supabase.auth.signInWithOtp({
-        phone: fullPhone,
-        options: {
-          channel: 'whatsapp',
-        },
+        email,
       });
 
       if (error) throw error;
       setAuthView("otp");
+      setResendTimer(60);
     } catch (err: any) {
       console.error("Error logging in:", err);
-      setAuthError("No pudimos enviar el código. Verifica el número e intenta de nuevo.");
+      const msg = err.message?.toLowerCase() || "";
+      if (msg.includes("rate limit")) {
+        setAuthError("Has superado el límite de intentos. Espera 1 minuto o usa otro correo.");
+      } else {
+        setAuthError("No pudimos enviar el código. Verifica el correo e intenta de nuevo.");
+      }
     } finally {
       setIsSending(false);
     }
@@ -346,14 +356,10 @@ export default function CheckoutPage() {
     setIsSending(true);
     setAuthError("");
     try {
-      const cleanPhone = phoneNumber.replace(/\D/g, "");
-      const cleanCode = countryCode.replace(/\D/g, "");
-      const fullPhone = `+${cleanCode}${cleanPhone}`;
-
       const { data, error } = await supabase.auth.verifyOtp({
-        phone: fullPhone,
+        email,
         token: otpCode,
-        type: "sms",
+        type: "email",
       });
 
       if (error) throw error;
@@ -363,15 +369,12 @@ export default function CheckoutPage() {
         const { data: profile } = await supabase
           .from("customers")
           .select("*")
-          .or(`id.eq.${data.user.id},phone.eq.${fullPhone}`)
+          .eq("id", data.user.id)
           .maybeSingle();
 
         if (!profile) {
           setAuthView("profile");
         } else {
-          if (profile.id !== data.user.id) {
-            await supabase.from("customers").update({ id: data.user.id }).eq('phone', fullPhone);
-          }
           setAuthView(null);
           setHasProfile(true);
           nextStep();
@@ -379,7 +382,12 @@ export default function CheckoutPage() {
       }
     } catch (err: any) {
       console.error("Error verifying OTP:", err);
-      setAuthError("El código ingresado es incorrecto o ha expirado.");
+      const msg = err.message?.toLowerCase() || "";
+      if (msg.includes("invalid") || msg.includes("expired")) {
+        setAuthError("El código ingresado es incorrecto o ha expirado.");
+      } else {
+        setAuthError("Hubo un error al verificar el código. Intenta de nuevo.");
+      }
     } finally {
       setIsSending(false);
     }
@@ -549,9 +557,9 @@ export default function CheckoutPage() {
       {/* Left Side: Summary */}
       <div className="bg-primary p-8 md:p-12 text-white md:w-5/12 flex flex-col justify-between relative overflow-hidden md:sticky md:top-0 md:h-screen">
         <div className="relative z-10">
-          <button onClick={() => router.push('/catalogo')} className="mb-8 hover:bg-white/10 p-2 rounded-full inline-flex transition-colors">
+          <Link href="/catalogo" className="mb-8 hover:bg-white/10 p-2 rounded-full inline-flex transition-colors">
             <X className="w-6 h-6" />
-          </button>
+          </Link>
           <h2 className="text-4xl md:text-5xl font-black mb-2 font-script">Tu Pedido</h2>
           <p className="text-white/80 text-sm md:text-base">Casi terminamos de preparar tu magia dulce.</p>
         </div>
@@ -649,12 +657,12 @@ export default function CheckoutPage() {
                 <div className="text-center mb-8">
                   <h2 className="font-display text-3xl md:text-4xl uppercase tracking-tight text-brand-darkgray">
                     {authView === "login" && "¡Hola, Dulce Amigo!"}
-                    {authView === "otp" && "Verifica tu WhatsApp"}
+                    {authView === "otp" && "Revisa tu Correo"}
                     {authView === "profile" && "¡Bienvenido!"}
                   </h2>
                   <p className="mt-2 font-body opacity-80 text-sm md:text-base text-gray-500">
-                    {authView === "login" && "Inicia sesión para continuar con tu pedido."}
-                    {authView === "otp" && `Ingresa el código que enviamos al +58 ${phoneNumber}`}
+                    {authView === "login" && "Ingresa tu correo para iniciar sesión o crear una cuenta nueva automáticamente."}
+                    {authView === "otp" && `Ingresa el código que enviamos a ${email}`}
                     {authView === "profile" && "Por favor, completa tu perfil para continuar."}
                   </p>
                 </div>
@@ -667,29 +675,28 @@ export default function CheckoutPage() {
 
                 {authView === "login" && (
                   <div className="space-y-6 max-w-md mx-auto">
-                    <form onSubmit={handleWhatsAppLogin} className="space-y-4">
-                      <div className="flex gap-2 relative">
-                        <CountryCodeSelect
-                          value={countryCode}
-                          onChange={setCountryCode}
-                          className="w-[120px]"
+                    <form onSubmit={handleEmailLogin} className="space-y-4">
+                      <div className="relative">
+                        <Mail
+                          size={18}
+                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
                         />
                         <input
-                          type="tel"
-                          placeholder="Número de teléfono"
-                          value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
-                          className="w-full rounded-2xl bg-slate-50 border border-slate-200 py-4 font-body px-5 outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all text-lg"
+                          type="email"
+                          placeholder="tucorreo@ejemplo.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full rounded-2xl bg-slate-50 border border-slate-200 py-4 pl-12 pr-5 font-body outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all text-lg"
                           required
                         />
                       </div>
                       <button
                         type="submit"
                         disabled={isSending}
-                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] py-4 font-body font-bold text-white shadow-xl shadow-[#25D366]/20 transition-all hover:bg-[#20ba5a] active:scale-[0.98] disabled:opacity-50 text-lg"
+                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary py-4 font-body font-bold text-white shadow-xl shadow-primary/20 transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 text-lg"
                       >
-                        <MessageCircle size={24} />
-                        {isSending ? "Enviando..." : "Enviar código por WhatsApp"}
+                        <Sparkles size={24} />
+                        {isSending ? "Enviando código..." : "Enviar código"}
                       </button>
                     </form>
 
@@ -712,7 +719,7 @@ export default function CheckoutPage() {
                         <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05" />
                         <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                       </svg>
-                      Continuar con Google
+                      Ingresar o registrarse con Google
                     </button>
 
                     <button onClick={() => setAuthView(null)} className="w-full text-center mt-6 text-sm text-gray-400 font-bold uppercase hover:text-gray-600 transition-colors">
@@ -722,7 +729,13 @@ export default function CheckoutPage() {
                 )}
 
                 {authView === "otp" && (
-                  <div className="space-y-6 max-w-md mx-auto">
+                  <motion.div
+                    key="otp"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-6 max-w-md mx-auto"
+                  >
                     <form onSubmit={handleVerifyOtp} className="space-y-6">
                       <input
                         type="text"
@@ -741,13 +754,24 @@ export default function CheckoutPage() {
                         {isSending ? "Verificando..." : "Verificar Código"}
                       </button>
                     </form>
-                    <button
-                      onClick={() => setAuthView("login")}
-                      className="w-full text-center text-sm font-body text-gray-400 hover:text-primary transition-colors font-medium"
-                    >
-                      ¿Número incorrecto? Volver atrás
-                    </button>
-                  </div>
+                    <div className="flex flex-col gap-4 pt-2">
+                      <button
+                        onClick={(e) => handleEmailLogin(e as unknown as React.FormEvent)}
+                        disabled={resendTimer > 0 || isSending}
+                        className="w-full text-center text-sm font-body text-primary transition-colors font-bold disabled:text-gray-400 disabled:font-medium hover:underline"
+                      >
+                        {resendTimer > 0 
+                          ? `Reenviar código en ${resendTimer}s` 
+                          : "¿No recibiste el código? Reenviar ahora"}
+                      </button>
+                      <button
+                        onClick={() => setAuthView("login")}
+                        className="w-full text-center text-sm font-body text-gray-400 hover:text-gray-600 transition-colors font-medium"
+                      >
+                        ¿Correo incorrecto? Volver atrás
+                      </button>
+                    </div>
+                  </motion.div>
                 )}
 
                 {authView === "profile" && (
@@ -757,9 +781,17 @@ export default function CheckoutPage() {
             ) : step === 1 ? (
               <motion.div key="step-1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-8 w-full">
                 <div className="space-y-2">
-                  <h3 className="text-3xl md:text-4xl font-display text-brand-darkgray leading-tight">
-                    {firstName ? `Hola ${firstName}, ¿Cómo lo recibes?` : '¿Cómo lo recibes?'}
-                  </h3>
+                  <div className="flex items-center justify-between gap-4">
+                    <h3 className="text-3xl md:text-4xl font-display text-brand-darkgray leading-tight">
+                      {firstName ? `Hola ${firstName}, ¿Cómo lo recibes?` : '¿Cómo lo recibes?'}
+                    </h3>
+                    <button 
+                      onClick={handleLogout}
+                      className="text-xs font-bold text-primary bg-primary/5 px-3 py-1.5 rounded-full hover:bg-primary/10 transition-colors uppercase tracking-wider shrink-0"
+                    >
+                      Cambiar usuario
+                    </button>
+                  </div>
                   <p className="text-brand-darkgray/60 font-body font-normal text-base">
                     Selecciona tu método de entrega preferido para continuar.
                   </p>

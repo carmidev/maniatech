@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { getImagePath } from "@/utils/imagePath";
 
 export default function AuthCallback() {
   const router = useRouter();
@@ -42,13 +43,13 @@ export default function AuthCallback() {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="w-24 h-24 rounded-[2rem] bg-brand-cream/50 flex items-center justify-center mb-8 shadow-xl shadow-brand-cream/20"
+        className="w-24 h-24 rounded-[2rem] bg-brand-cream/50 flex items-center justify-center mb-8 shadow-xl shadow-brand-cream/20 overflow-hidden"
       >
-        <span className="text-5xl">🍭</span>
+        <img src={getImagePath("/images/chupeta1.png")} alt="Cargando..." className="w-16 h-16 object-contain drop-shadow-md" />
       </motion.div>
 
       <h1 className="font-display text-2xl uppercase tracking-wider text-primary mb-3 text-center">
-        Dulzura en Camino...
+        Golosina en Camino...
       </h1>
       
       <p className="font-body text-slate-500 text-sm text-center max-w-[280px] leading-relaxed">
