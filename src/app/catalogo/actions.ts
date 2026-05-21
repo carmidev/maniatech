@@ -11,7 +11,8 @@ export async function getProductsWithInventory() {
   try {
     const { data, error } = await supabaseAdmin
       .from('products')
-      .select('*, inventory(quantity)');
+      .select('*, inventory(quantity)')
+      .eq('is_archived', false);
 
     if (error) throw error;
     return { success: true, data };
