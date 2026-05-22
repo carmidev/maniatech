@@ -132,7 +132,7 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                 <X size={20} />
               </button>
               <h2 className="font-display text-2xl uppercase tracking-wider">
-                {view === "login" && "¡Hola, Dulce Amigo!"}
+                {view === "login" && "¡Hola, Amigo!"}
                 {view === "otp" && "Revisa tu Correo"}
                 {view === "profile" && "¡Bienvenido!"}
               </h2>

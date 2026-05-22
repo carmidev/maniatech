@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
+import { getImagePath } from "@/utils/imagePath";
 
 // Carga dinámica de componentes pesados para agilizar la navegación inicial
 const ProfileForm = dynamic(() => import("@/components/ProfileForm").then(mod => mod.ProfileForm), { 
@@ -536,22 +537,35 @@ export default function CheckoutPage() {
             rotate: [0, 5, -5, 0]
           }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="w-24 h-24 rounded-[2rem] bg-brand-cream/50 flex items-center justify-center mb-8 shadow-xl shadow-brand-cream/20"
+          className="w-24 h-24 rounded-[2rem] bg-brand-cream/50 flex items-center justify-center mb-8 shadow-xl shadow-brand-cream/20 overflow-hidden"
         >
-          <span className="text-5xl">🍭</span>
+          <img src={getImagePath("/images/chupeta1.png")} alt="Cargando..." className="w-16 h-16 object-contain drop-shadow-md" />
         </motion.div>
+
         <h1 className="font-display text-2xl uppercase tracking-wider text-primary mb-3 text-center">
-          Verificando tu Dulce Sesión...
+          Golosina en Camino...
         </h1>
-        <div className="flex gap-3">
-          {[0, 0.2, 0.4].map((delay) => (
-            <motion.div
-              key={delay}
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 1, repeat: Infinity, delay }}
-              className="w-3 h-3 rounded-full bg-primary"
-            />
-          ))}
+        
+        <p className="font-body text-slate-500 text-sm text-center max-w-[280px] leading-relaxed">
+          Estamos verificando tu acceso. Te llevaremos de vuelta en un instante.
+        </p>
+
+        <div className="mt-10 flex gap-3">
+          <motion.div
+            animate={{ y: [0, -12, 0] }}
+            transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+            className="w-3.5 h-3.5 rounded-full bg-primary"
+          />
+          <motion.div
+            animate={{ y: [0, -12, 0] }}
+            transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+            className="w-3.5 h-3.5 rounded-full bg-secondary"
+          />
+          <motion.div
+            animate={{ y: [0, -12, 0] }}
+            transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+            className="w-3.5 h-3.5 rounded-full bg-brand-blue"
+          />
         </div>
       </div>
     );
@@ -661,7 +675,7 @@ export default function CheckoutPage() {
               >
                 <div className="text-center mb-8">
                   <h2 className="font-display text-3xl md:text-4xl uppercase tracking-tight text-brand-darkgray">
-                    {authView === "login" && "¡Hola, Dulce Amigo!"}
+                    {authView === "login" && "¡Hola, Amigo!"}
                     {authView === "otp" && "Revisa tu Correo"}
                     {authView === "profile" && "¡Bienvenido!"}
                   </h2>
@@ -1284,12 +1298,12 @@ export default function CheckoutPage() {
                       ? `${customerProfile.first_name} ${customerProfile.last_name}`.trim() 
                       : (firstName || user?.phone || "Invitado");
 
-                    const orderId = createdOrderId || "N/A";
+                    const orderId = createdOrderId ? String(createdOrderId).slice(0, 8).toUpperCase() : "N/A";
                     const totalAmount = totalPrice.toFixed(2);
 
-                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\\n\\n🆔 Orden: #${orderId}\\n👤 Cliente: ${customerName}\\n💳 Método: ${paymentMethodText}\\n💰 Total: $${totalAmount}\\n\\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
+                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n💳 Método: ${paymentMethodText}\n💰 Total: $${totalAmount}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
                     const encodedMsg = encodeURIComponent(orderSummary);
-                    window.open(`https://wa.me/${whatsappNumber}?text=${encodedMsg}`, "_blank");
+                    window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMsg}`, "_blank");
                     handleFinish();
                   }}
                   className="bg-[#25D366] text-white px-10 md:px-14 py-6 rounded-full font-black text-lg shadow-2xl shadow-[#25D366]/30 flex items-center gap-3 hover:scale-105 active:scale-95 transition-all w-full md:w-auto uppercase tracking-wider"

@@ -42,7 +42,7 @@ export const MapSelector = ({ onAddressSelect, onClose, autoLocate }: MapSelecto
   if (loadError) return <div className="p-10 text-center text-red-500 font-bold">Error cargando el mapa</div>;
   if (!isLoaded) return (
     <div className="p-10 flex flex-col items-center justify-center h-full gap-4 text-primary bg-white">
-      <Loader2 className="w-10 h-10 animate-spin" /> 
+      <Loader2 className="w-10 h-10 animate-spin" />
       <p className="font-black animate-pulse">CARGANDO MAPA...</p>
     </div>
   );
@@ -60,7 +60,7 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
   const [isLocating, setIsLocating] = useState(false);
   const [label, setLabel] = useState("Casa");
   const [refPoint, setRefPoint] = useState("");
-  
+
   const mapRef = useRef<google.maps.Map | null>(null);
 
   const {
@@ -79,7 +79,7 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
 
   const evaluateZone = useCallback(async (lat: number, lng: number, preFetchedResults?: any[]) => {
     if (!window.google) return;
-    
+
     let results = preFetchedResults;
     if (!results) {
       try {
@@ -93,26 +93,26 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
     if (results && results.length > 0) {
       // Intentar encontrar un resultado que sea dirección de calle o establecimiento
       const bestResult = results.find(r => r.types.includes('street_address') || r.types.includes('route') || r.types.includes('establishment')) || results[0];
-      
+
       let betterAddress = bestResult.formatted_address;
-      
+
       // Lógica de "Traducción" a Humano:
       // Si la dirección parece un Plus Code (ej: "FC86+GM9, Guarenas...") o es muy técnica
       const isPlusCode = /^[A-Z0-9]{4}\+[A-Z0-9]{2}/.test(betterAddress);
-      
+
       if (isPlusCode || betterAddress.includes('Unnamed Road')) {
         const components = bestResult.address_components;
-        
+
         // Extraemos partes orgánicas
-        const neighborhood = components.find((c: any) => 
-          c.types.includes('sublocality') || 
-          c.types.includes('neighborhood') || 
+        const neighborhood = components.find((c: any) =>
+          c.types.includes('sublocality') ||
+          c.types.includes('neighborhood') ||
           c.types.includes('sublocality_level_1')
         )?.long_name;
-        
+
         const city = components.find((c: any) => c.types.includes('locality'))?.long_name;
         const state = components.find((c: any) => c.types.includes('administrative_area_level_1'))?.long_name;
-        
+
         if (neighborhood && city) {
           betterAddress = `${neighborhood}, ${city}${state ? `, ${state}` : ''}`;
         } else if (city && state) {
@@ -215,7 +215,7 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
 
   return (
     <div className="h-full bg-slate-50 relative overflow-hidden">
-      
+
       {/* Map Container - Full screen in background */}
       <div className="absolute inset-0 z-0">
         <GoogleMap
@@ -264,9 +264,9 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
             <X className="w-6 h-6 text-slate-400" />
           </button>
         </div>
-        
+
         {/* Aviso de seguridad */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-amber-50 border border-amber-100 p-2.5 rounded-xl flex items-center gap-3 mb-3"
@@ -291,18 +291,18 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
             placeholder="Buscar calle, edificio, zona..."
             className="w-full bg-slate-50 border-2 border-slate-100 focus:border-primary/30 focus:bg-white rounded-2xl py-3 pl-12 pr-4 outline-none font-body text-sm transition-all"
           />
-          
+
           <AnimatePresence>
             {status === "OK" && (
-              <motion.ul 
+              <motion.ul
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 className="absolute top-[calc(100%+8px)] left-0 right-0 bg-white shadow-2xl rounded-2xl overflow-hidden border border-slate-100 z-50 max-h-60 overflow-y-auto"
               >
                 {data.map(({ place_id, description }) => (
-                  <li 
-                    key={place_id} 
+                  <li
+                    key={place_id}
                     onClick={() => handleSelect(description)}
                     className="p-4 hover:bg-slate-50 cursor-pointer flex items-center gap-3 border-b border-slate-50 last:border-none transition-colors"
                   >
@@ -318,7 +318,7 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
 
       {/* Location Button */}
       <div className="absolute bottom-[280px] right-4 z-20">
-        <button 
+        <button
           onClick={handleCurrentLocation}
           className="p-4 bg-white shadow-xl rounded-2xl text-slate-600 hover:text-primary transition-all active:scale-90"
         >
@@ -348,7 +348,7 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
               </span>
               <span className="text-[9px] text-slate-500 lowercase italic font-medium">✨ ¡ayúdanos a llegar más rápido!</span>
             </label>
-            <input 
+            <input
               type="text"
               placeholder="Ej: Portón blanco frente a la panadería 🥐..."
               value={refPoint}
@@ -357,16 +357,14 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
             />
           </div>
 
-          <div className={`p-3 rounded-xl flex items-start gap-2.5 border transition-all ${
-            deliveryStatus === 'LOCAL' ? 'bg-slate-50/50 border-slate-100' : 'bg-amber-50/50 border-amber-100'
-          }`}>
+          <div className={`p-3 rounded-xl flex items-start gap-2.5 border transition-all ${deliveryStatus === 'LOCAL' ? 'bg-slate-50/50 border-slate-100' : 'bg-amber-50/50 border-amber-100'
+            }`}>
             {deliveryStatus === 'LOCAL' && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />}
             {deliveryStatus === 'NATIONAL' && <Truck className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />}
-            
+
             <div className="space-y-0">
-              <p className={`text-[8px] font-black uppercase tracking-[0.1em] ${
-                deliveryStatus === 'LOCAL' ? 'text-green-600' : 'text-amber-600'
-              }`}>
+              <p className={`text-[8px] font-black uppercase tracking-[0.1em] ${deliveryStatus === 'LOCAL' ? 'text-green-600' : 'text-amber-600'
+                }`}>
                 {deliveryStatus === 'LOCAL' && "ZONA DE COBERTURA ACTIVA"}
                 {deliveryStatus === 'NATIONAL' && "ENVÍO NACIONAL (MRW / ZOOM)"}
               </p>
