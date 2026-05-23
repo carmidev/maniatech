@@ -1374,7 +1374,7 @@ export default function CheckoutPage() {
                 >
                   <CheckCircle className="w-14 h-14 md:w-20 md:h-20 text-green-500" />
                 </motion.div>
-                <h3 className="text-3xl md:text-5xl font-display mb-3 md:mb-4 text-brand-darkgray leading-tight">¡Pedido Recibido! ✨</h3>
+                <h3 className="text-2xl sm:text-3xl md:text-5xl font-display mb-3 md:mb-4 text-brand-darkgray leading-tight whitespace-nowrap">¡Pedido Recibido! ✨</h3>
                 <p className="text-slate-500 mb-8 md:mb-12 max-w-sm text-sm md:text-base leading-relaxed">
                   {deliveryMethod === 'delivery'
                     ? "Estamos preparando tus dulces. Pulsa abajo para enviar el reporte de pago por WhatsApp y que despachemos."
