@@ -48,19 +48,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = async () => {
     try {
+      // Alerta para confirmar a Safari que es una interacción de usuario y dar feedback
+      alert("Conectando con Google...");
+      
       // Guardamos la ruta actual y el estado del checkout para volver a abrirlo después
       localStorage.setItem('auth_return_url', window.location.pathname);
       localStorage.setItem('open_checkout', 'true');
 
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+          skipBrowserRedirect: true, // Forzamos a que NO redirija internamente para evitar bloqueos de Safari
         },
       });
       
       if (error) throw error;
-      // Supabase redirigirá automáticamente toda la página, lo cual funciona perfecto en móviles.
+      
+      if (data?.url) {
+        // Redirección manual y explícita para asegurar compatibilidad en iOS
+        window.location.href = data.url;
+      }
     } catch (error: any) {
       console.error("Error signing in with Google:", error);
       alert("Error iniciando sesión con Google: " + (error?.message || "Error desconocido"));
