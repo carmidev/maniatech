@@ -248,7 +248,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[46%] lg:top-[18%] left-[4%] lg:left-[4%] opacity-60"
+            className="absolute top-[46%] md:top-[55%] lg:top-[18%] left-[4%] md:left-[15%] lg:left-[4%] opacity-60 md:scale-150 lg:scale-100 origin-center"
           >
             <svg width="130" height="72" viewBox="0 0 130 72" fill="none" className="overflow-visible">
               <path d="M10,62 C10,62 0,60 0,52 C0,44 8,40 16,42 C16,30 26,22 38,24 C40,14 50,8 62,10 C70,4 82,4 90,12 C100,8 112,14 114,24 C122,24 130,32 128,40 C126,48 118,52 110,50 C110,60 100,68 85,65 C75,72 65,72 55,65 C40,72 25,70 10,62 Z" fill="white" />
@@ -259,7 +259,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, 10, 0], x: [0, -6, 0] }}
             transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className="absolute top-[38%] lg:top-[12%] right-[6%] lg:right-[6%] opacity-50"
+            className="absolute top-[41%] md:top-[50%] lg:top-[12%] right-[6%] md:right-[15%] lg:right-[6%] opacity-50 md:scale-150 lg:scale-100 origin-center"
           >
             <svg width="170" height="95" viewBox="0 0 170 95" fill="none">
               <path d="M20,75 C10,75 0,65 0,55 C0,40 15,30 30,35 C35,20 55,10 75,15 C85,5 105,5 115,15 C130,10 145,20 150,35 C165,35 175,45 170,60 C165,75 150,80 140,75 C135,85 120,95 105,90 C95,98 75,98 65,90 C55,98 35,95 25,85 C22,80 20,80 20,75 Z" fill="white" />
@@ -271,11 +271,11 @@ export default function Home() {
         <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden">
 
           {/* Chupeta Hero (chupeta1.png) - Plantada en la nube de la derecha */}
-          {/* Chupeta - Escritorio (Se mantiene independiente para no romper el layout web) */}
+          {/* Chupeta - Escritorio/Tablet */}
           <motion.div
             animate={{ y: [0, -12, 0], rotate: [5, -5, 5] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[10%] right-[5%] z-10 hidden lg:block"
+            className="absolute top-[28%] md:top-[46%] lg:top-[10%] right-[5%] md:right-[15%] lg:right-[5%] z-10 hidden md:block"
           >
             <img
               src={getImagePath("/images/chupeta1.png")}
@@ -295,12 +295,12 @@ export default function Home() {
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="absolute top-[12%] lg:top-[12%] left-[-2%] lg:left-[2%] z-10 hidden lg:block"
+            className="absolute top-[12%] md:top-[51%] lg:top-[78px] left-[-2%] md:left-[14%] lg:left-2 z-10 hidden md:block"
           >
             <img
               src={getImagePath("/images/chocolate.svg")}
               alt="Chocolate Dolce"
-              className="w-36 lg:w-56 h-auto drop-shadow-2xl -rotate-6 brightness-110 opacity-90 lg:opacity-100"
+              className="w-36 md:w-44 lg:w-56 h-auto drop-shadow-2xl -rotate-6 brightness-110 opacity-90 lg:opacity-100"
             />
           </motion.div>
         </div>
@@ -308,7 +308,7 @@ export default function Home() {
         {/* Chocolate Reubicado (Sólo Móvil - Sobre la nube inferior izquierda) */}
 
 
-        {/* Caramelo Sorpresa (Escritorio) */}
+        {/* Caramelo Sorpresa (Escritorio - Oculto en Móvil y Tablet) */}
         <motion.div
           animate={{
             y: [55, -90, 55], // Sube más alto para despegarse de la nube
@@ -320,7 +320,7 @@ export default function Home() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute bottom-[30px] md:bottom-[90px] left-[38%] md:left-[44%] z-25 pointer-events-none hidden md:block"
+          className="absolute bottom-[30px] md:bottom-[90px] left-[38%] md:left-[44%] z-25 pointer-events-none hidden lg:block"
         >
           <img
             src={getImagePath("/images/caramelodolce.png")}
@@ -329,29 +329,10 @@ export default function Home() {
           />
         </motion.div>
 
-        {/* Caramelo Sorpresa Móvil (Rescatado del z-index - z-40 supera a la nube) */}
-        <motion.div
-          animate={{
-            y: [-15, 10, -15],
-            rotate: [15, 375],
-            scale: [0.9, 1.2, 0.9]
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute bottom-[15px] left-[8%] z-40 pointer-events-none md:hidden"
-        >
-          <img
-            src={getImagePath("/images/caramelodolce.png")}
-            alt="Caramelo Sorpresa Móvil"
-            className="w-28 h-auto drop-shadow-2xl brightness-110"
-          />
-        </motion.div>
+
 
         {/* ── CONTENIDO TEXTO (IZQUIERDA) - AL FRENTE (z-30) ── */}
-        <div className="min-h-[100dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start relative z-30 px-6 sm:px-8 lg:px-[10%] pt-[140px] lg:pt-52 pointer-events-none">
+        <div className="min-h-[100dvh] md:min-h-[60dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start relative z-30 px-6 sm:px-8 lg:px-[10%] pt-[140px] md:pt-[160px] lg:pt-52 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
@@ -395,7 +376,7 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, -10, 0], rotate: [5, -5, 5] }}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-1 -right-20 z-10 lg:hidden pointer-events-none"
+                className="absolute top-[28px] -right-[69px] z-10 md:hidden pointer-events-none"
               >
                 <img
                   src={getImagePath("/images/chupeta1.png")}
@@ -408,7 +389,7 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, -6, 0], rotate: [-10, -5, -10] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-14 -left-16 z-10 lg:hidden pointer-events-none"
+                className="absolute top-14 -left-16 z-10 md:hidden pointer-events-none"
               >
                 <img
                   src={getImagePath("/images/chocolate.svg")}
@@ -426,26 +407,31 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* ── IMAGEN CENTRAL / PERSONAJE - BOTTOM STACK (z-20) ── */}
-        <div className="relative min-h-[55dvh] lg:min-h-0 flex-none lg:absolute lg:bottom-0 lg:right-[5%] z-20 pointer-events-none w-full lg:w-[50%] flex justify-center lg:justify-end items-end opacity-100 mt-[-45dvh] lg:mt-0 -translate-y-[40px] lg:translate-y-0">
+        <div className="absolute bottom-0 left-0 lg:left-auto lg:right-[5%] z-20 pointer-events-none w-full lg:w-[50%] flex justify-center lg:justify-end items-end opacity-100 -translate-y-8 md:translate-y-[20px] lg:translate-y-0">
+
+
           <img
             key={HERO_IMAGES[currentImageIndex]}
             src={getImagePath(HERO_IMAGES[currentImageIndex]) || undefined}
-            className="w-full max-w-[280px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block h-[60dvh] lg:h-[85dvh] drop-shadow-2xl transition-none origin-bottom"
+            className="w-full max-w-[280px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block h-[60dvh] md:h-[43dvh] lg:h-[85dvh] drop-shadow-2xl transition-none origin-bottom"
             alt="Dolce Candy Showcase"
+            style={{
+              WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
+              maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)'
+            }}
           />
         </div>
 
         {/* Layer 3: Organic Fluffy Cloud Border (Estilo Flat Shadow - Efecto Marco Profundo) */}
-        <div className="absolute bottom-[-1px] left-0 w-full z-30 pointer-events-none h-[140px] md:h-[220px]">
-          <svg viewBox="0 -20 1200 160" preserveAspectRatio="none" className="w-full h-full overflow-visible">
+        <div className="absolute bottom-6 md:bottom-[18px] lg:bottom-[-1px] left-0 w-full z-30 pointer-events-none h-[140px] md:h-[175px] lg:h-[220px]">
+          <svg viewBox="0 -20 1200 160" preserveAspectRatio="none" className="w-full h-full overflow-visible scale-x-[1.7] scale-y-100 origin-bottom md:scale-125 lg:scale-100 lg:origin-center">
 
             {/* Capa Trasera (Sombra Plana / Flat Shadow) */}
             <path
               fill="#ffffff"
               opacity="0.6"
               transform="translate(0, -15)"
-              d="M 0 140 L 0 35 
+              d="M 0 250 L 0 35 
                  C 10 7, 70 19, 80 46 
                  C 100 11, 180 23, 200 62 
                  C 210 54, 260 67, 270 89 
@@ -458,13 +444,13 @@ export default function Home() {
                  C 935 54, 995 38, 1010 60 
                  C 1030 41, 1100 31, 1120 51 
                  C 1140 22, 1180 6, 1200 25 
-                 L 1200 140 Z"
+                 L 1200 250 Z"
             />
 
             {/* Capa Frontal (Nube Principal) */}
             <path
               fill="#ffffff"
-              d="M 0 140 L 0 35 
+              d="M 0 250 L 0 35 
                  C 10 7, 70 19, 80 46 
                  C 100 11, 180 23, 200 62 
                  C 210 54, 260 67, 270 89 
@@ -477,7 +463,7 @@ export default function Home() {
                  C 935 54, 995 38, 1010 60 
                  C 1030 41, 1100 31, 1120 51 
                  C 1140 22, 1180 6, 1200 25 
-                 L 1200 140 Z"
+                 L 1200 250 Z"
             />
           </svg>
         </div>
@@ -537,33 +523,33 @@ export default function Home() {
                 <div onClick={() => setSelectedProduct(candy)} className="flex flex-col flex-1 cursor-pointer">
                   {/* Imagen */}
                   <div className="relative h-64 overflow-hidden bg-white p-6 shrink-0">
-                  <img
-                    src={getImagePath(candy.images?.[0]) || undefined}
-                    alt={candy.name}
-                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                  />
-                  {/* Gradiente inferior */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  {/* Badge */}
-                  {(() => {
-                    const isTop = Array.isArray(candy.category)
-                      ? candy.category.includes("top") || candy.category.includes("tendencias")
-                      : candy.category === "top" || candy.category === "tendencias";
-                    const activeBadge = candy.badge || (isTop ? "top" : null);
+                    <img
+                      src={getImagePath(candy.images?.[0]) || undefined}
+                      alt={candy.name}
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {/* Gradiente inferior */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    {/* Badge */}
+                    {(() => {
+                      const isTop = Array.isArray(candy.category)
+                        ? candy.category.includes("top") || candy.category.includes("tendencias")
+                        : candy.category === "top" || candy.category === "tendencias";
+                      const activeBadge = candy.badge || (isTop ? "top" : null);
 
-                    return activeBadge && (
-                      <span className={`absolute top-3 left-3 text-[10px] font-black uppercase px-3 py-1 rounded-full ${BADGE_STYLES[activeBadge]}`}>
-                        {BADGE_LABELS[activeBadge]}
-                      </span>
-                    );
-                  })()}
-                  {/* Precio sobre la imagen */}
-                  <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur text-primary font-numbers font-semibold text-xl px-3 py-1 rounded-2xl shadow-sm">
-                    ${candy.price.toFixed(2)}
-                  </span>
-                </div>
+                      return activeBadge && (
+                        <span className={`absolute top-3 left-3 text-[10px] font-black uppercase px-3 py-1 rounded-full ${BADGE_STYLES[activeBadge]}`}>
+                          {BADGE_LABELS[activeBadge]}
+                        </span>
+                      );
+                    })()}
+                    {/* Precio sobre la imagen */}
+                    <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur text-primary font-numbers font-semibold text-xl px-3 py-1 rounded-2xl shadow-sm">
+                      ${candy.price.toFixed(2)}
+                    </span>
+                  </div>
 
-                {/* Info (Textos) */}
+                  {/* Info (Textos) */}
                   <div className="px-5 pt-5 flex flex-col flex-1">
                     <h3 className="text-lg font-display text-brand-darkgray mb-1 leading-snug">{candy.name}</h3>
                     <p className="text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 leading-relaxed">{candy.description}</p>
