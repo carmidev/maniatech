@@ -196,7 +196,13 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
 
                     {/* Google Button */}
                     <button
-                      onClick={signInWithGoogle}
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        signInWithGoogle().catch(err => {
+                          alert("Error al intentar conectar con Google: " + err.message);
+                        });
+                      }}
                       className="flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-gray-100 py-4 font-body font-medium transition-all hover:bg-gray-50 active:scale-[0.98]"
                     >
                       <svg className="w-6 h-6" viewBox="0 0 24 24">
