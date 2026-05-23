@@ -332,7 +332,7 @@ export default function Home() {
 
 
         {/* ── CONTENIDO TEXTO (IZQUIERDA) - AL FRENTE (z-30) ── */}
-        <div className="min-h-[100dvh] md:min-h-[60dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start relative z-30 px-6 sm:px-8 lg:px-[10%] pt-[140px] md:pt-[160px] lg:pt-52 pointer-events-none">
+        <div className="min-h-[100dvh] md:min-h-[60dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start relative z-30 px-6 sm:px-8 lg:px-[10%] pt-[100px] md:pt-[160px] lg:pt-52 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
@@ -376,12 +376,12 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, -10, 0], rotate: [5, -5, 5] }}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[28px] -right-[69px] z-10 md:hidden pointer-events-none"
+                className="absolute top-[20px] -right-[69px] z-10 md:hidden pointer-events-none"
               >
                 <img
                   src={getImagePath("/images/chupeta1.png")}
                   alt="Chupeta"
-                  className="w-32 h-auto drop-shadow-2xl rotate-12"
+                  className="w-28 h-auto drop-shadow-2xl rotate-12"
                 />
               </motion.div>
 
@@ -389,12 +389,12 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, -6, 0], rotate: [-10, -5, -10] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-14 -left-16 z-10 md:hidden pointer-events-none"
+                className="absolute top-[40px] -left-16 z-10 md:hidden pointer-events-none"
               >
                 <img
                   src={getImagePath("/images/chocolate.svg")}
                   alt="Chocolate"
-                  className="w-36 h-auto drop-shadow-2xl"
+                  className="w-32 h-auto drop-shadow-2xl"
                 />
               </motion.div>
               <Link
@@ -407,13 +407,13 @@ export default function Home() {
           </motion.div>
         </div>
 
-        <div className="absolute bottom-0 left-0 lg:left-auto lg:right-[5%] z-20 pointer-events-none w-full lg:w-[50%] flex justify-center lg:justify-end items-end opacity-100 -translate-y-8 md:translate-y-[20px] lg:translate-y-0">
+        <div className="absolute bottom-0 left-0 lg:left-auto lg:right-[5%] z-20 pointer-events-none w-full lg:w-[50%] flex justify-center lg:justify-end items-end opacity-100 translate-y-1 md:translate-y-[20px] lg:translate-y-0">
 
 
           <img
             key={HERO_IMAGES[currentImageIndex]}
             src={getImagePath(HERO_IMAGES[currentImageIndex]) || undefined}
-            className="w-full max-w-[280px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block h-[60dvh] md:h-[43dvh] lg:h-[85dvh] drop-shadow-2xl transition-none origin-bottom"
+            className="w-full max-w-[280px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[600px] object-contain object-bottom block h-[46dvh] md:h-[43dvh] lg:h-[85dvh] drop-shadow-2xl transition-none origin-bottom"
             alt="Dolce Candy Showcase"
             style={{
               WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
