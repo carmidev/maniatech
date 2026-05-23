@@ -2,12 +2,16 @@
 
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export const WhatsAppWidget = () => {
+  const pathname = usePathname();
   const phoneNumber = "584142403001";
-  const message = "¡Hola Dolce Candy! 🍭 Me gustaría saber más sobre sus dulces exclusivos ✨";
+  const message = "¡Hola Dolce Candy! 🍭 Estoy interesado/a en hacer una compra. ¿Me podrían ayudar con mi pedido? ✨";
   
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+  if (pathname === '/checkout') return null;
 
   return (
     <motion.a

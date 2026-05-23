@@ -240,11 +240,11 @@ export default function CatalogoPage() {
       </div>
 
       {/* ── CONTENIDO ── */}
-      <main className="max-w-7xl mx-auto px-6 pt-32 pb-20">
-        <div className="flex flex-col gap-10">
+      <main className="max-w-7xl mx-auto px-6 pt-28 pb-20">
+        <div className="flex flex-col gap-6">
 
           {/* Header, Section Selector & Search */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4">
             <motion.h1
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
@@ -254,7 +254,7 @@ export default function CatalogoPage() {
               Catálogo <span className="text-primary text-glow-sm">Dolce Candy</span>
             </motion.h1>
 
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-3">
               {/* Section Selector (Píldora) - Extremo Izquierdo */}
               <div className="bg-white p-1.5 rounded-full shadow-lg shadow-black/5 border border-slate-100 flex gap-1 w-fit">
                 <button
@@ -310,7 +310,7 @@ export default function CatalogoPage() {
               </div>
 
               <div className="relative">
-                <div className="flex overflow-x-auto py-4 -mx-6 px-6 gap-6 no-scrollbar scroll-smooth flex-nowrap items-start">
+                <div className="flex overflow-x-auto py-2 -mx-6 px-6 gap-6 no-scrollbar scroll-smooth flex-nowrap items-start">
                   {[
                     { key: "all", label: "Todos", icon: <Star className="w-6 h-6" />, color: "bg-slate-100 text-slate-600" },
                     { key: "chocolates", label: "Chocolates", icon: <Cookie className="w-6 h-6" />, color: "bg-brand-brown/10 text-brand-brown" },

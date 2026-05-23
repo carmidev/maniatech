@@ -108,9 +108,9 @@ export default function CheckoutPage() {
               const parsed = JSON.parse(data.address);
               setAddresses(parsed);
               if (parsed.length > 0) {
-                setSelectedAddressId(parsed[0].id);
-                setAddress(parsed[0].formatted_address);
-                setReferencePoint(parsed[0].reference_point || "");
+                setSelectedAddressId(prev => prev ? prev : parsed[0].id);
+                setAddress(prev => prev ? prev : parsed[0].formatted_address);
+                setReferencePoint(prev => prev || (parsed[0].reference_point || ""));
               }
             } catch (e) {
               console.error("Error parsing address JSON:", e);
@@ -479,9 +479,9 @@ export default function CheckoutPage() {
                   const addressList = Array.isArray(parsed) ? parsed : [parsed];
                   setAddresses(addressList);
                   if (addressList.length > 0) {
-                    setSelectedAddressId(addressList[0].id);
-                    setAddress(addressList[0].formatted_address);
-                    setReferencePoint(addressList[0].reference_point || "");
+                    setSelectedAddressId(prev => prev ? prev : addressList[0].id);
+                    setAddress(prev => prev ? prev : addressList[0].formatted_address);
+                    setReferencePoint(prev => prev || (addressList[0].reference_point || ""));
                   }
                 } else {
                   // Legacy plain string address
@@ -493,8 +493,8 @@ export default function CheckoutPage() {
                     label: 'Casa'
                   };
                   setAddresses([legacyAddr]);
-                  setSelectedAddressId(legacyAddr.id);
-                  setAddress(data.address);
+                  setSelectedAddressId(prev => prev ? prev : legacyAddr.id);
+                  setAddress(prev => prev ? prev : data.address);
                 }
               } catch (e) {
                 console.error("Error parsing saved address:", e);
@@ -693,7 +693,7 @@ export default function CheckoutPage() {
       <div className="flex-1 p-6 md:p-12 bg-white relative flex flex-col justify-center items-center min-h-[60vh] md:min-h-0">
         <div className="w-full max-w-xl mx-auto">
           
-          {!authView && step > 1 && deliveryMethod === 'delivery' && addresses.find(a => a.id === selectedAddressId)?.zone === 'NATIONAL' && (
+          {!authView && step > 1 && step < 4 && deliveryMethod === 'delivery' && addresses.find(a => a.id === selectedAddressId)?.zone === 'NATIONAL' && (
             <motion.div 
               initial={{ opacity: 0, y: -20 }} 
               animate={{ opacity: 1, y: 0 }} 
@@ -711,7 +711,7 @@ export default function CheckoutPage() {
             </motion.div>
           )}
 
-          {!authView && step > 1 && isScheduledOrder && (
+          {!authView && step > 1 && step < 4 && isScheduledOrder && (
             <motion.div 
               initial={{ opacity: 0, y: -20 }} 
               animate={{ opacity: 1, y: 0 }} 
