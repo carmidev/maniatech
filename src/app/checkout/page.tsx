@@ -30,6 +30,7 @@ type Address = {
   lng: number;
   label?: string;
   reference_point?: string;
+  unit?: string;
   zone?: string;
 };
 type PaymentMethod = "zelle" | "pm" | "cash" | "paypal";
@@ -229,6 +230,18 @@ export default function CheckoutPage() {
         setReceiptUrl(uploadedUrl);
       }
 
+      const finalItems = [...items];
+      const deliveryCost = deliveryMethod === 'delivery' ? 5 : 0;
+      
+      if (deliveryCost > 0) {
+        finalItems.push({
+          product: { id: 'delivery', name: 'Costo de Envío / Delivery', price: deliveryCost, images: [], description: 'Tarifa de entrega' },
+          quantity: 1,
+          price: deliveryCost,
+          subtotal: deliveryCost
+        } as any);
+      }
+
       const orderData = {
         user_id: user?.id || null,
         customer_name: (hasProfile && customerProfile) 
@@ -236,14 +249,14 @@ export default function CheckoutPage() {
           : (firstName || user?.phone || 'Invitado'),
         customer_email: user?.email || 'no-email@dolce.com',
         customer_phone: customerProfile?.phone || user?.phone || null,
-        items: items,
-        total_amount: totalPrice,
+        items: finalItems,
+        total_amount: totalPrice + deliveryCost,
         delivery_method: deliveryMethod.toUpperCase(),
         delivery_address: deliveryMethod === 'delivery' ? (
           (() => {
             const selectedAddr = addresses.find(a => a.id === selectedAddressId);
             if (selectedAddr) {
-              return `${selectedAddr.formatted_address}${referencePoint ? `\nRef: ${referencePoint}` : ''}\nMapa: https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}`;
+              return `${selectedAddr.formatted_address}${selectedAddr.unit ? `\nInmueble: ${selectedAddr.unit}` : ''}${referencePoint ? `\nRef: ${referencePoint}` : ''}\nMapa: https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}`;
             }
             return address;
           })()
@@ -574,27 +587,60 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-slate-50 md:bg-primary flex flex-col md:flex-row">
       {/* Left Side: Summary */}
-      <div className="bg-primary p-8 md:p-12 text-white md:w-5/12 flex flex-col justify-between relative overflow-hidden md:sticky md:top-0 md:h-screen">
+      <div className="bg-primary p-6 md:p-10 text-white md:w-5/12 flex flex-col justify-between relative overflow-hidden md:sticky md:top-0 md:h-screen">
         <div className="relative z-10">
-          <Link href="/catalogo" className="mb-8 hover:bg-white/10 p-2 rounded-full inline-flex transition-colors">
+          <button 
+            onClick={() => {
+              if (step === 4) {
+                clearCart();
+              }
+              router.push("/catalogo");
+            }} 
+            className="mb-8 hover:bg-white/10 p-2 rounded-full inline-flex transition-colors"
+          >
             <X className="w-6 h-6" />
-          </Link>
+          </button>
           <h2 className="text-4xl md:text-5xl font-black mb-2 font-script">Tu Pedido</h2>
           <p className="text-white/80 text-sm md:text-base">Casi terminamos de preparar tu magia dulce.</p>
         </div>
 
         <div className="space-y-4 relative z-10 mt-12 md:mt-0">
           <div className="bg-white/10 p-6 rounded-[2rem] backdrop-blur-md border border-white/20 shadow-xl">
+            {deliveryMethod === 'delivery' && (
+              <div className="mb-4 pb-4 border-b border-white/10 space-y-2">
+                <div className="flex justify-between items-center text-sm text-white/80">
+                  <span>Subtotal</span>
+                  <span className="font-numbers font-semibold">{totalPrice.toFixed(2)} €</span>
+                </div>
+                <div className="flex justify-between items-center text-sm text-white/80">
+                  <span>Envío / Delivery</span>
+                  <span className="font-numbers font-semibold">5.00 €</span>
+                </div>
+              </div>
+            )}
+            
             <p className="text-xs text-white/70 mb-1 uppercase tracking-widest font-body font-bold">Total a pagar</p>
             <div className="flex items-baseline gap-3">
-              <p className="text-5xl font-numbers font-semibold">{totalPrice.toFixed(2)} €</p>
+              <p className="text-5xl font-numbers font-semibold">
+                {(deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2)} €
+              </p>
             </div>
             
             {bcvRate && (
               <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
                 <span className="text-xs font-bold text-white/60 uppercase tracking-widest">En Bs.</span>
-                <span className="text-lg font-numbers font-bold text-white">Bs. {(totalPrice * bcvRate).toFixed(2)}</span>
+                <span className="text-lg font-numbers font-bold text-white">
+                  Bs. {((deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice) * bcvRate).toFixed(2)}
+                </span>
               </div>
+            )}
+            
+            {step > 1 && deliveryMethod === 'delivery' && addresses.find(a => a.id === selectedAddressId)?.zone === 'NATIONAL' && (
+              <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="mt-3 p-2.5 bg-[#231f20] rounded-xl shadow-lg border border-white/5">
+                 <p className="text-[11px] text-white/90 leading-tight">
+                   📦 <strong>Nota de Logística:</strong> Los 5.00 € cobrados aquí en el total cubren exclusivamente el embalaje de seguridad y el traslado de tu pedido hasta la agencia de MRW.
+                 </p>
+              </motion.div>
             )}
             
             <p className="text-[10px] text-white/40 mt-3 leading-tight flex items-center gap-1">
@@ -606,7 +652,7 @@ export default function CheckoutPage() {
           </div>
 
           {(step > 1 && !authView) && (
-            <div className="text-xs space-y-2 bg-black/10 p-5 rounded-3xl border border-white/5">
+            <div className="text-xs space-y-2 bg-black/10 p-4 rounded-3xl border border-white/5">
               <p className="flex justify-between items-center"><span className="text-white/60 uppercase font-bold tracking-wider text-[10px]">Método de Entrega:</span> <span className="font-bold uppercase text-sm">{deliveryMethod}</span></p>
               {step > 2 && (
                 <p className="flex justify-between items-center pt-2 border-t border-white/10">
@@ -622,13 +668,14 @@ export default function CheckoutPage() {
           )}
 
           {hasProfile && customerProfile && !authView && (
-            <div className="bg-black/20 p-5 rounded-3xl border border-white/5 space-y-3 mt-4">
+            <div className="bg-black/20 p-4 rounded-3xl border border-white/5 flex items-center justify-between mt-3">
               <div>
                 <p className="font-bold text-sm leading-tight">{customerProfile.first_name} {customerProfile.last_name}</p>
-                <p className="text-[10px] text-white/60 uppercase tracking-widest">{customerProfile.id_number}</p>
+                <p className="text-[10px] text-white/60 uppercase tracking-widest mt-0.5">{customerProfile.id_number}</p>
               </div>
-              <div className="pt-3 border-t border-white/10">
-                <p className="text-xs flex items-center gap-2"><Smartphone className="w-4 h-4 text-white/50" /> {customerProfile.phone}</p>
+              <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full">
+                <Smartphone className="w-3.5 h-3.5 text-white/50" /> 
+                <p className="text-xs font-medium">{customerProfile.phone}</p>
               </div>
             </div>
           )}
@@ -646,6 +693,24 @@ export default function CheckoutPage() {
       <div className="flex-1 p-6 md:p-12 bg-white relative flex flex-col justify-center items-center min-h-[60vh] md:min-h-0">
         <div className="w-full max-w-xl mx-auto">
           
+          {!authView && step > 1 && deliveryMethod === 'delivery' && addresses.find(a => a.id === selectedAddressId)?.zone === 'NATIONAL' && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="w-full bg-blue-50 border border-blue-200 text-blue-900 p-5 rounded-[2rem] mb-8 flex items-center gap-5 shadow-sm"
+            >
+              <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center shrink-0">
+                <Truck className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <p className="font-black text-sm uppercase tracking-widest mb-0.5">🚚 ENVÍO NACIONAL (MRW / ZOOM)</p>
+                <p className="text-xs font-medium opacity-80 leading-relaxed max-w-sm">
+                  Tu dirección está fuera de Caracas. Enviaremos tus golosinas por MRW bajo la modalidad de <b>Cobro a Destino</b>.
+                </p>
+              </div>
+            </motion.div>
+          )}
+
           {!authView && step > 1 && isScheduledOrder && (
             <motion.div 
               initial={{ opacity: 0, y: -20 }} 
@@ -923,12 +988,10 @@ export default function CheckoutPage() {
                           </div>
                           <div className="flex-1">
                             <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-0.5">{addr.label}</p>
-                            <p className="text-sm font-medium text-slate-600 line-clamp-2 pr-8">{addr.formatted_address}</p>
-                            {addr.reference_point && (
-                              <p className="text-xs text-slate-400 mt-1 italic flex items-center gap-1">
-                                <MapPin className="w-3 h-3" /> {addr.reference_point}
-                              </p>
-                            )}
+                            <p className="text-sm font-medium text-slate-600 line-clamp-2 pr-8">
+                              {addr.unit ? `${addr.unit}, ` : ''}{addr.formatted_address}
+                            </p>
+
                           </div>
                         </div>
                         <button
@@ -1283,7 +1346,7 @@ export default function CheckoutPage() {
                     // Obtener dirección formateada final para WhatsApp
                     const selectedAddrObj = addresses.find(a => a.id === selectedAddressId);
                     const finalDeliveryText = deliveryMethod === 'delivery' && selectedAddrObj
-                      ? `${selectedAddrObj.formatted_address}${referencePoint ? `\n📍 *Ref:* ${referencePoint}` : ''}`
+                      ? `${isNational ? `Envío Nacional (MRW/Zoom) a:` : `Delivery a:`} ${selectedAddrObj.formatted_address}${selectedAddrObj.unit ? `\n🏢 *Inmueble:* ${selectedAddrObj.unit}` : ''}${referencePoint ? `\n📍 *Ref:* ${referencePoint}` : ''}`
                       : deliveryText;
 
                     const paymentMethodNames = {
@@ -1301,7 +1364,7 @@ export default function CheckoutPage() {
                     const orderId = createdOrderId ? String(createdOrderId).slice(0, 8).toUpperCase() : "N/A";
                     const totalAmount = totalPrice.toFixed(2);
 
-                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n💳 Método: ${paymentMethodText}\n💰 Total: $${totalAmount}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
+                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n🛵 *Entrega:*\n${finalDeliveryText}\n\n💳 Método: ${paymentMethodText}\n💰 Total: $${totalAmount}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
                     const encodedMsg = encodeURIComponent(orderSummary);
                     window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMsg}`, "_blank");
                     handleFinish();

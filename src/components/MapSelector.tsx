@@ -28,6 +28,8 @@ interface MapSelectorProps {
     lng: number;
     label?: string;
     reference_point?: string;
+    unit?: string;
+    zone?: string;
   }) => void;
   onClose: () => void;
   autoLocate?: boolean;
@@ -60,6 +62,7 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
   const [isLocating, setIsLocating] = useState(false);
   const [label, setLabel] = useState("Casa");
   const [refPoint, setRefPoint] = useState("");
+  const [unit, setUnit] = useState("");
 
   const mapRef = useRef<google.maps.Map | null>(null);
 
@@ -209,52 +212,16 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
       lat: markerPos.lat,
       lng: markerPos.lng,
       label: label,
-      reference_point: refPoint
+      reference_point: refPoint,
+      unit: unit,
+      zone: deliveryStatus
     });
   };
 
   return (
-    <div className="h-full bg-slate-50 relative overflow-hidden">
-
-      {/* Map Container - Full screen in background */}
-      <div className="absolute inset-0 z-0">
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={center}
-          zoom={15}
-          onLoad={onMapLoad}
-          options={{
-            disableDefaultUI: true,
-            zoomControl: true,
-            padding: { top: 200, bottom: 250 }, // Mantener el pin centrado en el espacio visible
-            styles: [
-              {
-                "featureType": "poi",
-                "stylers": [{ "visibility": "off" }]
-              }
-            ]
-          } as any}
-        >
-          <Marker
-            position={markerPos}
-            draggable={true}
-            onDragEnd={onMarkerDragEnd}
-            animation={google.maps.Animation.DROP}
-            icon={{
-              path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
-              fillColor: "#e81e25",
-              fillOpacity: 1,
-              strokeWeight: 2,
-              strokeColor: "#FFFFFF",
-              scale: 2,
-              anchor: new google.maps.Point(12, 22),
-            }}
-          />
-        </GoogleMap>
-      </div>
-
+    <div className="h-full bg-slate-50 flex flex-col overflow-hidden relative">
       {/* Floating Header UI */}
-      <div className="absolute top-0 left-0 right-0 z-20 p-4 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm rounded-b-3xl">
+      <div className="flex-none z-20 p-4 pb-5 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm rounded-b-3xl">
         <div className="flex items-center justify-between mb-2">
           <div>
             <h2 className="text-xl font-display text-brand-darkgray">Agregar Dirección</h2>
@@ -316,18 +283,62 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
         </div>
       </div>
 
-      {/* Location Button */}
-      <div className="absolute bottom-[280px] right-4 z-20">
-        <button
-          onClick={handleCurrentLocation}
-          className="p-4 bg-white shadow-xl rounded-2xl text-slate-600 hover:text-primary transition-all active:scale-90"
+      {/* Map Container - Takes remaining space */}
+      <div className="flex-1 relative z-0">
+        <GoogleMap
+          mapContainerStyle={mapContainerStyle}
+          center={center}
+          zoom={15}
+          onLoad={onMapLoad}
+          options={{
+            disableDefaultUI: true,
+            zoomControl: true,
+            padding: { top: 0, bottom: 0 },
+            styles: [
+              {
+                "featureType": "poi",
+                "stylers": [{ "visibility": "off" }]
+              }
+            ]
+          } as any}
         >
-          {isLocating ? <Loader2 className="w-6 h-6 animate-spin" /> : <Navigation className="w-6 h-6" />}
-        </button>
+          <Marker
+            position={markerPos}
+            draggable={true}
+            onDragEnd={onMarkerDragEnd}
+            animation={google.maps.Animation.DROP}
+            icon={{
+              path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
+              fillColor: "#e81e25",
+              fillOpacity: 1,
+              strokeWeight: 2,
+              strokeColor: "#FFFFFF",
+              scale: 2,
+              anchor: new google.maps.Point(12, 22),
+            }}
+          />
+        </GoogleMap>
+
+        {/* Location Button */}
+        <div className="absolute bottom-4 right-4 z-20">
+          <button
+            onClick={handleCurrentLocation}
+            className={`flex items-center justify-center gap-2 p-4 bg-white shadow-xl rounded-2xl text-slate-600 hover:text-primary transition-all active:scale-90 ${isLocating ? 'pr-6' : ''}`}
+          >
+            {isLocating ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Cargando ubicación...</span>
+              </>
+            ) : (
+              <Navigation className="w-6 h-6" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Bottom Card */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 bg-white/95 backdrop-blur-md border-t border-white/20 p-4 sm:p-5 shadow-[0_-20px_40px_rgba(0,0,0,0.1)] rounded-t-[2rem]">
+      <div className="flex-none z-20 bg-white/95 backdrop-blur-md border-t border-slate-100 p-4 sm:p-5 shadow-[0_-20px_40px_rgba(0,0,0,0.1)] rounded-t-[2rem]">
         <div className="space-y-3 max-w-xl mx-auto">
           <div className="flex gap-2">
             {["Casa", "Trabajo", "Otro"].map((l) => (
@@ -341,20 +352,34 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
             ))}
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center justify-between gap-2 ml-1">
-              <span className="flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-primary" /> Punto de Referencia
-              </span>
-              <span className="text-[9px] text-slate-500 lowercase italic font-medium">✨ ¡ayúdanos a llegar más rápido!</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Ej: Portón blanco frente a la panadería 🥐..."
-              value={refPoint}
-              onChange={(e) => setRefPoint(e.target.value)}
-              className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-100 focus:border-primary/30 focus:ring-2 focus:ring-primary/5 outline-none transition-all font-medium text-xs"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-1 ml-1">
+                Piso / Oficina / Casa <span className="text-primary">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Ej: Apto 4B, Casa 3..."
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
+                className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-100 focus:border-primary/30 focus:ring-2 focus:ring-primary/5 outline-none transition-all font-medium text-xs"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center justify-between gap-2 ml-1">
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-3 h-3 text-primary" /> Detalles / Ref. <span className="text-primary">*</span>
+                </span>
+              </label>
+              <input
+                type="text"
+                placeholder="Ej: Portón blanco..."
+                value={refPoint}
+                onChange={(e) => setRefPoint(e.target.value)}
+                className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-100 focus:border-primary/30 focus:ring-2 focus:ring-primary/5 outline-none transition-all font-medium text-xs"
+              />
+            </div>
           </div>
 
           <div className={`p-3 rounded-xl flex items-start gap-2.5 border transition-all ${deliveryStatus === 'LOCAL' ? 'bg-slate-50/50 border-slate-100' : 'bg-amber-50/50 border-amber-100'
@@ -376,7 +401,7 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
 
           <button
             onClick={handleConfirm}
-            disabled={!addressName}
+            disabled={!addressName || !unit.trim() || !refPoint.trim()}
             className="w-full bg-primary text-white py-3 rounded-xl font-black shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 text-base uppercase tracking-wider"
           >
             Confirmar Dirección
