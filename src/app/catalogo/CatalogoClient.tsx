@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift, Popcorn } from "lucide-react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, ChevronLeft, ChevronRight, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift, Popcorn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LollipopLogo } from "@/components/LollipopLogo";
 import { ProductCard } from "@/components/ProductCard";
@@ -26,6 +26,15 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 250;
+      scrollContainerRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+    }
+  };
+
   const handleOpenCart = () => {
     setIsCartOpen(true);
   };
@@ -275,8 +284,27 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                 </div>
               </div>
 
-              <div className="relative">
-                <div className="flex overflow-x-auto py-2 -mx-6 px-6 gap-6 no-scrollbar scroll-smooth flex-nowrap items-start">
+              <div className="relative group">
+                {/* Indicador de scroll - Izquierda (Oculto en desktop) */}
+                <button 
+                  onClick={() => handleScroll("left")}
+                  className="absolute left-[-12px] top-1/2 -translate-y-[60%] z-10 lg:hidden flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-full shadow-md text-brand-darkgray hover:text-brand-red transition-all active:scale-90"
+                >
+                  <ChevronLeft className="w-5 h-5 pr-[2px]" />
+                </button>
+                
+                {/* Indicador de scroll - Derecha (Oculto en desktop) */}
+                <button 
+                  onClick={() => handleScroll("right")}
+                  className="absolute right-[-12px] top-1/2 -translate-y-[60%] z-10 lg:hidden flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-full shadow-md text-brand-darkgray hover:text-brand-red transition-all active:scale-90"
+                >
+                  <ChevronRight className="w-5 h-5 pl-[2px]" />
+                </button>
+
+                <div 
+                  ref={scrollContainerRef}
+                  className="flex overflow-x-auto py-2 -mx-6 px-6 gap-3 md:gap-6 no-scrollbar scroll-smooth flex-nowrap items-start"
+                >
                   {[
                     { key: "all", label: "Todos", icon: <Star className="w-6 h-6" />, color: "bg-slate-100 text-slate-600" },
                     { key: "chocolates", label: "Chocolates", icon: <Cookie className="w-6 h-6" />, color: "bg-brand-brown/10 text-brand-brown" },
@@ -292,14 +320,14 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                     <button
                       key={cat.key}
                       onClick={() => setActiveCategory(cat.key)}
-                      className="flex flex-col items-center gap-3 shrink-0 transition-all group/cat"
+                      className="flex flex-col items-center gap-2 md:gap-3 shrink-0 transition-all group/cat"
                     >
-                      <div className={`w-16 h-16 rounded-full flex items-center justify-center border-2 transition-all p-1 ${activeCategory === cat.key ? "border-brand-red scale-110 shadow-lg shadow-brand-red/10" : "border-slate-100 group-hover/cat:border-brand-red/30"}`}>
+                      <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center border-2 transition-all p-1 ${activeCategory === cat.key ? "border-brand-red scale-110 shadow-lg shadow-brand-red/10" : "border-slate-100 group-hover/cat:border-brand-red/30"}`}>
                         <div className={`w-full h-full rounded-full flex items-center justify-center transition-colors ${activeCategory === cat.key ? "bg-brand-red text-white" : cat.color}`}>
                           {cat.icon}
                         </div>
                       </div>
-                      <span className={`text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${activeCategory === cat.key ? "text-brand-red" : "text-slate-500 group-hover/cat:text-brand-red"}`}>
+                      <span className={`text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${activeCategory === cat.key ? "text-brand-red" : "text-slate-500 group-hover/cat:text-brand-red"}`}>
                         {cat.label}
                       </span>
                     </button>
