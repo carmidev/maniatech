@@ -255,8 +255,10 @@ export default function CheckoutPage() {
         delivery_address: deliveryMethod === 'delivery' ? (
           (() => {
             const selectedAddr = addresses.find(a => a.id === selectedAddressId);
+            const isNational = selectedAddr?.zone === 'NATIONAL';
+            const prefix = isNational ? '[MRW] ' : '';
             if (selectedAddr) {
-              return `${selectedAddr.formatted_address}${selectedAddr.unit ? `\nInmueble: ${selectedAddr.unit}` : ''}${referencePoint ? `\nRef: ${referencePoint}` : ''}\nMapa: https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}`;
+              return `${prefix}${selectedAddr.formatted_address}${selectedAddr.unit ? `\nInmueble: ${selectedAddr.unit}` : ''}${referencePoint ? `\nRef: ${referencePoint}` : ''}\nMapa: https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}`;
             }
             return address;
           })()
@@ -1363,17 +1365,17 @@ export default function CheckoutPage() {
                 </div>
               </motion.div>
             ) : step === 4 ? (
-              <motion.div key="step-4" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center text-center py-12 w-full">
+              <motion.div key="step-4" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center text-center py-8 md:py-12 w-full px-4 md:px-0">
                 <motion.div
                   initial={{ scale: 0, rotate: -20 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", bounce: 0.5 }}
-                  className="w-40 h-40 bg-green-100 rounded-full flex items-center justify-center mb-10 shadow-inner"
+                  className="w-28 h-28 md:w-40 md:h-40 bg-green-100 rounded-full flex items-center justify-center mb-6 md:mb-10 shadow-inner"
                 >
-                  <CheckCircle className="w-20 h-20 text-green-500" />
+                  <CheckCircle className="w-14 h-14 md:w-20 md:h-20 text-green-500" />
                 </motion.div>
-                <h3 className="text-4xl md:text-5xl font-display mb-4 text-brand-darkgray leading-tight">¡Pedido Recibido! ✨</h3>
-                <p className="text-slate-500 mb-12 max-w-sm text-base leading-relaxed">
+                <h3 className="text-3xl md:text-5xl font-display mb-3 md:mb-4 text-brand-darkgray leading-tight">¡Pedido Recibido! ✨</h3>
+                <p className="text-slate-500 mb-8 md:mb-12 max-w-sm text-sm md:text-base leading-relaxed">
                   {deliveryMethod === 'delivery'
                     ? "Estamos preparando tus dulces. Pulsa abajo para enviar el reporte de pago por WhatsApp y que despachemos."
                     : "Tu pedido estará listo para retirar en tienda una vez envíes el comprobante por WhatsApp."}
@@ -1429,9 +1431,9 @@ export default function CheckoutPage() {
                     window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMsg}`, "_blank");
                     handleFinish();
                   }}
-                  className="bg-[#25D366] text-white px-10 md:px-14 py-6 rounded-full font-black text-lg shadow-2xl shadow-[#25D366]/30 flex items-center gap-3 hover:scale-105 active:scale-95 transition-all w-full md:w-auto uppercase tracking-wider"
+                  className="bg-[#25D366] text-white px-6 md:px-14 py-4 md:py-6 rounded-full font-black text-sm md:text-lg shadow-2xl shadow-[#25D366]/30 flex items-center justify-center gap-2 md:gap-3 hover:scale-105 active:scale-95 transition-all w-full md:w-auto uppercase tracking-wider"
                 >
-                  <MessageCircle className="w-7 h-7 fill-current" />
+                  <MessageCircle className="w-5 h-5 md:w-7 md:h-7 fill-current shrink-0" />
                   Enviar por WhatsApp
                 </button>
 
