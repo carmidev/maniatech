@@ -876,12 +876,14 @@ export default function CheckoutPage() {
                     <h3 className="text-3xl md:text-4xl font-display text-brand-darkgray leading-tight">
                       {firstName ? `Hola ${firstName}, ¿Cómo lo recibes?` : '¿Cómo lo recibes?'}
                     </h3>
-                    <button 
-                      onClick={handleLogout}
-                      className="text-xs font-bold text-primary bg-primary/5 px-3 py-1.5 rounded-full hover:bg-primary/10 transition-colors uppercase tracking-wider shrink-0"
-                    >
-                      Cambiar usuario
-                    </button>
+                    {user && (
+                      <button 
+                        onClick={handleLogout}
+                        className="text-xs font-bold text-primary bg-primary/5 px-3 py-1.5 rounded-full hover:bg-primary/10 transition-colors uppercase tracking-wider shrink-0"
+                      >
+                        Cambiar usuario
+                      </button>
+                    )}
                   </div>
                   <p className="text-brand-darkgray/60 font-body font-normal text-base">
                     Selecciona tu método de entrega preferido para continuar.
