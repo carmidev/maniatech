@@ -33,9 +33,26 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
       .from("customers")
       .select("id")
       .eq("id", user?.id)
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
+      // Check if they used the wrong method (Google vs OTP)
+      if (user?.email) {
+        const { data: existingUser } = await supabase
+          .from("customers")
+          .select("auth_provider")
+          .eq("email", user.email)
+          .maybeSingle();
+
+        if (existingUser) {
+          // Si existe pero con otro ID, se equivocó de método
+          const expectedMethod = existingUser.auth_provider === "google" ? "Continuar con Google" : "código por correo";
+          await supabase.auth.signOut();
+          setError(`Esta cuenta se creó usando ${expectedMethod}. Por favor, usa esa opción.`);
+          setView("login");
+          return;
+        }
+      }
       setView("profile");
     } else {
       handleComplete();
@@ -60,6 +77,19 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
     setError("");
 
     try {
+      // Pre-check if this email belongs to a Google account
+      const { data: existingUser } = await supabase
+        .from("customers")
+        .select("auth_provider")
+        .eq("email", email)
+        .maybeSingle();
+
+      if (existingUser && existingUser.auth_provider === "google") {
+        setError("Esta cuenta se creó con Google. Por favor, usa el botón de Continuar con Google abajo.");
+        setIsSending(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithOtp({
         email,
       });

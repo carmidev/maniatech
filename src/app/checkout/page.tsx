@@ -321,6 +321,48 @@ export default function CheckoutPage() {
         if (error) throw error;
 
         if (!profile) {
+          // Chequeo de colisión de identidad por email
+          if (user.email) {
+            const { data: existingUser } = await supabase
+              .from("customers")
+              .select("auth_provider")
+              .eq("email", user.email)
+              .maybeSingle();
+
+            if (existingUser) {
+              const identities = (user as any)?.identities || [];
+              const providers = user?.app_metadata?.providers || [];
+              const isGoogle = providers.includes("google") || identities.some((i: any) => i.provider === "google");
+              const currentProvider = isGoogle ? "google" : (existingUser.auth_provider === "phone" ? "phone" : "email");
+              
+              if (currentProvider !== existingUser.auth_provider && !(currentProvider === "email" && existingUser.auth_provider === "phone")) {
+                const expectedMethod = existingUser.auth_provider === "google" ? "Continuar con Google" : "código por correo";
+                await supabase.auth.signOut();
+                setAuthError(`Esta cuenta se creó usando ${expectedMethod}. Por favor, usa esa opción.`);
+                setAuthView("login");
+                setIsCheckingProfile(false);
+                return;
+              } else {
+                // El método es correcto, pero el ID cambió (probablemente un usuario eliminado y recreado en Auth).
+                // Vinculamos el nuevo ID a la fila existente.
+                await supabase.from("customers").update({ id: user.id }).eq('email', user.email);
+                
+                // Recargamos el perfil
+                const { data: updatedProfile } = await supabase.from("customers").select("*").eq("id", user.id).single();
+                if (updatedProfile) {
+                  setCustomerProfile(updatedProfile);
+                  setHasProfile(true);
+                  if (deliveryMethod === "pickup") {
+                    setStep(3);
+                  } else {
+                    nextStep();
+                  }
+                  setIsCheckingProfile(false);
+                  return;
+                }
+              }
+            }
+          }
           setAuthView("profile");
         } else {
           // Si lo encontramos por teléfono pero el ID es distinto, lo vinculamos
@@ -350,6 +392,19 @@ export default function CheckoutPage() {
     setIsSending(true);
     setAuthError("");
     try {
+      // Pre-check if this email belongs to a Google account
+      const { data: existingUser } = await supabase
+        .from("customers")
+        .select("auth_provider")
+        .eq("email", email)
+        .maybeSingle();
+
+      if (existingUser && existingUser.auth_provider === "google") {
+        setAuthError("Esta cuenta se creó con Google. Por favor, usa el botón de Continuar con Google abajo.");
+        setIsSending(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithOtp({
         email,
       });
@@ -904,7 +959,7 @@ export default function CheckoutPage() {
                 </div>
 
                 {deliveryMethod === "pickup" && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 gap-4 pt-4">
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                       <div
                         onClick={() => setPickupStore("campoclaro")}
                         className={`p-5 rounded-3xl border-2 text-left transition-all relative cursor-pointer ${pickupStore === 'campoclaro' ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 bg-slate-50 hover:border-slate-200'}`}
