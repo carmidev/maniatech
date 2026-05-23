@@ -59,8 +59,8 @@ const HERO_IMAGES = [
 /* Fallback inicial con mock data filtrada por top/tendencias */
 const INITIAL_FEATURED = CANDIES.filter((c) => {
   const categories = Array.isArray(c.category) ? c.category : [c.category];
-  return categories.some(cat => 
-    cat.toLowerCase() === 'top' || 
+  return categories.some(cat =>
+    cat.toLowerCase() === 'top' ||
     cat.toLowerCase() === 'tendencias'
   );
 }).slice(0, 3);
@@ -79,7 +79,7 @@ export default function Home() {
       try {
         const { getProductsWithInventory } = await import('./catalogo/actions');
         const result = await getProductsWithInventory();
-        
+
         if (result.success && result.data) {
           const mapped = result.data
             .map((item: any) => ({
@@ -439,11 +439,11 @@ export default function Home() {
         {/* Layer 3: Organic Fluffy Cloud Border (Estilo Flat Shadow - Efecto Marco Profundo) */}
         <div className="absolute bottom-[-1px] left-0 w-full z-30 pointer-events-none h-[140px] md:h-[220px]">
           <svg viewBox="0 -20 1200 160" preserveAspectRatio="none" className="w-full h-full overflow-visible">
-            
+
             {/* Capa Trasera (Sombra Plana / Flat Shadow) */}
-            <path 
-              fill="#ffffff" 
-              opacity="0.6" 
+            <path
+              fill="#ffffff"
+              opacity="0.6"
               transform="translate(0, -15)"
               d="M 0 140 L 0 35 
                  C 10 7, 70 19, 80 46 
@@ -458,12 +458,12 @@ export default function Home() {
                  C 935 54, 995 38, 1010 60 
                  C 1030 41, 1100 31, 1120 51 
                  C 1140 22, 1180 6, 1200 25 
-                 L 1200 140 Z" 
+                 L 1200 140 Z"
             />
 
             {/* Capa Frontal (Nube Principal) */}
-            <path 
-              fill="#ffffff" 
+            <path
+              fill="#ffffff"
               d="M 0 140 L 0 35 
                  C 10 7, 70 19, 80 46 
                  C 100 11, 180 23, 200 62 
@@ -477,7 +477,7 @@ export default function Home() {
                  C 935 54, 995 38, 1010 60 
                  C 1030 41, 1100 31, 1120 51 
                  C 1140 22, 1180 6, 1200 25 
-                 L 1200 140 Z" 
+                 L 1200 140 Z"
             />
           </svg>
         </div>
@@ -531,11 +531,12 @@ export default function Home() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                onClick={() => setSelectedProduct(candy)}
-                className="group relative bg-white rounded-3xl overflow-hidden shadow-md shadow-gray-100 border border-gray-50 flex flex-col cursor-pointer"
+                className="group relative bg-white rounded-3xl overflow-hidden shadow-md shadow-gray-100 border border-gray-50 flex flex-col"
               >
-                {/* Imagen */}
-                <div className="relative h-64 overflow-hidden bg-white p-6">
+                {/* Área Clickeable Principal */}
+                <div onClick={() => setSelectedProduct(candy)} className="flex flex-col flex-1 cursor-pointer">
+                  {/* Imagen */}
+                  <div className="relative h-64 overflow-hidden bg-white p-6 shrink-0">
                   <img
                     src={getImagePath(candy.images?.[0]) || undefined}
                     alt={candy.name}
@@ -545,11 +546,11 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   {/* Badge */}
                   {(() => {
-                    const isTop = Array.isArray(candy.category) 
+                    const isTop = Array.isArray(candy.category)
                       ? candy.category.includes("top") || candy.category.includes("tendencias")
                       : candy.category === "top" || candy.category === "tendencias";
                     const activeBadge = candy.badge || (isTop ? "top" : null);
-                    
+
                     return activeBadge && (
                       <span className={`absolute top-3 left-3 text-[10px] font-black uppercase px-3 py-1 rounded-full ${BADGE_STYLES[activeBadge]}`}>
                         {BADGE_LABELS[activeBadge]}
@@ -562,17 +563,22 @@ export default function Home() {
                   </span>
                 </div>
 
-                {/* Info */}
-                <div className="p-5 flex flex-col flex-1">
-                  <h3 className="text-lg font-display text-brand-darkgray mb-1 leading-snug">{candy.name}</h3>
-                  <p className="text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 flex-1 leading-relaxed">{candy.description}</p>
-                  <Link
+                {/* Info (Textos) */}
+                  <div className="px-5 pt-5 flex flex-col flex-1">
+                    <h3 className="text-lg font-display text-brand-darkgray mb-1 leading-snug">{candy.name}</h3>
+                    <p className="text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 leading-relaxed">{candy.description}</p>
+                  </div>
+                </div>
+
+                {/* Botón (Aislado) */}
+                <div className="px-5 pb-5 mt-auto">
+                  <a
                     href="/catalogo"
                     className="mt-4 w-full py-2.5 rounded-xl bg-brand-red/8 text-brand-red font-bold text-sm hover:bg-brand-red hover:text-white transition-all flex items-center justify-center gap-2 group/btn"
                   >
                     <ShoppingBasket className="w-4 h-4 transition-transform group-hover/btn:scale-110" />
                     Ver en catálogo
-                  </Link>
+                  </a>
                 </div>
               </motion.div>
             ))}
@@ -676,9 +682,9 @@ export default function Home() {
                   </div>
 
                   <div className="shrink-0">
-                    <a 
-                      href={loc.mapUrl} 
-                      target="_blank" 
+                    <a
+                      href={loc.mapUrl}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="w-full lg:w-max inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-white/50 hover:bg-white border border-brand-darkred/10 text-brand-darkred font-black text-[10px] uppercase tracking-widest rounded-full transition-all group/map"
                     >
