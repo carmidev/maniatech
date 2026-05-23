@@ -61,8 +61,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       if (error) throw error;
       // Supabase redirigirá automáticamente toda la página, lo cual funciona perfecto en móviles.
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error signing in with Google:", error);
+      alert("Error iniciando sesión con Google: " + (error?.message || "Error desconocido"));
     }
   };
 
