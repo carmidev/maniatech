@@ -73,18 +73,22 @@ export default function CheckoutPage() {
   useEffect(() => {
     const fetchBcvRate = async () => {
       try {
-        const res = await fetch('https://ve.dolarapi.com/v1/euros/oficial', {
-          headers: { 'Accept': 'application/json' }
-        });
-        const data = await res.json();
-        if (data && data.promedio) {
-          setBcvRate(parseFloat(data.promedio));
+        const { data, error } = await supabase
+          .from("store_settings")
+          .select("value")
+          .eq("id", "exchange_rate")
+          .single();
+
+        if (error) throw error;
+        
+        if (data && data.value) {
+          setBcvRate(parseFloat(data.value));
         } else {
           setBcvRate(36.50); // Fallback seguro
         }
       } catch (err) {
-        console.error("Error al obtener la tasa:", err);
-        setBcvRate(36.50); // Fallback en caso de error de red
+        console.error("Error al obtener la tasa de Supabase:", err);
+        setBcvRate(36.50); // Fallback en caso de error
       } finally {
         setIsFetchingRate(false);
       }
@@ -700,12 +704,6 @@ export default function CheckoutPage() {
               </motion.div>
             )}
             
-            <p className="text-[10px] text-white/40 mt-3 leading-tight flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              {isFetchingRate 
-                ? "Calculando tasa oficial BCV..." 
-                : bcvRate ? `Tasa BCV calculada a Bs. ${bcvRate}` : "No se pudo cargar la tasa BCV actual."}
-            </p>
           </div>
 
           {(step > 1 && !authView) && (
