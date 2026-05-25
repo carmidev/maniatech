@@ -29,9 +29,18 @@ const BADGE_STYLES: Record<string, string> = {
 const BADGE_LABELS: Record<string, string> = {
   nuevo: "Nuevo",
   bestseller: "Bestseller",
-  viral: "Viral",
+  viral: "Viral 🔥",
   exclusivo: "Exclusivo",
   top: "TOP 🔥",
+};
+
+const renderWithNumberFont = (text: string) => {
+  return text.split(/(\d+)/).map((part, i) => {
+    if (/\d+/.test(part)) {
+      return <span key={i} className="font-numbers font-semibold tracking-normal leading-normal">{part}</span>;
+    }
+    return part;
+  });
 };
 
 /* Lógica de normalización de categorías consistente con el catálogo */
@@ -81,25 +90,30 @@ export default function Home() {
         const result = await getProductsWithInventory();
 
         if (result.success && result.data) {
-          const mapped = result.data
-            .map((item: any) => ({
-              id: item.id,
-              name: item.name,
-              description: item.description || "",
-              ownerReview: item.owner_review || "",
-              price: Number(item.price) || 0,
-              images: item.images && item.images.length > 0 ? item.images : ["/images/catalog/placeholder.png"],
-              category: normalizeCategory(item.category),
-              stock: item.inventory?.reduce((sum: number, loc: any) => sum + (loc.quantity || 0), 0) || 0,
-            }))
+          const allMapped = result.data.map((item: any) => ({
+            id: item.id,
+            name: item.name,
+            description: item.description || "",
+            ownerReview: item.owner_review || "",
+            price: Number(item.price) || 0,
+            images: item.images && item.images.length > 0 ? item.images : ["/images/catalog/placeholder.png"],
+            category: normalizeCategory(item.category),
+            stock: item.inventory?.reduce((sum: number, loc: any) => sum + (loc.quantity || 0), 0) || 0,
+          }));
+
+          const topMapped = allMapped
             .filter((c: Candy) => {
               const cats = Array.isArray(c.category) ? c.category : [c.category];
-              return cats.includes("top");
+              return cats.includes("top") || cats.includes("viral") || cats.includes("nuevo");
             })
             .slice(0, 3);
 
-          if (mapped.length > 0) {
-            setFeaturedCandies(mapped);
+          if (topMapped.length > 0) {
+            setFeaturedCandies(topMapped);
+          } else if (allMapped.length > 0) {
+            setFeaturedCandies(allMapped.slice(0, 3));
+          } else {
+            setFeaturedCandies([]);
           }
         }
       } catch (err) {
@@ -181,21 +195,21 @@ export default function Home() {
               </Link>
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+                className="relative p-2 sm:p-2.5 hover:bg-gray-100 rounded-full transition-colors shrink-0"
               >
-                <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 text-gray-700" />
+                <ShoppingBasket className="w-6 h-6 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-gray-700" />
                 {totalItems > 0 && (
-                  <span className="absolute top-0 right-0 bg-primary text-white text-[9px] lg:text-[12px] font-black w-3.5 h-3.5 lg:w-5 lg:h-5 flex items-center justify-center rounded-full border-2 border-white">
+                  <span className="absolute top-0 right-0 bg-primary text-white text-[10px] lg:text-[12px] font-black w-[18px] h-[18px] lg:w-5 lg:h-5 flex items-center justify-center rounded-full border-2 border-white">
                     {totalItems}
                   </span>
                 )}
               </button>
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-1.5 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+                className="lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0"
                 aria-label="Toggle Menu"
               >
-                {isMobileMenuOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900" />}
+                {isMobileMenuOpen ? <X className="w-6 h-6 sm:w-6 sm:h-6 text-gray-900" /> : <Menu className="w-6 h-6 sm:w-6 sm:h-6 text-gray-900" />}
               </button>
             </div>
           </div>
@@ -532,12 +546,16 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     {/* Badge */}
                     {(() => {
-                      const isTop = Array.isArray(candy.category)
-                        ? candy.category.includes("top") || candy.category.includes("tendencias")
-                        : candy.category === "top" || candy.category === "tendencias";
-                      const activeBadge = candy.badge || (isTop ? "top" : null);
+                      let activeBadge = candy.badge;
+                      if (!activeBadge) {
+                        const cats = Array.isArray(candy.category) ? candy.category : [candy.category];
+                        if (cats.includes("viral")) activeBadge = "viral";
+                        else if (cats.includes("nuevo")) activeBadge = "nuevo";
+                        else if (cats.includes("top") || cats.includes("tendencias")) activeBadge = "top";
+                        else if (cats.includes("bestseller")) activeBadge = "bestseller";
+                      }
 
-                      return activeBadge && (
+                      return activeBadge && BADGE_LABELS[activeBadge] && (
                         <span className={`absolute top-3 left-3 text-[10px] font-black uppercase px-3 py-1 rounded-full ${BADGE_STYLES[activeBadge]}`}>
                           {BADGE_LABELS[activeBadge]}
                         </span>
@@ -545,13 +563,13 @@ export default function Home() {
                     })()}
                     {/* Precio sobre la imagen */}
                     <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur text-primary font-numbers font-semibold text-xl px-3 py-1 rounded-2xl shadow-sm">
-                      ${candy.price.toFixed(2)}
+                      ref {candy.price.toFixed(2)}
                     </span>
                   </div>
 
                   {/* Info (Textos) */}
                   <div className="px-5 pt-5 flex flex-col flex-1">
-                    <h3 className="text-lg font-display text-brand-darkgray mb-1 leading-snug">{candy.name}</h3>
+                    <h3 className="text-lg font-display text-brand-darkgray mb-1 leading-snug">{renderWithNumberFont(candy.name)}</h3>
                     <p className="text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 leading-relaxed">{candy.description}</p>
                   </div>
                 </div>

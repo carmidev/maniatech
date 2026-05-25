@@ -667,11 +667,11 @@ export default function CheckoutPage() {
               <div className="mb-4 pb-4 border-b border-white/10 space-y-2">
                 <div className="flex justify-between items-center text-sm text-white/80">
                   <span>Subtotal</span>
-                  <span className="font-numbers font-semibold">{totalPrice.toFixed(2)} €</span>
+                  <span className="font-numbers font-semibold">ref {totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm text-white/80">
                   <span>Envío / Delivery</span>
-                  <span className="font-numbers font-semibold">5.00 €</span>
+                  <span className="font-numbers font-semibold">ref 5.00</span>
                 </div>
               </div>
             )}
@@ -679,7 +679,7 @@ export default function CheckoutPage() {
             <p className="text-xs text-white/70 mb-1 uppercase tracking-widest font-body font-bold">Total a pagar</p>
             <div className="flex items-baseline gap-3">
               <p className="text-5xl font-numbers font-semibold">
-                {(deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2)} €
+                ref {(deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2)}
               </p>
             </div>
             
@@ -695,7 +695,7 @@ export default function CheckoutPage() {
             {step > 1 && deliveryMethod === 'delivery' && addresses.find(a => a.id === selectedAddressId)?.zone === 'NATIONAL' && (
               <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="mt-3 p-2.5 bg-[#231f20] rounded-xl shadow-lg border border-white/5">
                  <p className="text-[11px] text-white/90 leading-tight">
-                   📦 <strong>Nota de Logística:</strong> Los 5.00 € cobrados aquí en el total cubren exclusivamente el embalaje de seguridad y el traslado de tu pedido hasta la agencia de MRW.
+                   📦 <strong>Nota de Logística:</strong> Los ref 5.00 cobrados aquí en el total cubren exclusivamente el embalaje de seguridad y el traslado de tu pedido hasta la agencia de MRW.
                  </p>
               </motion.div>
             )}
@@ -1223,7 +1223,7 @@ export default function CheckoutPage() {
                         {bcvRate && (
                           <div className="pt-4 border-t border-slate-200 flex justify-between items-center mt-2">
                             <p className="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-wider">Monto a Transferir</p>
-                            <p className="font-black text-primary text-xl md:text-2xl font-numbers">Bs. {(totalPrice * bcvRate).toFixed(2)}</p>
+                            <p className="font-black text-primary text-xl md:text-2xl font-numbers">Bs. {((deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice) * bcvRate).toFixed(2)}</p>
                           </div>
                         )}
                       </div>
@@ -1263,7 +1263,7 @@ export default function CheckoutPage() {
                           <label className="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" checked={isExactCash} onChange={(e) => {
                               setIsExactCash(e.target.checked);
-                              if(e.target.checked) setCashAmount(totalPrice.toFixed(2));
+                              if(e.target.checked) setCashAmount((deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2));
                             }} className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
                             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Monto Exacto</span>
                           </label>
@@ -1383,7 +1383,7 @@ export default function CheckoutPage() {
 
                 <button
                   onClick={() => {
-                    const whatsappNumber = "584142403001";
+                    const whatsappNumber = "584122861719";
                     const selectedAddr = addresses.find(a => a.id === selectedAddressId);
                     const mapsLink = selectedAddr ? `\n📍 *Ubicación:* https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}` : '';
                     const scheduledBadge = isScheduledOrder ? `⚠️ *ORDEN PROGRAMADA (Fuera de horario)* ⚠️\n\n` : '';
@@ -1401,7 +1401,7 @@ export default function CheckoutPage() {
                     if (paymentMethod === 'zelle') paymentText = `Zelle (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
                     if (paymentMethod === 'pm') paymentText = `Pago Móvil - Ref: ${paymentReference || 'Ver Foto'}`;
                     if (paymentMethod === 'paypal') paymentText = `PayPal (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
-                    if (paymentMethod === 'cash') paymentText = `Efectivo - Monto a entregar: $${cashAmount || totalPrice.toFixed(2)}${isExactCash ? ' (Monto Exacto)' : ''}`;
+                    if (paymentMethod === 'cash') paymentText = `Efectivo - Monto a entregar: ref ${cashAmount || (deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2)}${isExactCash ? ' (Monto Exacto)' : ''}`;
                       
                     const receiptLinkText = receiptUrl ? `\n📸 *Comprobante:* ${receiptUrl}` : '';
                     
@@ -1424,9 +1424,9 @@ export default function CheckoutPage() {
                       : (firstName || user?.phone || "Invitado");
 
                     const orderId = createdOrderId ? String(createdOrderId).slice(0, 8).toUpperCase() : "N/A";
-                    const totalAmount = totalPrice.toFixed(2);
+                    const totalAmount = (deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2);
 
-                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n🛵 *Entrega:*\n${finalDeliveryText}\n\n💳 Método: ${paymentMethodText}\n💰 Total: $${totalAmount}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
+                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n🛵 *Entrega:*\n${finalDeliveryText}\n\n💳 Método: ${paymentMethodText}\n💰 Total: ref ${totalAmount}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
                     const encodedMsg = encodeURIComponent(orderSummary);
                     window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMsg}`, "_blank");
                     handleFinish();

@@ -96,7 +96,6 @@ export const CountryCodeSelect = ({ value, onChange, className = "" }: CountryCo
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full rounded-xl bg-white border border-gray-200 py-1.5 px-3 text-[11px] font-body outline-none focus:border-primary/30 transition-all"
-                autoFocus
               />
             </div>
 

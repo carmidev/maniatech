@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 export const WhatsAppWidget = () => {
   const pathname = usePathname();
-  const phoneNumber = "584142403001";
+  const phoneNumber = "584122861719";
   const message = "¡Hola Dolce Candy! 🍭 Estoy interesado/a en hacer una compra. ¿Me podrían ayudar con mi pedido? ✨";
   
   const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;

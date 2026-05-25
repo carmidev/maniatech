@@ -92,7 +92,7 @@ export const FloatingCart = ({ onClick }: { onClick: () => void }) => {
             </div>
             
             <div className="flex items-center gap-1.5">
-              <span className="font-numbers font-bold text-sm md:text-base leading-none pt-0.5">{totalPrice.toFixed(2)} €</span>
+              <span className="font-numbers font-bold text-sm md:text-base leading-none pt-0.5">ref {totalPrice.toFixed(2)}</span>
               <ChevronRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-0.5 transition-transform" />
             </div>
 

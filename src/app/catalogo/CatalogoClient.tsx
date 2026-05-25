@@ -55,6 +55,8 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
     { id: "snacks", label: "Snacks", icon: "🍿" },
     { id: "bebidas", label: "Bebidas", icon: "🥤" },
     { id: "juguetes", label: "Juguetes", icon: "🎁" },
+    { id: "chicles", label: "Chicles", icon: "🍬" },
+    { id: "caramelos", label: "Caramelos", icon: "🍬" },
     { id: "top", label: "Top", icon: "✨" },
   ];
 
@@ -149,21 +151,21 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
               </Link>
               <button
                 onClick={handleOpenCart}
-                className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+                className="relative p-2 sm:p-2.5 hover:bg-gray-100 rounded-full transition-colors shrink-0"
               >
-                <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 text-gray-700" />
+                <ShoppingBasket className="w-6 h-6 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-gray-700" />
                 {totalItems > 0 && (
-                  <span className="absolute top-0 right-0 bg-primary text-white text-[9px] lg:text-[12px] font-black w-3.5 h-3.5 lg:w-5 lg:h-5 flex items-center justify-center rounded-full border-2 border-white">
+                  <span className="absolute top-0 right-0 bg-primary text-white text-[10px] lg:text-[12px] font-black w-[18px] h-[18px] lg:w-5 lg:h-5 flex items-center justify-center rounded-full border-2 border-white">
                     {totalItems}
                   </span>
                 )}
               </button>
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-1.5 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+                className="lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0"
                 aria-label="Toggle Menu"
               >
-                {isMobileMenuOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900" />}
+                {isMobileMenuOpen ? <X className="w-6 h-6 sm:w-6 sm:h-6 text-gray-900" /> : <Menu className="w-6 h-6 sm:w-6 sm:h-6 text-gray-900" />}
               </button>
             </div>
           </div>
@@ -315,6 +317,8 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                     { key: "snacks", label: "Snacks", icon: <Popcorn className="w-6 h-6" />, color: "bg-yellow-100 text-yellow-600" },
                     { key: "bebidas", label: "Bebidas", icon: <CupSoda className="w-6 h-6" />, color: "bg-brand-blue/10 text-brand-blue" },
                     { key: "juguetes", label: "Juguetes", icon: <Gift className="w-6 h-6" />, color: "bg-purple-100 text-purple-600" },
+                    { key: "chicles", label: "Chicles", icon: <CandyIcon className="w-6 h-6" />, color: "bg-pink-100 text-pink-600" },
+                    { key: "caramelos", label: "Caramelos", icon: <CandyIcon className="w-6 h-6" />, color: "bg-orange-100 text-orange-500" },
                     { key: "top", label: "Top", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
                   ].map((cat) => (
                     <button

@@ -250,7 +250,7 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-20">
           <div className="space-y-1">
             <label className="text-[10px] font-black uppercase text-gray-400 ml-1">Cédula / ID</label>
             <div className="flex gap-2">
@@ -264,7 +264,7 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
                   { value: "G", label: "G" },
                   { value: "P", label: "P" },
                 ]}
-                className="w-[85px] shrink-0 z-10"
+                className="w-[85px] shrink-0 z-20"
               />
               <input
                 type="text"
@@ -294,7 +294,7 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
                 { value: "Otro", label: "Otro" },
               ]}
               placeholder="Selecciona..."
-              className="z-0"
+              className="z-10"
             />
           </div>
         </div>

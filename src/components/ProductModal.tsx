@@ -8,6 +8,15 @@ import { getImagePath } from "@/utils/imagePath";
 import { DolceButton } from "./DolceButton";
 import { useState } from "react";
 
+const renderWithNumberFont = (text: string) => {
+  return text.split(/(\d+)/).map((part, i) => {
+    if (/\d+/.test(part)) {
+      return <span key={i} className="font-numbers font-semibold tracking-normal leading-normal">{part}</span>;
+    }
+    return part;
+  });
+};
+
 interface ProductModalProps {
   candy: Candy | null;
   isOpen: boolean;
@@ -97,13 +106,13 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
                   {!isMenu && (
                     <>
                       <span className="text-slate-300">|</span>
-                      <span className="text-primary font-numbers font-semibold text-2xl">{candy.price.toFixed(2)}€</span>
+                      <span className="text-primary font-numbers font-semibold text-2xl">ref {candy.price.toFixed(2)}</span>
                     </>
                   )}
                 </div>
                 
-                <h2 className="text-3xl md:text-4xl font-sans font-bold text-brand-darkgray leading-tight mb-3 flex items-center gap-3">
-                  {candy.name}
+                <h2 className="text-3xl md:text-4xl font-display text-brand-darkgray leading-tight mb-3 flex items-center gap-3">
+                  {renderWithNumberFont(candy.name)}
                   {isMenu && <Coffee className="w-8 h-8 text-primary" />}
                 </h2>
                 

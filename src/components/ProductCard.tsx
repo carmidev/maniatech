@@ -26,6 +26,15 @@ const BADGE_LABELS: Record<string, string> = {
   menu: "Menú",
 };
 
+const renderWithNumberFont = (text: string) => {
+  return text.split(/(\d+)/).map((part, i) => {
+    if (/\d+/.test(part)) {
+      return <span key={i} className="font-numbers font-semibold tracking-normal leading-normal">{part}</span>;
+    }
+    return part;
+  });
+};
+
 export const ProductCard = ({ 
   candy, 
   onOpenDetails 
@@ -45,12 +54,15 @@ export const ProductCard = ({
   
   const isOutOfStock = candy.stock === 0;
 
-  // Determinar si el producto es "Top" para ponerle el badge automáticamente
-  const isTopProduct = Array.isArray(candy.category) 
-    ? candy.category.includes("top") 
-    : candy.category === "top";
-  
-  const activeBadge = candy.badge || (isTopProduct ? "top" : null);
+  // Determinar el badge en base a las categorías o usar el asignado por defecto
+  let activeBadge = candy.badge;
+  if (!activeBadge) {
+    const cats = Array.isArray(candy.category) ? candy.category : [candy.category];
+    if (cats.includes("viral")) activeBadge = "viral";
+    else if (cats.includes("nuevo")) activeBadge = "nuevo";
+    else if (cats.includes("top") || cats.includes("tendencias")) activeBadge = "top";
+    else if (cats.includes("bestseller")) activeBadge = "bestseller";
+  }
   const isMenu = activeBadge === 'menu';
 
   return (
@@ -90,15 +102,15 @@ export const ProductCard = ({
 
           {!isMenu && (
             <div className="absolute top-5 right-5 bg-white/95 backdrop-blur px-3 py-1 rounded-2xl shadow-md border border-white/50">
-              <span className="text-primary font-numbers font-semibold text-xl">${candy.price.toFixed(2)}</span>
+              <span className="text-primary font-numbers font-semibold text-xl">ref {candy.price.toFixed(2)}</span>
             </div>
           )}
         </div>
 
         {/* Info */}
         <div className="p-7 flex flex-col flex-1 gap-2 bg-white">
-          <h3 className="text-xl font-sans font-bold text-brand-darkgray leading-tight group-hover:text-primary transition-colors flex items-center gap-2">
-            {candy.name}
+          <h3 className="text-xl font-display text-brand-darkgray leading-tight group-hover:text-primary transition-colors flex items-center gap-2">
+            {renderWithNumberFont(candy.name)}
             {isMenu && <Coffee className="w-5 h-5 text-primary" />}
           </h3>
           <p className="text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 leading-relaxed flex-1">

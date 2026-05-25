@@ -88,7 +88,7 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                     </div>
                     <div className="flex-1">
                       <h4 className="font-display text-brand-darkgray">{item.name}</h4>
-                      <p className="text-primary font-numbers font-semibold">{item.price.toFixed(2)} €</p>
+                      <p className="text-primary font-numbers font-semibold">ref {item.price.toFixed(2)}</p>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center gap-3 bg-gray-100 rounded-full px-2 py-1">
                           <button 
@@ -123,7 +123,7 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
               <div className="p-6 bg-gray-50 border-t space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-500 font-bold">Total Estimado</span>
-                  <span className="text-3xl font-black text-primary">{totalPrice.toFixed(2)} €</span>
+                  <span className="text-3xl font-black text-primary">ref {totalPrice.toFixed(2)}</span>
                 </div>
                 <button 
                   disabled={isNavigating}
