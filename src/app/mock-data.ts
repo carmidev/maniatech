@@ -7,7 +7,7 @@ export interface Candy {
   images: string[];
   category: string | string[];
   tag?: string;
-  badge?: "nuevo" | "bestseller" | "viral" | "exclusivo" | "menu";
+  badge?: "nuevo" | "bestseller" | "viral" | "exclusivo" | "menu" | "top";
   stock?: number;
 }
 
