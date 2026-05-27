@@ -36,6 +36,33 @@ type Address = {
 type PaymentMethod = "zelle" | "pm" | "cash" | "paypal" | "pos";
 type AuthView = "login" | "otp" | "profile" | null;
 
+const VENEZUELAN_STATES = [
+  "Amazonas",
+  "Anzoátegui",
+  "Apure",
+  "Aragua",
+  "Barinas",
+  "Bolívar",
+  "Carabobo",
+  "Cojedes",
+  "Delta Amacuro",
+  "Distrito Capital",
+  "Falcón",
+  "Guárico",
+  "Lara",
+  "La Guaira",
+  "Mérida",
+  "Miranda",
+  "Monagas",
+  "Nueva Esparta",
+  "Portuguesa",
+  "Sucre",
+  "Táchira",
+  "Trujillo",
+  "Yaracuy",
+  "Zulia"
+];
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, totalPrice, clearCart } = useCart();
@@ -55,6 +82,8 @@ export default function CheckoutPage() {
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
+  const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
+  const [isAccordionFullyOpen, setIsAccordionFullyOpen] = useState(false);
   const [address, setAddress] = useState(""); // Current selected address string
   const [referencePoint, setReferencePoint] = useState(""); // Nuevo: Punto de referencia
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -68,6 +97,28 @@ export default function CheckoutPage() {
   const [bcvRate, setBcvRate] = useState<number | null>(null);
   const [isFetchingRate, setIsFetchingRate] = useState(true);
   const [resendTimer, setResendTimer] = useState(0);
+
+  // Estados de Encomienda Nacional (MRW / ZOOM)
+  const [shippingCourier, setShippingCourier] = useState<"mrw" | "zoom">("mrw");
+  const [shippingState, setShippingState] = useState("");
+  const [shippingCity, setShippingCity] = useState("");
+  const [shippingAgency, setShippingAgency] = useState("");
+  const [shippingReceptorType, setShippingReceptorType] = useState<"same" | "third">("same");
+  const [shippingReceptorName, setShippingReceptorName] = useState("");
+  const [shippingReceptorId, setShippingReceptorId] = useState("");
+
+  const isShippingValid = () => {
+    const selectedAddr = addresses.find(a => a.id === selectedAddressId);
+    if (!selectedAddr || selectedAddr.zone !== 'NATIONAL') return true;
+    if (!shippingState.trim()) return false;
+    if (!shippingCity.trim()) return false;
+    if (!shippingAgency.trim()) return false;
+    if (shippingReceptorType === 'third') {
+      if (!shippingReceptorName.trim()) return false;
+      if (!shippingReceptorId.trim()) return false;
+    }
+    return true;
+  };
 
   // Carga de datos inicial
   useEffect(() => {
@@ -125,6 +176,18 @@ export default function CheckoutPage() {
     };
     fetchCustomerData();
   }, [user]);
+
+  // Bloquear scroll de la página si el dropdown de estados está abierto
+  useEffect(() => {
+    if (isStateDropdownOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isStateDropdownOpen]);
 
   // Horario States & Logic
   const checkIfStoreIsOpen = () => {
@@ -260,9 +323,15 @@ export default function CheckoutPage() {
           (() => {
             const selectedAddr = addresses.find(a => a.id === selectedAddressId);
             const isNational = selectedAddr?.zone === 'NATIONAL';
-            const prefix = isNational ? '[MRW] ' : '';
             if (selectedAddr) {
-              return `${prefix}${selectedAddr.formatted_address}${selectedAddr.unit ? `\nInmueble: ${selectedAddr.unit}` : ''}${referencePoint ? `\nRef: ${referencePoint}` : ''}\nMapa: https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}`;
+              if (isNational) {
+                const courierUpper = shippingCourier.toUpperCase();
+                const receptorInfo = shippingReceptorType === 'third' 
+                  ? `\nReceptor: ${shippingReceptorName} (C.I. ${shippingReceptorId})` 
+                  : '';
+                return `[${courierUpper}] Envío Nacional a Agencia\nEstado/Ciudad: ${shippingState} / ${shippingCity}\nAgencia: ${shippingAgency}${receptorInfo}\nDirección física del cliente (Mapa): ${selectedAddr.formatted_address} (${selectedAddr.lat},${selectedAddr.lng})`;
+              }
+              return `${selectedAddr.formatted_address}${selectedAddr.unit ? `\nInmueble: ${selectedAddr.unit}` : ''}${referencePoint ? `\nRef: ${referencePoint}` : ''}\nMapa: https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}`;
             }
             return address;
           })()
@@ -1040,6 +1109,7 @@ export default function CheckoutPage() {
                           setSelectedAddressId(addr.id);
                           setAddress(addr.formatted_address);
                           setReferencePoint(addr.reference_point || "");
+                          setIsAccordionFullyOpen(false);
                         }}
                         className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative group ${selectedAddressId === addr.id ? 'border-primary bg-primary/5 shadow-md' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
                       >
@@ -1055,6 +1125,187 @@ export default function CheckoutPage() {
 
                           </div>
                         </div>
+
+                        {selectedAddressId === addr.id && addr.zone === 'NATIONAL' && (
+                          <motion.div 
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            onAnimationStart={() => setIsAccordionFullyOpen(false)}
+                            onAnimationComplete={() => setIsAccordionFullyOpen(true)}
+                            className={`mt-5 pt-5 border-t border-slate-200 space-y-4 text-left cursor-default ${
+                              isAccordionFullyOpen ? 'overflow-visible' : 'overflow-hidden'
+                            }`}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <p className="text-xs font-black uppercase tracking-wider text-slate-500">
+                              Detalles para Envío Nacional (Cobro a Destino)
+                            </p>
+
+                            {/* Selector MRW / ZOOM */}
+                            <div className="grid grid-cols-2 gap-3">
+                              <button
+                                type="button"
+                                onClick={() => setShippingCourier("mrw")}
+                                className={`py-3 px-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+                                  shippingCourier === "mrw" 
+                                    ? "border-red-600 bg-red-50 text-red-700 shadow-sm" 
+                                    : "border-slate-200 hover:border-slate-300 text-slate-600"
+                                }`}
+                              >
+                                <span className={`w-2.5 h-2.5 rounded-full ${shippingCourier === 'mrw' ? 'bg-red-600' : 'bg-slate-300'}`} />
+                                MRW
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setShippingCourier("zoom")}
+                                className={`py-3 px-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+                                  shippingCourier === "zoom" 
+                                    ? "border-amber-500 bg-amber-50 text-amber-700 shadow-sm" 
+                                    : "border-slate-200 hover:border-slate-300 text-slate-600"
+                                }`}
+                              >
+                                <span className={`w-2.5 h-2.5 rounded-full ${shippingCourier === 'zoom' ? 'bg-amber-500' : 'bg-slate-300'}`} />
+                                ZOOM
+                              </button>
+                            </div>
+
+                            {/* Inputs Estado/Ciudad & Agencia */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div className="space-y-1">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                  Estado <span className="text-primary">*</span>
+                                </label>
+                                <div className="relative">
+                                  <button
+                                    type="button"
+                                    onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all font-body text-sm font-semibold text-slate-700 bg-white h-[50px]"
+                                  >
+                                    <span>{shippingState || "Selecciona un estado"}</span>
+                                    <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${isStateDropdownOpen ? 'rotate-180' : ''}`} />
+                                  </button>
+
+                                  <AnimatePresence>
+                                    {isStateDropdownOpen && (
+                                      <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.2 }}
+                                        data-lenis-prevent
+                                        className="absolute top-[calc(100%+8px)] left-0 w-full bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden max-h-60 overflow-y-auto overscroll-contain"
+                                      >
+                                        {VENEZUELAN_STATES.map((state) => (
+                                          <button
+                                            key={state}
+                                            type="button"
+                                            onClick={() => {
+                                              setShippingState(state);
+                                              setIsStateDropdownOpen(false);
+                                            }}
+                                            className={`w-full text-left p-3 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 font-body text-sm font-semibold ${
+                                              shippingState === state ? 'text-primary bg-primary/5' : 'text-slate-600'
+                                            }`}
+                                          >
+                                            {state}
+                                          </button>
+                                        ))}
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
+                                </div>
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                  Ciudad <span className="text-primary">*</span>
+                                </label>
+                                <input
+                                  type="text"
+                                  placeholder="Ej: Valencia"
+                                  value={shippingCity}
+                                  onChange={(e) => setShippingCity(e.target.value)}
+                                  className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body text-sm font-semibold text-slate-700 h-[50px]"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                Oficina / Agencia de Retiro <span className="text-primary">*</span>
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="Ej: Oficina Los Sauces"
+                                value={shippingAgency}
+                                onChange={(e) => setShippingAgency(e.target.value)}
+                                className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body text-sm font-semibold text-slate-700 h-[50px]"
+                              />
+                            </div>
+
+                            {/* ¿Quién retira? Selector */}
+                            <div className="space-y-3 pt-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                ¿Quién retira el paquete?
+                              </label>
+                              <div className="flex gap-4">
+                                <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-600">
+                                  <input
+                                    type="radio"
+                                    name="receptorType"
+                                    checked={shippingReceptorType === "same"}
+                                    onChange={() => setShippingReceptorType("same")}
+                                    className="accent-primary"
+                                  />
+                                  Mismo comprador
+                                </label>
+                                <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-600">
+                                  <input
+                                    type="radio"
+                                    name="receptorType"
+                                    checked={shippingReceptorType === "third"}
+                                    onChange={() => setShippingReceptorType("third")}
+                                    className="accent-primary"
+                                  />
+                                  Otra persona
+                                </label>
+                              </div>
+
+                              {shippingReceptorType === "third" && (
+                                <motion.div
+                                  initial={{ opacity: 0, y: -5 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1"
+                                >
+                                  <div className="space-y-1">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                      Nombre Completo <span className="text-primary">*</span>
+                                    </label>
+                                    <input
+                                      type="text"
+                                      placeholder="Ej: Carlos Pérez"
+                                      value={shippingReceptorName}
+                                      onChange={(e) => setShippingReceptorName(e.target.value)}
+                                      className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/5 outline-none transition-all text-xs font-semibold text-slate-700"
+                                    />
+                                  </div>
+                                  <div className="space-y-1">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                      Cédula de Identidad <span className="text-primary">*</span>
+                                    </label>
+                                    <input
+                                      type="text"
+                                      placeholder="Ej: 12345678"
+                                      value={shippingReceptorId}
+                                      onChange={(e) => setShippingReceptorId(e.target.value)}
+                                      className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/5 outline-none transition-all text-xs font-semibold text-slate-700"
+                                    />
+                                  </div>
+                                </motion.div>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1095,7 +1346,7 @@ export default function CheckoutPage() {
                 <div className="flex gap-4 pt-6">
                   <button onClick={prevStep} className="flex-1 py-5 font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-wider text-sm bg-slate-100 hover:bg-slate-200 rounded-full">Atrás</button>
                   <button
-                    disabled={deliveryMethod === 'delivery' && !selectedAddressId}
+                    disabled={deliveryMethod === 'delivery' && (!selectedAddressId || !isShippingValid())}
                     onClick={nextStep}
                     className="flex-[2] bg-primary text-white py-5 rounded-full font-black text-lg flex items-center justify-center gap-2 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
                   >
@@ -1426,9 +1677,18 @@ export default function CheckoutPage() {
                     
                     // Obtener dirección formateada final para WhatsApp
                     const selectedAddrObj = addresses.find(a => a.id === selectedAddressId);
-                    const finalDeliveryText = deliveryMethod === 'delivery' && selectedAddrObj
-                      ? `${isNational ? `Envío Nacional (MRW/Zoom) a:` : `Delivery a:`} ${selectedAddrObj.formatted_address}${selectedAddrObj.unit ? `\n🏢 *Inmueble:* ${selectedAddrObj.unit}` : ''}${referencePoint ? `\n📍 *Ref:* ${referencePoint}` : ''}`
-                      : deliveryText;
+                    let finalDeliveryText = deliveryText;
+                    if (deliveryMethod === 'delivery' && selectedAddrObj) {
+                      if (selectedAddrObj.zone === 'NATIONAL') {
+                        const courierUpper = shippingCourier.toUpperCase();
+                        const receptorInfo = shippingReceptorType === 'third' 
+                          ? `\n👤 *Receptor:* ${shippingReceptorName} (C.I. ${shippingReceptorId})` 
+                          : '';
+                        finalDeliveryText = `📦 *Envío Nacional por ${courierUpper}*\n📍 *Ubicación:* ${shippingState} / ${shippingCity}\n🏢 *Agencia:* ${shippingAgency}${receptorInfo}\n📍 *Ref. de Zona:* ${selectedAddrObj.formatted_address}`;
+                      } else {
+                        finalDeliveryText = `Delivery a: ${selectedAddrObj.formatted_address}${selectedAddrObj.unit ? `\n🏢 *Inmueble:* ${selectedAddrObj.unit}` : ''}${referencePoint ? `\n📍 *Ref:* ${referencePoint}` : ''}`;
+                      }
+                    }
 
                     const paymentMethodNames = {
                       zelle: "Zelle",
