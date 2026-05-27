@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
-import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, ChevronLeft, ChevronRight, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift, Popcorn, Sparkles } from "lucide-react";
+import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, ChevronLeft, ChevronRight, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift, Popcorn, Sparkles, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LollipopLogo } from "@/components/LollipopLogo";
 import { ProductCard } from "@/components/ProductCard";
@@ -26,6 +26,9 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("relevance");
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const sortDropdownRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = (direction: "left" | "right") => {
@@ -94,6 +97,22 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
     return matchesCategory && matchesSearch;
   });
 
+  const SORT_OPTIONS = [
+    { id: "relevance", label: "Relevancia" },
+    { id: "price_asc", label: "Precio más bajo" },
+    { id: "price_desc", label: "Precio más alto" },
+    { id: "name", label: "Nombre" },
+    { id: "brand", label: "Marca" },
+  ];
+
+  const sortedCandies = [...filteredCandies].sort((a, b) => {
+    if (sortBy === "price_asc") return a.price - b.price;
+    if (sortBy === "price_desc") return b.price - a.price;
+    if (sortBy === "name") return a.name.localeCompare(b.name);
+    if (sortBy === "brand") return (a.name.split(" ")[0] || "").localeCompare(b.name.split(" ")[0] || "");
+    return 0;
+  });
+
   const coffeeItems: Candy[] = [
     { id: "cafe1", name: "Menú Café", description: "Explora nuestra variedad de cafés preparados con granos seleccionados.", price: 0, images: ["/images/cafe 1.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
     { id: "cafe2", name: "Menú Café", description: "Disfruta de nuestras especialidades de la casa en un ambiente acogedor.", price: 0, images: ["/images/cafe 2.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
@@ -101,7 +120,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
     { id: "cafe4", name: "Menú Café", description: "El complemento perfecto para tu momento Dolce.", price: 0, images: ["/images/cafe 4.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
   ];
 
-  const displayedProducts = activeSection === 'cafe' ? coffeeItems : filteredCandies;
+  const displayedProducts = activeSection === 'cafe' ? coffeeItems : sortedCandies;
 
   return (
     <div className="min-h-screen bg-[#f8f6f6]">
@@ -252,14 +271,55 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                 </button>
               </div>
 
-              {/* Buscador - Extremo Derecho */}
+              {/* Buscador + Ordenamiento - Extremo Derecho */}
               {activeSection === 'golosinas' && (
-                <div className="w-full md:w-80">
-                  <div className="relative group">
+                <div className="flex items-center gap-2 w-full md:w-auto">
+
+                  {/* Dropdown Ordenar */}
+                  <div className="relative" ref={sortDropdownRef}>
+                    <button
+                      onClick={() => setIsSortOpen(!isSortOpen)}
+                      className="flex items-center gap-2 px-4 py-3.5 rounded-[2rem] bg-white border border-slate-200 shadow-sm hover:border-primary/40 transition-all font-bold text-sm text-slate-600 whitespace-nowrap"
+                    >
+                      <SlidersHorizontal className="w-4 h-4 text-primary" />
+                      <span className="hidden sm:inline">{SORT_OPTIONS.find(o => o.id === sortBy)?.label || "Relevancia"}</span>
+                      <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isSortOpen ? "rotate-180" : ""}`} />
+                    </button>
+
+                    <AnimatePresence>
+                      {isSortOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute top-[calc(100%+8px)] left-0 z-50 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/10 border border-white/60 p-1.5 min-w-[180px]"
+                        >
+                          {SORT_OPTIONS.map((opt) => (
+                            <button
+                              key={opt.id}
+                              onClick={() => { setSortBy(opt.id); setIsSortOpen(false); }}
+                              className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                                sortBy === opt.id
+                                  ? "bg-primary/10 text-primary"
+                                  : "text-slate-600 hover:bg-slate-50"
+                              }`}
+                            >
+                              {opt.label}
+                              {sortBy === opt.id && <Check className="w-4 h-4 text-primary" />}
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Buscador */}
+                  <div className="relative group flex-1 md:w-64">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
                     <input
                       type="text"
-                      placeholder="Buscar..."
+                      placeholder="Buscar golosinas..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-11 pr-4 py-4 rounded-[2rem] bg-white border border-slate-200 shadow-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/5 outline-none transition-all font-bold text-sm"
