@@ -120,6 +120,12 @@ export default function CheckoutPage() {
     return true;
   };
 
+  const selectedAddr = addresses.find(a => a.id === selectedAddressId);
+  const isNational = deliveryMethod === 'delivery' && selectedAddr?.zone === 'NATIONAL';
+  const deliveryCost = deliveryMethod === 'delivery' ? 5 : 0;
+  const bagFeeCost = !isNational ? 0.5 : 0;
+  const grandTotal = totalPrice + deliveryCost + bagFeeCost;
+
   // Carga de datos inicial
   useEffect(() => {
     const fetchBcvRate = async () => {
@@ -298,7 +304,6 @@ export default function CheckoutPage() {
       }
 
       const finalItems = [...items];
-      const deliveryCost = deliveryMethod === 'delivery' ? 5 : 0;
       
       if (deliveryCost > 0) {
         finalItems.push({
@@ -306,6 +311,15 @@ export default function CheckoutPage() {
           quantity: 1,
           price: deliveryCost,
           subtotal: deliveryCost
+        } as any);
+      }
+
+      if (bagFeeCost > 0) {
+        finalItems.push({
+          product: { id: 'bag_fee', name: 'Bolsa Dolce Candy', price: bagFeeCost, images: [], description: 'Bolsa de la tienda' },
+          quantity: 1,
+          price: bagFeeCost,
+          subtotal: bagFeeCost
         } as any);
       }
 
@@ -317,7 +331,7 @@ export default function CheckoutPage() {
         customer_email: user?.email || 'no-email@dolce.com',
         customer_phone: customerProfile?.phone || user?.phone || null,
         items: finalItems,
-        total_amount: totalPrice + deliveryCost,
+        total_amount: grandTotal,
         delivery_method: deliveryMethod.toUpperCase(),
         delivery_address: deliveryMethod === 'delivery' ? (
           (() => {
@@ -736,23 +750,41 @@ export default function CheckoutPage() {
 
         <div className="space-y-4 relative z-10 mt-12 md:mt-0">
           <div className="bg-white/10 p-6 rounded-[2rem] backdrop-blur-md border border-white/20 shadow-xl">
-            {deliveryMethod === 'delivery' && (
-              <div className="mb-4 pb-4 border-b border-white/10 space-y-2">
+            <div className="mb-4 pb-4 border-b border-white/10 space-y-2">
+              <div className="flex justify-between items-center text-sm text-white/80">
+                <span>Productos</span>
+                <span className="font-numbers font-semibold">ref {totalPrice.toFixed(2)}</span>
+              </div>
+              {bagFeeCost > 0 && (
                 <div className="flex justify-between items-center text-sm text-white/80">
-                  <span>Subtotal</span>
-                  <span className="font-numbers font-semibold">ref {totalPrice.toFixed(2)}</span>
+                  <span>Bolsa Dolce Candy</span>
+                  <span className="font-numbers font-semibold">ref {bagFeeCost.toFixed(2)}</span>
                 </div>
+              )}
+              {deliveryMethod === 'delivery' && (
                 <div className="flex justify-between items-center text-sm text-white/80">
                   <span>Envío / Delivery</span>
-                  <span className="font-numbers font-semibold">ref 5.00</span>
+                  <span className="font-numbers font-semibold">ref {deliveryCost.toFixed(2)}</span>
                 </div>
+              )}
+            </div>
+
+            {/* Desglose de IVA */}
+            <div className="mb-4 pb-4 border-b border-white/10 space-y-2 text-xs text-white/70">
+              <div className="flex justify-between items-center">
+                <span>Monto sin IVA (Base)</span>
+                <span className="font-numbers font-semibold">ref {(grandTotal / 1.16).toFixed(2)}</span>
               </div>
-            )}
+              <div className="flex justify-between items-center">
+                <span>IVA (16%)</span>
+                <span className="font-numbers font-semibold">ref {(grandTotal - (grandTotal / 1.16)).toFixed(2)}</span>
+              </div>
+            </div>
             
             <p className="text-xs text-white/70 mb-1 uppercase tracking-widest font-body font-bold">Total a pagar</p>
             <div className="flex items-baseline gap-3">
               <p className="text-5xl font-numbers font-semibold">
-                ref {(deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2)}
+                ref {grandTotal.toFixed(2)}
               </p>
             </div>
             
@@ -760,12 +792,12 @@ export default function CheckoutPage() {
               <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
                 <span className="text-xs font-bold text-white/60 uppercase tracking-widest">En Bs.</span>
                 <span className="text-lg font-numbers font-bold text-white">
-                  Bs. {((deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice) * bcvRate).toFixed(2)}
+                  Bs. {(grandTotal * bcvRate).toFixed(2)}
                 </span>
               </div>
             )}
             
-            {step > 1 && deliveryMethod === 'delivery' && addresses.find(a => a.id === selectedAddressId)?.zone === 'NATIONAL' && (
+            {step > 1 && deliveryMethod === 'delivery' && isNational && (
               <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="mt-3 p-2.5 bg-[#231f20] rounded-xl shadow-lg border border-white/5">
                  <p className="text-[11px] text-white/90 leading-tight">
                    📦 <strong>Nota de Logística:</strong> Los ref 5.00 cobrados aquí en el total cubren exclusivamente el embalaje de seguridad y el traslado de tu pedido hasta la agencia de MRW.
@@ -1717,7 +1749,7 @@ export default function CheckoutPage() {
                       : (firstName || user?.phone || "Invitado");
 
                     const orderId = createdOrderId ? String(createdOrderId).slice(0, 8).toUpperCase() : "N/A";
-                    const totalAmount = (deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2);
+                    const totalAmount = grandTotal.toFixed(2);
 
                     const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n🛵 *Entrega:*\n${finalDeliveryText}\n\n💳 Método: ${paymentMethodText}\n💰 Total: ref ${totalAmount}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
                     const encodedMsg = encodeURIComponent(orderSummary);
