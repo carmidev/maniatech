@@ -100,8 +100,8 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
                 <div className="flex items-center gap-3 mb-2">
                   <span className="bg-primary/10 text-primary px-3 py-0.5 rounded-full text-[9px] font-display uppercase tracking-widest">
                     {Array.isArray(candy.category) 
-                      ? (candy.category.includes("top") ? "🔥 Los más buscados" : candy.category.join(", ")) 
-                      : (candy.category === "top" ? "🔥 Los más buscados" : candy.category)}
+                      ? (candy.category.includes("top") ? "🔥 Lo más vendido" : candy.category.join(", ")) 
+                      : (candy.category === "top" ? "🔥 Lo más vendido" : candy.category)}
                   </span>
                   {!isMenu && (
                     <>
@@ -120,8 +120,8 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
                   {candy.description}
                 </p>
 
-                {/* Reseña Personal o Botón de Navegación */}
-                {isMenu ? (
+                {/* Botón de Navegación para el Menú */}
+                {isMenu && (
                   <div className="mt-8 flex flex-col items-center text-center px-4">
                     <p className="text-sm font-medium text-slate-400 mb-4 uppercase tracking-widest">¿Buscas algo para acompañar?</p>
                     <button
@@ -131,23 +131,6 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
                       <Cookie className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                       Ver Golosinas (Galletas)
                     </button>
-                  </div>
-                ) : (
-                  <div className="relative bg-primary/5 p-6 rounded-[2rem] mb-6 border border-primary/10 mx-3 mt-3">
-                    <div className="absolute -top-3 -left-3 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center shadow-lg transform -rotate-12">
-                      <Heart className="w-4 h-4 fill-current" />
-                    </div>
-                    <h4 className="text-primary font-black uppercase tracking-tighter text-[10px] mb-2 font-body">
-                      Reseña de Ana ✨
-                    </h4>
-                    <p className="text-slate-800 font-bold text-base leading-snug italic">
-                      "{candy.ownerReview || "¡Un sabor único que tienes que probar!"}"
-                    </p>
-                    <div className="mt-3 flex items-center gap-2">
-                      <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest italic">
-                        — ANA
-                      </span>
-                    </div>
                   </div>
                 )}
               </div>

@@ -20,9 +20,9 @@ const BADGE_STYLES: Record<string, string> = {
 const BADGE_LABELS: Record<string, string> = {
   nuevo: "Nuevo",
   bestseller: "Bestseller",
-  viral: "Viral 🔥",
+  viral: "Nuevo",
   exclusivo: "Exclusivo",
-  top: "TOP 🔥",
+  top: "Lo más vendido",
   menu: "Menú",
 };
 

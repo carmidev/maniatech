@@ -72,7 +72,7 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(1);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("delivery");
   const [pickupStore, setPickupStore] = useState<string>("campoclaro");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("zelle");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("pm");
   const [paymentHolder, setPaymentHolder] = useState("");
   const [paymentReference, setPaymentReference] = useState("");
   const [cashAmount, setCashAmount] = useState("");
@@ -1383,7 +1383,7 @@ export default function CheckoutPage() {
                       const selectedAddr = addresses.find(a => a.id === selectedAddressId);
                       const isNational = deliveryMethod === 'delivery' && selectedAddr?.zone === 'NATIONAL';
                       if (isNational && (paymentMethod === 'cash' || paymentMethod === 'pos')) {
-                        setPaymentMethod('zelle');
+                        setPaymentMethod('pm');
                       }
                       nextStep();
                     }}
@@ -1433,11 +1433,11 @@ export default function CheckoutPage() {
                         className="absolute top-[calc(100%+8px)] left-0 w-full bg-white border border-slate-200 rounded-2xl shadow-xl z-10 overflow-hidden"
                       >
                         {[
-                          { id: 'zelle', name: 'Zelle', icon: <span className="font-black text-white text-base">Z</span>, bg: 'bg-[#741BCC]' },
+                          { id: 'pos', name: 'Punto de Venta (POS)', icon: <CreditCard className="w-5 h-5 text-white" />, bg: 'bg-[#FF9F00]' },
                           { id: 'pm', name: 'Pago Móvil', icon: <Smartphone className="w-5 h-5 text-white" />, bg: 'bg-[#00B0F0]' },
+                          { id: 'zelle', name: 'Zelle', icon: <span className="font-black text-white text-base">Z</span>, bg: 'bg-[#741BCC]' },
                           { id: 'cash', name: 'Efectivo', icon: <Wallet className="w-5 h-5 text-white" />, bg: 'bg-[#1D9A5B]' },
-                          { id: 'paypal', name: 'PayPal', icon: <span className="font-black text-white text-base italic">P</span>, bg: 'bg-[#00457C]' },
-                          { id: 'pos', name: 'Punto de Venta (POS)', icon: <CreditCard className="w-5 h-5 text-white" />, bg: 'bg-[#FF9F00]' }
+                          { id: 'paypal', name: 'PayPal', icon: <span className="font-black text-white text-base italic">P</span>, bg: 'bg-[#00457C]' }
                         ].filter(option => {
                           const isNational = deliveryMethod === 'delivery' && addresses.find(a => a.id === selectedAddressId)?.zone === 'NATIONAL';
                           if (isNational && (option.id === 'cash' || option.id === 'pos')) {
@@ -1521,7 +1521,7 @@ export default function CheckoutPage() {
                         {bcvRate && (
                           <div className="pt-4 border-t border-slate-200 flex justify-between items-center mt-2">
                             <p className="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-wider">Monto a Transferir</p>
-                            <p className="font-black text-primary text-xl md:text-2xl font-numbers">Bs. {((deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice) * bcvRate).toFixed(2)}</p>
+                            <p className="font-black text-primary text-xl md:text-2xl font-numbers">Bs. {(grandTotal * bcvRate).toFixed(2)}</p>
                           </div>
                         )}
                       </div>
@@ -1561,7 +1561,7 @@ export default function CheckoutPage() {
                           <label className="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" checked={isExactCash} onChange={(e) => {
                               setIsExactCash(e.target.checked);
-                              if(e.target.checked) setCashAmount((deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2));
+                              if(e.target.checked) setCashAmount(grandTotal.toFixed(2));
                             }} className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
                             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Monto Exacto</span>
                           </label>
@@ -1715,7 +1715,7 @@ export default function CheckoutPage() {
                     if (paymentMethod === 'zelle') paymentText = `Zelle (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
                     if (paymentMethod === 'pm') paymentText = `Pago Móvil - Ref: ${paymentReference || 'Ver Foto'}`;
                     if (paymentMethod === 'paypal') paymentText = `PayPal (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
-                    if (paymentMethod === 'cash') paymentText = `Efectivo - Monto a entregar: ref ${cashAmount || (deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2)}${isExactCash ? ' (Monto Exacto)' : ''}`;
+                    if (paymentMethod === 'cash') paymentText = `Efectivo - Monto a entregar: ref ${cashAmount || grandTotal.toFixed(2)}${isExactCash ? ' (Monto Exacto)' : ''}`;
                     if (paymentMethod === 'pos') paymentText = `Punto de Venta (POS) - Pago al recibir`;
                       
                     const receiptLinkText = receiptUrl ? `\n📸 *Comprobante:* ${receiptUrl}` : '';

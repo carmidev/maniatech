@@ -57,7 +57,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
     { id: "juguetes", label: "Juguetes", icon: "🎁" },
     { id: "chicles", label: "Chicles", icon: "🍬" },
     { id: "caramelos", label: "Caramelos", icon: "🍬" },
-    { id: "top", label: "Top", icon: "✨" },
+    { id: "top", label: "Lo más vendido", icon: "✨" },
   ];
 
   const normalizeCategory = (cat: string | string[] | null): string[] => {
@@ -319,7 +319,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                     { key: "juguetes", label: "Juguetes", icon: <Gift className="w-6 h-6" />, color: "bg-purple-100 text-purple-600" },
                     { key: "chicles", label: "Chicles", icon: <CandyIcon className="w-6 h-6" />, color: "bg-pink-100 text-pink-600" },
                     { key: "caramelos", label: "Caramelos", icon: <CandyIcon className="w-6 h-6" />, color: "bg-orange-100 text-orange-500" },
-                    { key: "top", label: "Top", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
+                    { key: "top", label: "Lo más vendido", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
                   ].map((cat) => (
                     <button
                       key={cat.key}
