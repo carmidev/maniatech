@@ -271,51 +271,10 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                 </button>
               </div>
 
-              {/* Buscador + Ordenamiento - Extremo Derecho */}
+              {/* Buscador - Extremo Derecho */}
               {activeSection === 'golosinas' && (
-                <div className="flex items-center gap-2 w-full md:w-auto">
-
-                  {/* Dropdown Ordenar */}
-                  <div className="relative" ref={sortDropdownRef}>
-                    <button
-                      onClick={() => setIsSortOpen(!isSortOpen)}
-                      className="flex items-center gap-2 px-4 py-3.5 rounded-[2rem] bg-white border border-slate-200 shadow-sm hover:border-primary/40 transition-all font-bold text-sm text-slate-600 whitespace-nowrap"
-                    >
-                      <SlidersHorizontal className="w-4 h-4 text-primary" />
-                      <span className="hidden sm:inline">{SORT_OPTIONS.find(o => o.id === sortBy)?.label || "Relevancia"}</span>
-                      <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isSortOpen ? "rotate-180" : ""}`} />
-                    </button>
-
-                    <AnimatePresence>
-                      {isSortOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                          transition={{ duration: 0.15 }}
-                          className="absolute top-[calc(100%+8px)] left-0 z-50 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/10 border border-white/60 p-1.5 min-w-[180px]"
-                        >
-                          {SORT_OPTIONS.map((opt) => (
-                            <button
-                              key={opt.id}
-                              onClick={() => { setSortBy(opt.id); setIsSortOpen(false); }}
-                              className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
-                                sortBy === opt.id
-                                  ? "bg-primary/10 text-primary"
-                                  : "text-slate-600 hover:bg-slate-50"
-                              }`}
-                            >
-                              {opt.label}
-                              {sortBy === opt.id && <Check className="w-4 h-4 text-primary" />}
-                            </button>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Buscador */}
-                  <div className="relative group flex-1 md:w-64">
+                <div className="w-full md:w-80">
+                  <div className="relative group">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
                     <input
                       type="text"
@@ -403,6 +362,47 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                   ))}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Dropdown Ordenar - debajo del slider, alineado a la izquierda */}
+          {activeSection === 'golosinas' && (
+            <div className="relative w-fit" ref={sortDropdownRef}>
+              <button
+                onClick={() => setIsSortOpen(!isSortOpen)}
+                className="flex items-center gap-2 px-5 py-3 rounded-[2rem] bg-white border border-slate-200 shadow-sm hover:border-primary/40 transition-all font-bold text-sm text-slate-600 whitespace-nowrap"
+              >
+                <SlidersHorizontal className="w-4 h-4 text-primary" />
+                <span>Ordenar: {SORT_OPTIONS.find(o => o.id === sortBy)?.label || "Relevancia"}</span>
+                <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isSortOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              <AnimatePresence>
+                {isSortOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-[calc(100%+8px)] left-0 z-50 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/10 border border-white/60 p-1.5 min-w-[200px]"
+                  >
+                    {SORT_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.id}
+                        onClick={() => { setSortBy(opt.id); setIsSortOpen(false); }}
+                        className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                          sortBy === opt.id
+                            ? "bg-primary/10 text-primary"
+                            : "text-slate-600 hover:bg-slate-50"
+                        }`}
+                      >
+                        {opt.label}
+                        {sortBy === opt.id && <Check className="w-4 h-4 text-primary" />}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           )}
 
