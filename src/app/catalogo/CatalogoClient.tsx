@@ -313,6 +313,8 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                 >
                   {[
                     { key: "all", label: "Todos", icon: <Star className="w-6 h-6" />, color: "bg-slate-100 text-slate-600" },
+                    { key: "top", label: "Lo más vendido", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
+                    { key: "nuevo", label: "Nuevo", icon: <Sparkles className="w-6 h-6" />, color: "bg-brand-blue/20 text-brand-blue" },
                     { key: "chocolates", label: "Chocolates", icon: <Cookie className="w-6 h-6" />, color: "bg-brand-brown/10 text-brand-brown" },
                     { key: "gomitas", label: "Gomitas", icon: <CandyIcon className="w-6 h-6" />, color: "bg-accent/10 text-accent" },
                     { key: "acidos", label: "Ácidos", icon: <Zap className="w-6 h-6" />, color: "bg-secondary/10 text-secondary" },
@@ -320,11 +322,9 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                     { key: "galletas", label: "Galletas", icon: <Cookie className="w-6 h-6" />, color: "bg-orange-100 text-orange-600" },
                     { key: "snacks", label: "Snacks", icon: <Popcorn className="w-6 h-6" />, color: "bg-yellow-100 text-yellow-600" },
                     { key: "bebidas", label: "Bebidas", icon: <CupSoda className="w-6 h-6" />, color: "bg-brand-blue/10 text-brand-blue" },
-                    { key: "juguetes", label: "Juguetes", icon: <Gift className="w-6 h-6" />, color: "bg-purple-100 text-purple-600" },
-                    { key: "chicles", label: "Chicles", icon: <CandyIcon className="w-6 h-6" />, color: "bg-pink-100 text-pink-600" },
                     { key: "caramelos", label: "Caramelos", icon: <CandyIcon className="w-6 h-6" />, color: "bg-orange-100 text-orange-500" },
-                    { key: "top", label: "Lo más vendido", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
-                    { key: "nuevo", label: "Nuevo", icon: <Sparkles className="w-6 h-6" />, color: "bg-brand-blue/20 text-brand-blue" },
+                    { key: "chicles", label: "Chicles", icon: <CandyIcon className="w-6 h-6" />, color: "bg-pink-100 text-pink-600" },
+                    { key: "juguetes", label: "Juguetes", icon: <Gift className="w-6 h-6" />, color: "bg-purple-100 text-purple-600" },
                   ].map((cat) => (
                     <button
                       key={cat.key}
