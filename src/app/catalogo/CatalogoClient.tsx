@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
-import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, ChevronLeft, ChevronRight, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift, Popcorn } from "lucide-react";
+import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, ChevronLeft, ChevronRight, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift, Popcorn, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LollipopLogo } from "@/components/LollipopLogo";
 import { ProductCard } from "@/components/ProductCard";
@@ -58,6 +58,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
     { id: "chicles", label: "Chicles", icon: "🍬" },
     { id: "caramelos", label: "Caramelos", icon: "🍬" },
     { id: "top", label: "Lo más vendido", icon: "✨" },
+    { id: "nuevo", label: "Nuevo", icon: "✨" },
   ];
 
   const normalizeCategory = (cat: string | string[] | null): string[] => {
@@ -84,7 +85,10 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
 
   const filteredCandies = candiesList.filter((c) => {
     const productCategories = Array.isArray(c.category) ? c.category : [c.category];
-    const matchesCategory = activeCategory === "all" || productCategories.includes(activeCategory);
+    const matchesCategory = activeCategory === "all" || 
+      productCategories.includes(activeCategory) ||
+      (activeCategory === "nuevo" && (productCategories.includes("nuevo") || productCategories.includes("viral") || c.badge === "nuevo" || c.badge === "viral")) ||
+      (activeCategory === "top" && (productCategories.includes("top") || productCategories.includes("tendencias") || c.badge === "top" || c.badge === "bestseller"));
     const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       c.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -320,6 +324,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                     { key: "chicles", label: "Chicles", icon: <CandyIcon className="w-6 h-6" />, color: "bg-pink-100 text-pink-600" },
                     { key: "caramelos", label: "Caramelos", icon: <CandyIcon className="w-6 h-6" />, color: "bg-orange-100 text-orange-500" },
                     { key: "top", label: "Lo más vendido", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
+                    { key: "nuevo", label: "Nuevo", icon: <Sparkles className="w-6 h-6" />, color: "bg-brand-blue/20 text-brand-blue" },
                   ].map((cat) => (
                     <button
                       key={cat.key}
