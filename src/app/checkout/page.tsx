@@ -33,7 +33,7 @@ type Address = {
   unit?: string;
   zone?: string;
 };
-type PaymentMethod = "zelle" | "pm" | "cash" | "paypal";
+type PaymentMethod = "zelle" | "pm" | "cash" | "paypal" | "pos";
 type AuthView = "login" | "otp" | "profile" | null;
 
 export default function CheckoutPage() {
@@ -715,7 +715,8 @@ export default function CheckoutPage() {
                   <span className="font-bold uppercase text-sm">
                     {paymentMethod === 'pm' ? 'Pago Móvil' : 
                      paymentMethod === 'zelle' ? 'Zelle' : 
-                     paymentMethod === 'paypal' ? 'PayPal' : 'Efectivo'}
+                     paymentMethod === 'paypal' ? 'PayPal' : 
+                     paymentMethod === 'pos' ? 'Punto de Venta' : 'Efectivo'}
                   </span>
                 </p>
               )}
@@ -1120,11 +1121,13 @@ export default function CheckoutPage() {
                       {paymentMethod === 'pm' && <div className="w-10 h-10 rounded-xl bg-[#00B0F0] text-white flex items-center justify-center"><Smartphone className="w-5 h-5" /></div>}
                       {paymentMethod === 'cash' && <div className="w-10 h-10 rounded-xl bg-[#1D9A5B] text-white flex items-center justify-center"><Wallet className="w-5 h-5" /></div>}
                       {paymentMethod === 'paypal' && <div className="w-10 h-10 rounded-xl bg-[#00457C] text-white flex items-center justify-center font-black text-lg italic">P</div>}
+                      {paymentMethod === 'pos' && <div className="w-10 h-10 rounded-xl bg-[#FF9F00] text-white flex items-center justify-center"><CreditCard className="w-5 h-5" /></div>}
                       <span className="font-black text-slate-700 text-xl">
                         {paymentMethod === 'zelle' && 'Zelle'}
                         {paymentMethod === 'pm' && 'Pago Móvil'}
                         {paymentMethod === 'cash' && 'Efectivo'}
                         {paymentMethod === 'paypal' && 'PayPal'}
+                        {paymentMethod === 'pos' && 'Punto de Venta (POS)'}
                       </span>
                     </div>
                     <ChevronDown className={`w-6 h-6 text-slate-400 transition-transform duration-300 ${isPaymentDropdownOpen ? 'rotate-180' : ''}`} />
@@ -1143,7 +1146,8 @@ export default function CheckoutPage() {
                           { id: 'zelle', name: 'Zelle', icon: <span className="font-black text-white text-base">Z</span>, bg: 'bg-[#741BCC]' },
                           { id: 'pm', name: 'Pago Móvil', icon: <Smartphone className="w-5 h-5 text-white" />, bg: 'bg-[#00B0F0]' },
                           { id: 'cash', name: 'Efectivo', icon: <Wallet className="w-5 h-5 text-white" />, bg: 'bg-[#1D9A5B]' },
-                          { id: 'paypal', name: 'PayPal', icon: <span className="font-black text-white text-base italic">P</span>, bg: 'bg-[#00457C]' }
+                          { id: 'paypal', name: 'PayPal', icon: <span className="font-black text-white text-base italic">P</span>, bg: 'bg-[#00457C]' },
+                          { id: 'pos', name: 'Punto de Venta (POS)', icon: <CreditCard className="w-5 h-5 text-white" />, bg: 'bg-[#FF9F00]' }
                         ].map((option) => (
                           <button
                             key={option.id}
@@ -1329,6 +1333,22 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                   )}
+
+                  {paymentMethod === 'pos' && (
+                    <div className="space-y-6">
+                      <div className="bg-amber-50 p-6 rounded-[2.5rem] border border-amber-200 flex items-start gap-4">
+                        <div className="p-3 bg-amber-100 rounded-2xl shrink-0"><CreditCard className="w-6 h-6 text-amber-600" /></div>
+                        <div>
+                          <p className="font-black text-amber-900 text-sm uppercase tracking-widest mb-1">Punto de Venta (POS)</p>
+                          <p className="text-xs font-medium text-amber-800/80 leading-relaxed font-body">
+                            {deliveryMethod === 'delivery' 
+                              ? 'Pagarás con tu tarjeta de crédito o débito al recibir tu pedido. El repartidor llevará el equipo de cobro (POS / Datáfono) a tu dirección.' 
+                              : 'Pagarás con tu tarjeta de crédito o débito directamente en la tienda al momento de retirar tu pedido.'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-6 text-center">
@@ -1400,6 +1420,7 @@ export default function CheckoutPage() {
                     if (paymentMethod === 'pm') paymentText = `Pago Móvil - Ref: ${paymentReference || 'Ver Foto'}`;
                     if (paymentMethod === 'paypal') paymentText = `PayPal (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
                     if (paymentMethod === 'cash') paymentText = `Efectivo - Monto a entregar: ref ${cashAmount || (deliveryMethod === 'delivery' ? totalPrice + 5 : totalPrice).toFixed(2)}${isExactCash ? ' (Monto Exacto)' : ''}`;
+                    if (paymentMethod === 'pos') paymentText = `Punto de Venta (POS) - Pago al recibir`;
                       
                     const receiptLinkText = receiptUrl ? `\n📸 *Comprobante:* ${receiptUrl}` : '';
                     
@@ -1413,7 +1434,8 @@ export default function CheckoutPage() {
                       zelle: "Zelle",
                       pm: "Pago Móvil",
                       paypal: "PayPal",
-                      cash: "Efectivo"
+                      cash: "Efectivo",
+                      pos: "Punto de Venta (POS)"
                     };
                     const paymentMethodText = paymentMethodNames[paymentMethod as keyof typeof paymentMethodNames] || paymentMethod;
 
