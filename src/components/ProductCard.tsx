@@ -11,7 +11,7 @@ import { getImagePath } from "@/utils/imagePath";
 const BADGE_STYLES: Record<string, string> = {
   nuevo: "bg-brand-blue text-brand-darkgray",
   bestseller: "bg-secondary text-white",
-  viral: "bg-primary text-white",
+  viral: "bg-brand-blue text-brand-darkgray",
   exclusivo: "bg-brand-brown text-white",
   top: "bg-primary text-white",
   menu: "bg-brand-darkgray text-white",
