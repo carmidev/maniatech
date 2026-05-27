@@ -1347,7 +1347,14 @@ export default function CheckoutPage() {
                   <button onClick={prevStep} className="flex-1 py-5 font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-wider text-sm bg-slate-100 hover:bg-slate-200 rounded-full">Atrás</button>
                   <button
                     disabled={deliveryMethod === 'delivery' && (!selectedAddressId || !isShippingValid())}
-                    onClick={nextStep}
+                    onClick={() => {
+                      const selectedAddr = addresses.find(a => a.id === selectedAddressId);
+                      const isNational = deliveryMethod === 'delivery' && selectedAddr?.zone === 'NATIONAL';
+                      if (isNational && (paymentMethod === 'cash' || paymentMethod === 'pos')) {
+                        setPaymentMethod('zelle');
+                      }
+                      nextStep();
+                    }}
                     className="flex-[2] bg-primary text-white py-5 rounded-full font-black text-lg flex items-center justify-center gap-2 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
                   >
                     Siguiente <ChevronRight className="w-6 h-6" />
@@ -1399,7 +1406,13 @@ export default function CheckoutPage() {
                           { id: 'cash', name: 'Efectivo', icon: <Wallet className="w-5 h-5 text-white" />, bg: 'bg-[#1D9A5B]' },
                           { id: 'paypal', name: 'PayPal', icon: <span className="font-black text-white text-base italic">P</span>, bg: 'bg-[#00457C]' },
                           { id: 'pos', name: 'Punto de Venta (POS)', icon: <CreditCard className="w-5 h-5 text-white" />, bg: 'bg-[#FF9F00]' }
-                        ].map((option) => (
+                        ].filter(option => {
+                          const isNational = deliveryMethod === 'delivery' && addresses.find(a => a.id === selectedAddressId)?.zone === 'NATIONAL';
+                          if (isNational && (option.id === 'cash' || option.id === 'pos')) {
+                            return false;
+                          }
+                          return true;
+                        }).map((option) => (
                           <button
                             key={option.id}
                             onClick={() => {
@@ -1429,8 +1442,8 @@ export default function CheckoutPage() {
                           <Copy className="w-5 h-5 text-slate-300 cursor-pointer hover:text-primary transition-colors shrink-0 ml-2" onClick={() => copyToClipboard('Anakarinapeca@gmail.com', 'email')} />
                         </div>
                         <div className="flex justify-between items-center group">
-                          <div><p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Titular</p><p className="font-black text-slate-700 text-base md:text-lg">Ana Karina Pérez Caraciolo</p></div>
-                          <Copy className="w-5 h-5 text-slate-300 cursor-pointer hover:text-primary transition-colors shrink-0 ml-2" onClick={() => copyToClipboard('Ana Karina Pérez Caraciolo', 'name')} />
+                          <div><p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Titular</p><p className="font-black text-slate-700 text-base md:text-lg">Anakarina Pérez Caraciolo</p></div>
+                          <Copy className="w-5 h-5 text-slate-300 cursor-pointer hover:text-primary transition-colors shrink-0 ml-2" onClick={() => copyToClipboard('Anakarina Pérez Caraciolo', 'name')} />
                         </div>
                       </div>
 
