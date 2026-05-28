@@ -72,7 +72,7 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(1);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("delivery");
   const [pickupStore, setPickupStore] = useState<string>("campoclaro");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("pm");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("pos");
   const [paymentHolder, setPaymentHolder] = useState("");
   const [paymentReference, setPaymentReference] = useState("");
   const [cashAmount, setCashAmount] = useState("");
@@ -769,17 +769,10 @@ export default function CheckoutPage() {
               )}
             </div>
 
-            {/* Desglose de IVA */}
-            <div className="mb-4 pb-4 border-b border-white/10 space-y-2 text-xs text-white/70">
-              <div className="flex justify-between items-center">
-                <span>Monto sin IVA (Base)</span>
-                <span className="font-numbers font-semibold">ref {(grandTotal / 1.16).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span>IVA (16%)</span>
-                <span className="font-numbers font-semibold">ref {(grandTotal - (grandTotal / 1.16)).toFixed(2)}</span>
-              </div>
-            </div>
+            {/* Nota de IVA */}
+            <p className="mb-4 pb-4 border-b border-white/10 text-xs text-white/60 italic">
+              Todos nuestros precios incluyen IVA.
+            </p>
             
             <p className="text-xs text-white/70 mb-1 uppercase tracking-widest font-body font-bold">Total a pagar</p>
             <div className="flex items-baseline gap-3">
