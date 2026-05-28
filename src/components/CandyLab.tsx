@@ -14,7 +14,7 @@ export const CandyLab = () => {
   return (
     <div className="pt-0 pb-20 bg-transparent overflow-visible relative">
       {/* Decoración: Chupeta 2 (Oculta en móvil para mudarse a la tarjeta de abajo) */}
-      <div className="hidden lg:block absolute lg:top-[0%] lg:right-[2%] pointer-events-none z-0">
+      <div className="hidden xl:block absolute lg:top-[0%] lg:right-[2%] pointer-events-none z-0">
         <motion.div
           animate={{ y: [0, 20, 0], rotate: [0, -5, 5, 0] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
@@ -40,7 +40,7 @@ export const CandyLab = () => {
               <span className="text-primary italic font-script">cómo saben</span>?
             </h2>
             <p className="text-brand-darkgray/80 text-base lg:text-lg font-body font-normal">
-              Nuestra fundadora prueba cada golosina en Instagram. Mira sus reacciones reales antes de decidirte.
+              ¡Ve más reviews de golosinas en nuestro instagram!
             </p>
           </div>
           

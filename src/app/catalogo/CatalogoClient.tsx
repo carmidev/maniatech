@@ -60,12 +60,12 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
     { id: "juguetes", label: "Juguetes", icon: "🎁" },
     { id: "chicles", label: "Chicles", icon: "🍬" },
     { id: "caramelos", label: "Caramelos", icon: "🍬" },
-    { id: "top", label: "Lo más vendido", icon: "✨" },
+    { id: "lo_mas_vendido", label: "Lo más vendido", icon: "✨" },
     { id: "nuevo", label: "Nuevo", icon: "✨" },
   ];
 
   const normalizeCategory = (cat: string | string[] | null): string[] => {
-    if (!cat) return ["top"];
+    if (!cat) return ["lo_mas_vendido"];
     const cats = Array.isArray(cat) ? cat : [cat];
     return cats.map(c =>
       String(c)
@@ -74,7 +74,10 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .replace("pikantes", "picantes")
-        .replace("tendencias", "top")
+        .replace("tendencias", "lo_mas_vendido")
+        .replace("top", "lo_mas_vendido")
+        .replace("lo mas vendido", "lo_mas_vendido")
+        .replace("viral", "nuevo")
     );
   };
 
@@ -90,8 +93,8 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
     const productCategories = Array.isArray(c.category) ? c.category : [c.category];
     const matchesCategory = activeCategory === "all" || 
       productCategories.includes(activeCategory) ||
-      (activeCategory === "nuevo" && (productCategories.includes("nuevo") || productCategories.includes("viral") || c.badge === "nuevo" || c.badge === "viral")) ||
-      (activeCategory === "top" && (productCategories.includes("top") || productCategories.includes("tendencias") || c.badge === "top" || c.badge === "bestseller"));
+      (activeCategory === "nuevo" && (productCategories.includes("nuevo") || c.badge === "nuevo")) ||
+      (activeCategory === "lo_mas_vendido" && (productCategories.includes("lo_mas_vendido") || c.badge === "bestseller"));
     const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       c.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -156,7 +159,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                 Catálogo
               </Link>
               <Link href="/#lab" className="text-gray-600 hover:text-primary transition-colors">
-                Candy Lab
+                Candy Reviews
               </Link>
               <Link href="/#ubicaciones" className="text-gray-600 hover:text-primary transition-colors">
                 Ubicaciones
@@ -217,7 +220,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
                 >
-                  Candy Lab
+                  Candy Reviews
                 </Link>
                 <Link
                   href="/#ubicaciones"

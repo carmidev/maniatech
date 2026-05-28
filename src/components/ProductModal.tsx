@@ -112,7 +112,7 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
                 </div>
                 
                 <h2 className="text-3xl md:text-4xl font-display text-brand-darkgray leading-tight mb-3 flex items-center gap-3">
-                  {renderWithNumberFont(candy.name)}
+                  <span>{renderWithNumberFont(candy.name)}</span>
                   {isMenu && <Coffee className="w-8 h-8 text-primary" />}
                 </h2>
                 

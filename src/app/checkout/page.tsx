@@ -123,7 +123,7 @@ export default function CheckoutPage() {
   const selectedAddr = addresses.find(a => a.id === selectedAddressId);
   const isNational = deliveryMethod === 'delivery' && selectedAddr?.zone === 'NATIONAL';
   const deliveryCost = deliveryMethod === 'delivery' ? 5 : 0;
-  const bagFeeCost = !isNational ? 0.5 : 0;
+  const bagFeeCost = 0.5;
   const grandTotal = totalPrice + deliveryCost + bagFeeCost;
 
   // Carga de datos inicial
@@ -1744,7 +1744,8 @@ export default function CheckoutPage() {
                     const orderId = createdOrderId ? String(createdOrderId).slice(0, 8).toUpperCase() : "N/A";
                     const totalAmount = grandTotal.toFixed(2);
 
-                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n🛵 *Entrega:*\n${finalDeliveryText}\n\n💳 Método: ${paymentMethodText}\n💰 Total: ref ${totalAmount}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
+                    const totalBsStr = bcvRate ? ` (Bs. ${(grandTotal * bcvRate).toFixed(2)})` : "";
+                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n🛵 *Entrega:*\n${finalDeliveryText}\n\n💳 Método: ${paymentMethodText}\n💰 Total: ref ${totalAmount}${totalBsStr}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
                     const encodedMsg = encodeURIComponent(orderSummary);
                     window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMsg}`, "_blank");
                     handleFinish();
