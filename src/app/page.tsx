@@ -272,7 +272,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[46%] md:top-[55%] lg:top-[18%] left-[4%] md:left-[15%] lg:left-[4%] opacity-60 md:scale-150 lg:scale-100 origin-center"
+            className="absolute top-[50%] md:top-[55%] lg:top-[18%] left-[4%] md:left-[15%] lg:left-[4%] opacity-60 md:scale-150 lg:scale-100 origin-center"
           >
             <svg width="130" height="72" viewBox="0 0 130 72" fill="none" className="overflow-visible">
               <path d="M10,62 C10,62 0,60 0,52 C0,44 8,40 16,42 C16,30 26,22 38,24 C40,14 50,8 62,10 C70,4 82,4 90,12 C100,8 112,14 114,24 C122,24 130,32 128,40 C126,48 118,52 110,50 C110,60 100,68 85,65 C75,72 65,72 55,65 C40,72 25,70 10,62 Z" fill="white" />
@@ -283,7 +283,7 @@ export default function Home() {
           <motion.div
             animate={{ y: [0, 10, 0], x: [0, -6, 0] }}
             transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className="absolute top-[41%] md:top-[50%] lg:top-[12%] right-[6%] md:right-[15%] lg:right-[6%] opacity-50 md:scale-150 lg:scale-100 origin-center"
+            className="absolute top-[45%] md:top-[50%] lg:top-[12%] right-[6%] md:right-[15%] lg:right-[6%] opacity-50 md:scale-150 lg:scale-100 origin-center"
           >
             <svg width="170" height="95" viewBox="0 0 170 95" fill="none">
               <path d="M20,75 C10,75 0,65 0,55 C0,40 15,30 30,35 C35,20 55,10 75,15 C85,5 105,5 115,15 C130,10 145,20 150,35 C165,35 175,45 170,60 C165,75 150,80 140,75 C135,85 120,95 105,90 C95,98 75,98 65,90 C55,98 35,95 25,85 C22,80 20,80 20,75 Z" fill="white" />
@@ -400,7 +400,7 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, -10, 0], rotate: [5, -5, 5] }}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[-10px] -right-[69px] z-10 md:hidden pointer-events-none"
+                className="absolute top-[20px] -right-[69px] z-10 md:hidden pointer-events-none"
               >
                 <img
                   src={getImagePath("/images/chupeta1.png")}
@@ -413,7 +413,7 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, -6, 0], rotate: [-10, -5, -10] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[10px] -left-16 z-10 md:hidden pointer-events-none"
+                className="absolute top-[40px] -left-16 z-10 md:hidden pointer-events-none"
               >
                 <img
                   src={getImagePath("/images/chocolate.svg")}
