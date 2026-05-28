@@ -56,7 +56,7 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
   const [center, setCenter] = useState({ lat: 10.4806, lng: -66.9036 }); // Centro inicial Caracas
   const [markerPos, setMarkerPos] = useState({ lat: 10.4806, lng: -66.9036 });
   const [addressName, setAddressName] = useState("");
-  type DeliveryStatus = 'LOCAL' | 'NATIONAL' | 'PROHIBITED';
+  type DeliveryStatus = 'LOCAL' | 'OUT_OF_BOUNDS';
   const [deliveryStatus, setDeliveryStatus] = useState<DeliveryStatus>('LOCAL');
   const [regionName, setRegionName] = useState("");
   const [isLocating, setIsLocating] = useState(false);
@@ -146,7 +146,7 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
       }
     });
 
-    setDeliveryStatus(isLocal ? 'LOCAL' : 'NATIONAL');
+    setDeliveryStatus(isLocal ? 'LOCAL' : 'OUT_OF_BOUNDS');
   }, [setValue]);
 
   const onMapLoad = useCallback((map: google.maps.Map) => {
@@ -323,15 +323,18 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
         <div className="absolute bottom-4 right-4 z-20">
           <button
             onClick={handleCurrentLocation}
-            className={`flex items-center justify-center gap-2 p-4 bg-white shadow-xl rounded-2xl text-slate-600 hover:text-primary transition-all active:scale-90 ${isLocating ? 'pr-6' : ''}`}
+            className="flex items-center justify-center gap-2 py-3 px-4 bg-white shadow-xl rounded-2xl text-slate-700 hover:text-primary border border-slate-100 transition-all active:scale-90"
           >
             {isLocating ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin text-primary" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Cargando ubicación...</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Cargando...</span>
               </>
             ) : (
-              <Navigation className="w-6 h-6" />
+              <>
+                <Navigation className="w-5 h-5 text-primary" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Usar mi ubicación actual</span>
+              </>
             )}
           </button>
         </div>
@@ -382,26 +385,28 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
             </div>
           </div>
 
-          <div className={`p-3 rounded-xl flex items-start gap-2.5 border transition-all ${deliveryStatus === 'LOCAL' ? 'bg-slate-50/50 border-slate-100' : 'bg-amber-50/50 border-amber-100'
+          <div className={`p-3 rounded-xl flex items-start gap-2.5 border transition-all ${deliveryStatus === 'LOCAL' ? 'bg-slate-50/50 border-slate-100' : 'bg-red-50/50 border-red-200'
             }`}>
             {deliveryStatus === 'LOCAL' && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />}
-            {deliveryStatus === 'NATIONAL' && <Truck className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />}
+            {deliveryStatus === 'OUT_OF_BOUNDS' && <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />}
 
             <div className="space-y-0">
-              <p className={`text-[8px] font-black uppercase tracking-[0.1em] ${deliveryStatus === 'LOCAL' ? 'text-green-600' : 'text-amber-600'
+              <p className={`text-[8px] font-black uppercase tracking-[0.1em] ${deliveryStatus === 'LOCAL' ? 'text-green-600' : 'text-red-600'
                 }`}>
                 {deliveryStatus === 'LOCAL' && "ZONA DE COBERTURA ACTIVA"}
-                {deliveryStatus === 'NATIONAL' && "ENVÍO NACIONAL (MRW / ZOOM)"}
+                {deliveryStatus === 'OUT_OF_BOUNDS' && "FUERA DE COBERTURA LOCAL"}
               </p>
               <p className="text-xs font-bold text-slate-700 leading-tight">
-                {addressName || "Selecciona un punto en el mapa"}
+                {deliveryStatus === 'OUT_OF_BOUNDS' 
+                  ? "Esta dirección está muy lejos de nuestras tiendas. Por favor, cierra este mapa y selecciona la opción 'Envío Nacional'." 
+                  : (addressName || "Selecciona un punto en el mapa")}
               </p>
             </div>
           </div>
 
           <button
             onClick={handleConfirm}
-            disabled={!addressName || !unit.trim() || !refPoint.trim()}
+            disabled={!addressName || !unit.trim() || !refPoint.trim() || deliveryStatus === 'OUT_OF_BOUNDS'}
             className="w-full bg-primary text-white py-3 rounded-xl font-black shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 text-base uppercase tracking-wider"
           >
             Confirmar Dirección

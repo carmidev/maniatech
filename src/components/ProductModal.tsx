@@ -27,6 +27,7 @@ interface ProductModalProps {
 export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: ProductModalProps) => {
   const { addToCart } = useCart();
   const [currentImg, setCurrentImg] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   if (!candy) return null;
 
@@ -39,7 +40,7 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+        <div key="product-modal-main" className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -72,7 +73,8 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
                 animate={{ opacity: 1 }}
                 src={getImagePath(candy.images[currentImg]) || undefined}
                 alt={candy.name}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain cursor-zoom-in"
+                onClick={() => setIsFullscreen(true)}
               />
               
               {/* Controles Galería */}
@@ -100,8 +102,8 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
                 <div className="flex items-center gap-3 mb-2">
                   <span className="bg-primary/10 text-primary px-3 py-0.5 rounded-full text-[9px] font-display uppercase tracking-widest">
                     {Array.isArray(candy.category) 
-                      ? (candy.category.includes("top") ? "🔥 Lo más vendido" : candy.category.join(", ")) 
-                      : (candy.category === "top" ? "🔥 Lo más vendido" : candy.category)}
+                      ? (candy.category.some(c => ["top", "lo más vendido", "lo mas vendido"].includes((c || "").toLowerCase())) ? "🔥 Lo más vendido" : candy.category.join(", ")) 
+                      : (["top", "lo más vendido", "lo mas vendido"].includes((candy.category || "").toLowerCase()) ? "🔥 Lo más vendido" : candy.category)}
                   </span>
                   {!isMenu && (
                     <>
@@ -163,6 +165,53 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
               </div>
             </div>
           </motion.div>
+        </div>
+      )}
+
+      {/* Visor de Pantalla Completa */}
+      {isOpen && isFullscreen && (
+        <div key="product-modal-fullscreen" className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsFullscreen(false)}
+            className="absolute inset-0 bg-black/95 backdrop-blur-sm cursor-zoom-out"
+          />
+          
+          <button
+            onClick={() => setIsFullscreen(false)}
+            className="absolute top-6 right-6 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+          >
+            <X className="w-6 h-6 text-white" />
+          </button>
+
+          <motion.img
+            key={`fs-${currentImg}`}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            src={getImagePath(candy.images[currentImg]) || undefined}
+            alt={candy.name}
+            className="relative z-10 max-w-full max-h-[90vh] object-contain pointer-events-none"
+          />
+
+          {candy.images.length > 1 && (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); prevImg(); }}
+                className="absolute left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+              >
+                <ChevronLeft className="w-8 h-8 text-white" />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); nextImg(); }}
+                className="absolute right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+              >
+                <ChevronRight className="w-8 h-8 text-white" />
+              </button>
+            </>
+          )}
         </div>
       )}
     </AnimatePresence>

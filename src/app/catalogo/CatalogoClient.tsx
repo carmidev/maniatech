@@ -90,7 +90,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
   const [candiesList, setCandiesList] = useState<Candy[]>(initialProducts);
 
   const filteredCandies = candiesList.filter((c) => {
-    const productCategories = Array.isArray(c.category) ? c.category : [c.category];
+    const productCategories = normalizeCategory(c.category);
     const matchesCategory = activeCategory === "all" || 
       productCategories.includes(activeCategory) ||
       (activeCategory === "nuevo" && (productCategories.includes("nuevo") || c.badge === "nuevo")) ||
@@ -104,16 +104,36 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
     { id: "relevance", label: "Relevancia" },
     { id: "price_asc", label: "Precio más bajo" },
     { id: "price_desc", label: "Precio más alto" },
-    { id: "name", label: "Nombre" },
-    { id: "brand", label: "Marca" },
+    { id: "name", label: "Nombre (A-Z)" },
+    { id: "brand", label: "Marca (A-Z)" },
   ];
 
+  const getPriorityScore = (c: Candy) => {
+    if (c.badge === "top") return 2;
+    if (c.badge === "nuevo" || c.badge === "viral") return 1;
+    const cats = Array.isArray(c.category) ? c.category : [c.category];
+    const safeCats = cats.map(cat => (cat || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim());
+    if (safeCats.includes("top") || safeCats.includes("tendencias") || safeCats.includes("lo mas vendido") || safeCats.includes("lo_mas_vendido") || safeCats.includes("bestseller")) return 2;
+    if (safeCats.includes("nuevo") || safeCats.includes("viral")) return 1;
+    return 0;
+  };
+
   const sortedCandies = [...filteredCandies].sort((a, b) => {
-    if (sortBy === "price_asc") return a.price - b.price;
-    if (sortBy === "price_desc") return b.price - a.price;
+    if (sortBy === "price_asc") {
+      const diff = Number(a.price || 0) - Number(b.price || 0);
+      return diff !== 0 ? diff : a.name.localeCompare(b.name);
+    }
+    if (sortBy === "price_desc") {
+      const diff = Number(b.price || 0) - Number(a.price || 0);
+      return diff !== 0 ? diff : a.name.localeCompare(b.name);
+    }
     if (sortBy === "name") return a.name.localeCompare(b.name);
     if (sortBy === "brand") return (a.name.split(" ")[0] || "").localeCompare(b.name.split(" ")[0] || "");
-    return 0;
+    
+    // Default: relevance
+    const scoreA = getPriorityScore(a);
+    const scoreB = getPriorityScore(b);
+    return scoreB - scoreA;
   });
 
   const coffeeItems: Candy[] = [
@@ -335,7 +355,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                 >
                   {[
                     { key: "all", label: "Todos", icon: <Star className="w-6 h-6" />, color: "bg-slate-100 text-slate-600" },
-                    { key: "top", label: "Lo más vendido", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
+                    { key: "lo_mas_vendido", label: "Lo más vendido", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
                     { key: "nuevo", label: "Nuevo", icon: <Sparkles className="w-6 h-6" />, color: "bg-brand-blue/20 text-brand-blue" },
                     { key: "chocolates", label: "Chocolates", icon: <Cookie className="w-6 h-6" />, color: "bg-brand-brown/10 text-brand-brown" },
                     { key: "gomitas", label: "Gomitas", icon: <CandyIcon className="w-6 h-6" />, color: "bg-accent/10 text-accent" },

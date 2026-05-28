@@ -31,7 +31,7 @@ const BADGE_LABELS: Record<string, string> = {
   bestseller: "Bestseller",
   viral: "Nuevo",
   exclusivo: "Exclusivo",
-  top: "Lo más vendido",
+  top: "🔥 Lo más vendido",
 };
 
 const renderWithNumberFont = (text: string) => {
@@ -66,13 +66,21 @@ const HERO_IMAGES = [
 ];
 
 /* Fallback inicial con mock data filtrada por top/tendencias */
-const INITIAL_FEATURED = CANDIES.filter((c) => {
+const topMock = CANDIES.filter((c) => {
   const categories = Array.isArray(c.category) ? c.category : [c.category];
-  return categories.some(cat =>
-    cat.toLowerCase() === 'top' ||
-    cat.toLowerCase() === 'tendencias'
-  );
-}).slice(0, 3);
+  return categories.some(cat => {
+    const safeCat = cat.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return safeCat === 'top' || safeCat === 'tendencias' || safeCat === 'lo mas vendido' || safeCat === 'lo_mas_vendido';
+  });
+});
+
+let initialFeatured = topMock.slice(0, 3);
+if (initialFeatured.length < 3) {
+  const featuredIds = new Set(initialFeatured.map(c => c.id));
+  const remaining = CANDIES.filter(c => !featuredIds.has(c.id));
+  initialFeatured = [...initialFeatured, ...remaining.slice(0, 3 - initialFeatured.length)];
+}
+const INITIAL_FEATURED = initialFeatured;
 
 export default function Home() {
   const router = useRouter();
@@ -104,17 +112,19 @@ export default function Home() {
           const topMapped = allMapped
             .filter((c: Candy) => {
               const cats = Array.isArray(c.category) ? c.category : [c.category];
-              return cats.includes("top") || cats.includes("viral") || cats.includes("nuevo");
-            })
-            .slice(0, 3);
+              return cats.includes("top") || cats.includes("viral") || cats.includes("nuevo") || cats.includes("lo_mas_vendido");
+            });
 
-          if (topMapped.length > 0) {
-            setFeaturedCandies(topMapped);
-          } else if (allMapped.length > 0) {
-            setFeaturedCandies(allMapped.slice(0, 3));
-          } else {
-            setFeaturedCandies([]);
+          let featured = topMapped.slice(0, 3);
+          
+          if (featured.length < 3) {
+            const featuredIds = new Set(featured.map(c => c.id));
+            const remainingProducts = allMapped.filter((c: Candy) => !featuredIds.has(c.id));
+            const needed = 3 - featured.length;
+            featured = [...featured, ...remainingProducts.slice(0, needed)];
           }
+
+          setFeaturedCandies(featured);
         }
       } catch (err) {
         console.error("Error fetching featured products:", err);
@@ -546,19 +556,29 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     {/* Badge */}
                     {(() => {
-                      let activeBadge = candy.badge;
-                      if (!activeBadge) {
+                      let activeBadges: string[] = [];
+                      if (candy.badge) {
+                        activeBadges = [candy.badge];
+                      } else {
                         const cats = Array.isArray(candy.category) ? candy.category : [candy.category];
-                        if (cats.includes("viral")) activeBadge = "viral";
-                        else if (cats.includes("nuevo")) activeBadge = "nuevo";
-                        else if (cats.includes("top") || cats.includes("tendencias")) activeBadge = "top";
-                        else if (cats.includes("bestseller")) activeBadge = "bestseller";
+                        const safeCats = cats.map(c => (c || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim());
+                        if (safeCats.includes("viral")) activeBadges.push("viral");
+                        if (safeCats.includes("nuevo")) activeBadges.push("nuevo");
+                        if (safeCats.includes("top") || safeCats.includes("tendencias") || safeCats.includes("lo mas vendido") || safeCats.includes("lo_mas_vendido")) activeBadges.push("top");
+                        if (safeCats.includes("bestseller")) activeBadges.push("bestseller");
+                        activeBadges = Array.from(new Set(activeBadges));
                       }
 
-                      return activeBadge && BADGE_LABELS[activeBadge] && (
-                        <span className={`absolute top-3 left-3 text-[10px] font-black uppercase px-3 py-1 rounded-full ${BADGE_STYLES[activeBadge]}`}>
-                          {BADGE_LABELS[activeBadge]}
-                        </span>
+                      if (activeBadges.length === 0) return null;
+
+                      return (
+                        <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start z-10 pointer-events-none">
+                          {activeBadges.map(badge => BADGE_LABELS[badge] ? (
+                            <span key={badge} className={`text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-md ${BADGE_STYLES[badge]}`}>
+                              {BADGE_LABELS[badge]}
+                            </span>
+                          ) : null)}
+                        </div>
                       );
                     })()}
                     {/* Precio sobre la imagen */}

@@ -22,7 +22,7 @@ const BADGE_LABELS: Record<string, string> = {
   bestseller: "Bestseller",
   viral: "Nuevo",
   exclusivo: "Exclusivo",
-  top: "Lo más vendido",
+  top: "🔥 Lo más vendido",
   menu: "Menú",
 };
 
@@ -55,15 +55,19 @@ export const ProductCard = ({
   const isOutOfStock = candy.stock === 0;
 
   // Determinar el badge en base a las categorías o usar el asignado por defecto
-  let activeBadge = candy.badge;
-  if (!activeBadge) {
+  let activeBadges: string[] = [];
+  if (candy.badge) {
+    activeBadges = [candy.badge];
+  } else {
     const cats = Array.isArray(candy.category) ? candy.category : [candy.category];
-    if (cats.includes("viral")) activeBadge = "viral";
-    else if (cats.includes("nuevo")) activeBadge = "nuevo";
-    else if (cats.includes("top") || cats.includes("tendencias")) activeBadge = "top";
-    else if (cats.includes("bestseller")) activeBadge = "bestseller";
+    const safeCats = cats.map(c => (c || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim());
+    if (safeCats.includes("viral")) activeBadges.push("viral");
+    if (safeCats.includes("nuevo")) activeBadges.push("nuevo");
+    if (safeCats.includes("top") || safeCats.includes("tendencias") || safeCats.includes("lo mas vendido") || safeCats.includes("lo_mas_vendido")) activeBadges.push("top");
+    if (safeCats.includes("bestseller")) activeBadges.push("bestseller");
+    activeBadges = Array.from(new Set(activeBadges));
   }
-  const isMenu = activeBadge === 'menu';
+  const isMenu = activeBadges.includes('menu') || candy.badge === 'menu';
 
   return (
     <motion.div
@@ -92,12 +96,17 @@ export const ProductCard = ({
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
           {/* Badge flotante */}
-          {activeBadge && (
-            <span
-              className={`absolute top-5 left-5 text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-lg ${BADGE_STYLES[activeBadge]}`}
-            >
-              {BADGE_LABELS[activeBadge]}
-            </span>
+          {activeBadges.length > 0 && (
+            <div className="absolute top-5 left-5 flex flex-col gap-2 items-start z-10 pointer-events-none">
+              {activeBadges.map(badge => BADGE_LABELS[badge] ? (
+                <span
+                  key={badge}
+                  className={`text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-lg ${BADGE_STYLES[badge]}`}
+                >
+                  {BADGE_LABELS[badge]}
+                </span>
+              ) : null)}
+            </div>
           )}
 
           {!isMenu && (

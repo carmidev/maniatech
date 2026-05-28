@@ -8,7 +8,7 @@ import { CustomSelect } from "./CustomSelect";
 
 interface ProfileFormProps {
   onComplete: () => void;
-  deliveryMethod?: "pickup" | "delivery";
+  deliveryMethod?: "pickup" | "delivery" | "national";
 }
 
 const ID_RULES: Record<string, { min: number, max: number, placeholder: string, pattern: RegExp }> = {

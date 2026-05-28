@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle, Upload, CreditCard, Copy, ChevronRight, ChevronDown, Truck, Store, Wallet, MapPin, Smartphone, Mail, Sparkles, User, Clock, Navigation, Map, MessageCircle } from "lucide-react";
+import { X, CheckCircle, Upload, CreditCard, Copy, ChevronRight, ChevronDown, Truck, Store, Wallet, MapPin, Smartphone, Mail, Sparkles, User, Clock, Navigation, Map, MessageCircle, Package } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -22,7 +22,7 @@ const MapSelector = dynamic(() => import("@/components/MapSelector").then(mod =>
   ssr: false 
 });
 
-type DeliveryMethod = "delivery" | "pickup";
+type DeliveryMethod = "delivery" | "pickup" | "national";
 type Address = {
   id: string;
   formatted_address: string;
@@ -108,8 +108,7 @@ export default function CheckoutPage() {
   const [shippingReceptorId, setShippingReceptorId] = useState("");
 
   const isShippingValid = () => {
-    const selectedAddr = addresses.find(a => a.id === selectedAddressId);
-    if (!selectedAddr || selectedAddr.zone !== 'NATIONAL') return true;
+    if (deliveryMethod !== 'national') return true;
     if (!shippingState.trim()) return false;
     if (!shippingCity.trim()) return false;
     if (!shippingAgency.trim()) return false;
@@ -121,8 +120,8 @@ export default function CheckoutPage() {
   };
 
   const selectedAddr = addresses.find(a => a.id === selectedAddressId);
-  const isNational = deliveryMethod === 'delivery' && selectedAddr?.zone === 'NATIONAL';
-  const deliveryCost = deliveryMethod === 'delivery' ? 5 : 0;
+  const isNational = deliveryMethod === 'national';
+  const deliveryCost = (deliveryMethod === 'delivery' || deliveryMethod === 'national') ? 5 : 0;
   const bagFeeCost = 0.5;
   const grandTotal = totalPrice + deliveryCost + bagFeeCost;
 
@@ -333,18 +332,18 @@ export default function CheckoutPage() {
         items: finalItems,
         total_amount: grandTotal,
         delivery_method: deliveryMethod.toUpperCase(),
-        delivery_address: deliveryMethod === 'delivery' ? (
+        delivery_address: deliveryMethod === 'national' ? (
+          (() => {
+            const courierUpper = shippingCourier.toUpperCase();
+            const receptorInfo = shippingReceptorType === 'third' 
+              ? `\nReceptor: ${shippingReceptorName} (C.I. ${shippingReceptorId})` 
+              : '';
+            return `[${courierUpper}] Envío Nacional a Agencia\nEstado/Ciudad: ${shippingState} / ${shippingCity}\nAgencia: ${shippingAgency}${receptorInfo}`;
+          })()
+        ) : deliveryMethod === 'delivery' ? (
           (() => {
             const selectedAddr = addresses.find(a => a.id === selectedAddressId);
-            const isNational = selectedAddr?.zone === 'NATIONAL';
             if (selectedAddr) {
-              if (isNational) {
-                const courierUpper = shippingCourier.toUpperCase();
-                const receptorInfo = shippingReceptorType === 'third' 
-                  ? `\nReceptor: ${shippingReceptorName} (C.I. ${shippingReceptorId})` 
-                  : '';
-                return `[${courierUpper}] Envío Nacional a Agencia\nEstado/Ciudad: ${shippingState} / ${shippingCity}\nAgencia: ${shippingAgency}${receptorInfo}\nDirección física del cliente (Mapa): ${selectedAddr.formatted_address} (${selectedAddr.lat},${selectedAddr.lng})`;
-              }
               return `${selectedAddr.formatted_address}${selectedAddr.unit ? `\nInmueble: ${selectedAddr.unit}` : ''}${referencePoint ? `\nRef: ${referencePoint}` : ''}\nMapa: https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}`;
             }
             return address;
@@ -761,9 +760,9 @@ export default function CheckoutPage() {
                   <span className="font-numbers font-semibold">ref {bagFeeCost.toFixed(2)}</span>
                 </div>
               )}
-              {deliveryMethod === 'delivery' && (
+              {(deliveryMethod === 'delivery' || deliveryMethod === 'national') && (
                 <div className="flex justify-between items-center text-sm text-white/80">
-                  <span>Envío / Delivery</span>
+                  <span>{deliveryMethod === 'national' ? 'Embalaje y Traslado MRW/Zoom' : 'Envío / Delivery'}</span>
                   <span className="font-numbers font-semibold">ref {deliveryCost.toFixed(2)}</span>
                 </div>
               )}
@@ -790,10 +789,10 @@ export default function CheckoutPage() {
               </div>
             )}
             
-            {step > 1 && deliveryMethod === 'delivery' && isNational && (
+            {step > 1 && deliveryMethod === 'national' && (
               <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="mt-3 p-2.5 bg-[#231f20] rounded-xl shadow-lg border border-white/5">
                  <p className="text-[11px] text-white/90 leading-tight">
-                   📦 <strong>Nota de Logística:</strong> Los ref 5.00 cobrados aquí en el total cubren exclusivamente el embalaje de seguridad y el traslado de tu pedido hasta la agencia de MRW.
+                   📦 <strong>Nota de Logística:</strong> Los ref 5.00 cobrados aquí en el total cubren exclusivamente el embalaje de seguridad y el traslado de tu pedido hasta la agencia de MRW / Zoom.
                  </p>
               </motion.div>
             )}
@@ -802,7 +801,7 @@ export default function CheckoutPage() {
 
           {(step > 1 && !authView) && (
             <div className="text-xs space-y-2 bg-black/10 p-4 rounded-3xl border border-white/5">
-              <p className="flex justify-between items-center"><span className="text-white/60 uppercase font-bold tracking-wider text-[10px]">Método de Entrega:</span> <span className="font-bold uppercase text-sm">{deliveryMethod}</span></p>
+              <p className="flex justify-between items-center"><span className="text-white/60 uppercase font-bold tracking-wider text-[10px]">Método de Entrega:</span> <span className="font-bold uppercase text-sm">{deliveryMethod === 'delivery' ? 'Delivery Local' : deliveryMethod === 'national' ? 'Envío Nacional' : 'Retiro en Tienda'}</span></p>
               {step > 2 && (
                 <p className="flex justify-between items-center pt-2 border-t border-white/10">
                   <span className="text-white/60 uppercase font-bold tracking-wider text-[10px]">Método de Pago:</span> 
@@ -1036,20 +1035,36 @@ export default function CheckoutPage() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <button
                     onClick={() => setDeliveryMethod("delivery")}
-                    className={`p-8 rounded-3xl border-2 transition-all flex flex-col items-center gap-4 ${deliveryMethod === 'delivery' ? 'border-primary bg-primary/5 text-primary shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 hover:border-slate-200 text-slate-400 bg-slate-50 hover:bg-slate-100'}`}
+                    className={`p-6 rounded-3xl border-2 transition-all flex flex-col items-center gap-3 ${deliveryMethod === 'delivery' ? 'border-primary bg-primary/5 text-primary shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 hover:border-slate-200 text-slate-400 bg-slate-50 hover:bg-slate-100'}`}
                   >
-                    <Truck className="w-10 h-10" />
-                    <span className="font-bold text-base uppercase tracking-wider">Delivery</span>
+                    <Truck className="w-8 h-8" />
+                    <div className="text-center">
+                      <span className="font-bold text-sm uppercase tracking-wider block">Delivery</span>
+                      <span className="text-[10px] font-medium opacity-70">Caracas</span>
+                    </div>
                   </button>
                   <button
                     onClick={() => setDeliveryMethod("pickup")}
-                    className={`p-8 rounded-3xl border-2 transition-all flex flex-col items-center gap-4 ${deliveryMethod === 'pickup' ? 'border-primary bg-primary/5 text-primary shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 hover:border-slate-200 text-slate-400 bg-slate-50 hover:bg-slate-100'}`}
+                    className={`p-6 rounded-3xl border-2 transition-all flex flex-col items-center gap-3 ${deliveryMethod === 'pickup' ? 'border-primary bg-primary/5 text-primary shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 hover:border-slate-200 text-slate-400 bg-slate-50 hover:bg-slate-100'}`}
                   >
-                    <Store className="w-10 h-10" />
-                    <span className="font-bold text-base uppercase tracking-wider">Pickup</span>
+                    <Store className="w-8 h-8" />
+                    <div className="text-center">
+                      <span className="font-bold text-sm uppercase tracking-wider block">Pickup</span>
+                      <span className="text-[10px] font-medium opacity-70">Retiro en Tienda</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setDeliveryMethod("national")}
+                    className={`p-6 rounded-3xl border-2 transition-all flex flex-col items-center gap-3 ${deliveryMethod === 'national' ? 'border-primary bg-primary/5 text-primary shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 hover:border-slate-200 text-slate-400 bg-slate-50 hover:bg-slate-100'}`}
+                  >
+                    <Package className="w-8 h-8" />
+                    <div className="text-center">
+                      <span className="font-bold text-sm uppercase tracking-wider block">Envío Nacional</span>
+                      <span className="text-[10px] font-medium opacity-70">MRW / ZOOM</span>
+                    </div>
                   </button>
                 </div>
 
@@ -1121,260 +1136,186 @@ export default function CheckoutPage() {
             ) : step === 2 ? (
               <motion.div key="step-2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-8 w-full">
                 <div className="space-y-2">
-                  <h3 className="text-3xl md:text-4xl font-display text-brand-darkgray leading-tight">Dirección de Entrega</h3>
-                  <p className="text-brand-darkgray/60 font-body font-normal text-base">Gestiona tus lugares favoritos para recibir tus dulces.</p>
+                  <h3 className="text-3xl md:text-4xl font-display text-brand-darkgray leading-tight">
+                    {deliveryMethod === 'national' ? 'Datos del Envío' : 'Dirección de Entrega'}
+                  </h3>
+                  <p className="text-brand-darkgray/60 font-body font-normal text-base">
+                    {deliveryMethod === 'national'
+                      ? 'Indícanos la agencia de retiro y quién recibe el paquete.'
+                      : 'Gestiona tus lugares favoritos para recibir tus dulces.'}
+                  </p>
                 </div>
 
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 gap-3">
-                    {addresses.map((addr) => (
-                      <div
-                        key={addr.id}
-                        onClick={() => {
-                          setSelectedAddressId(addr.id);
-                          setAddress(addr.formatted_address);
-                          setReferencePoint(addr.reference_point || "");
-                          setIsAccordionFullyOpen(false);
-                        }}
-                        className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative group ${selectedAddressId === addr.id ? 'border-primary bg-primary/5 shadow-md' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className={`mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedAddressId === addr.id ? 'border-primary' : 'border-slate-200'}`}>
-                            {selectedAddressId === addr.id && <div className="w-2.5 h-2.5 bg-primary rounded-full" />}
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-0.5">{addr.label}</p>
-                            <p className="text-sm font-medium text-slate-600 line-clamp-2 pr-8">
-                              {addr.unit ? `${addr.unit}, ` : ''}{addr.formatted_address}
-                            </p>
+                {deliveryMethod === 'national' && (
+                  <div className="space-y-5">
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Empresa de encomienda</p>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setShippingCourier("mrw")}
+                          className={`py-4 px-4 rounded-2xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${shippingCourier === "mrw" ? "border-red-600 bg-red-50 text-red-700 shadow-sm scale-[1.02]" : "border-slate-200 hover:border-slate-300 text-slate-600"}`}
+                        >
+                          <span className={`w-2.5 h-2.5 rounded-full ${shippingCourier === 'mrw' ? 'bg-red-600' : 'bg-slate-300'}`} />
+                          MRW
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShippingCourier("zoom")}
+                          className={`py-4 px-4 rounded-2xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${shippingCourier === "zoom" ? "border-amber-500 bg-amber-50 text-amber-700 shadow-sm scale-[1.02]" : "border-slate-200 hover:border-slate-300 text-slate-600"}`}
+                        >
+                          <span className={`w-2.5 h-2.5 rounded-full ${shippingCourier === 'zoom' ? 'bg-amber-500' : 'bg-slate-300'}`} />
+                          ZOOM
+                        </button>
+                      </div>
+                    </div>
 
-                          </div>
-                        </div>
-
-                        {selectedAddressId === addr.id && addr.zone === 'NATIONAL' && (
-                          <motion.div 
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            onAnimationStart={() => setIsAccordionFullyOpen(false)}
-                            onAnimationComplete={() => setIsAccordionFullyOpen(true)}
-                            className={`mt-5 pt-5 border-t border-slate-200 space-y-4 text-left cursor-default ${
-                              isAccordionFullyOpen ? 'overflow-visible' : 'overflow-hidden'
-                            }`}
-                            onClick={(e) => e.stopPropagation()}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Estado <span className="text-primary">*</span></label>
+                        <div className="relative">
+                          <button
+                            type="button"
+                            onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
+                            className="w-full bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all font-body text-sm font-semibold text-slate-700 h-[50px]"
                           >
-                            <p className="text-xs font-black uppercase tracking-wider text-slate-500">
-                              Detalles para Envío Nacional (Cobro a Destino)
-                            </p>
-
-                            {/* Selector MRW / ZOOM */}
-                            <div className="grid grid-cols-2 gap-3">
-                              <button
-                                type="button"
-                                onClick={() => setShippingCourier("mrw")}
-                                className={`py-3 px-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${
-                                  shippingCourier === "mrw" 
-                                    ? "border-red-600 bg-red-50 text-red-700 shadow-sm" 
-                                    : "border-slate-200 hover:border-slate-300 text-slate-600"
-                                }`}
+                            <span>{shippingState || "Selecciona un estado"}</span>
+                            <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${isStateDropdownOpen ? 'rotate-180' : ''}`} />
+                          </button>
+                          <AnimatePresence>
+                            {isStateDropdownOpen && (
+                              <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.2 }}
+                                data-lenis-prevent
+                                className="absolute top-[calc(100%_+_8px)] left-0 w-full bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden max-h-60 overflow-y-auto overscroll-contain"
                               >
-                                <span className={`w-2.5 h-2.5 rounded-full ${shippingCourier === 'mrw' ? 'bg-red-600' : 'bg-slate-300'}`} />
-                                MRW
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setShippingCourier("zoom")}
-                                className={`py-3 px-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${
-                                  shippingCourier === "zoom" 
-                                    ? "border-amber-500 bg-amber-50 text-amber-700 shadow-sm" 
-                                    : "border-slate-200 hover:border-slate-300 text-slate-600"
-                                }`}
-                              >
-                                <span className={`w-2.5 h-2.5 rounded-full ${shippingCourier === 'zoom' ? 'bg-amber-500' : 'bg-slate-300'}`} />
-                                ZOOM
-                              </button>
-                            </div>
-
-                            {/* Inputs Estado/Ciudad & Agencia */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                              <div className="space-y-1">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                  Estado <span className="text-primary">*</span>
-                                </label>
-                                <div className="relative">
+                                {VENEZUELAN_STATES.map((state) => (
                                   <button
+                                    key={state}
                                     type="button"
-                                    onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all font-body text-sm font-semibold text-slate-700 bg-white h-[50px]"
+                                    onClick={() => { setShippingState(state); setIsStateDropdownOpen(false); }}
+                                    className={`w-full text-left p-3 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 font-body text-sm font-semibold ${shippingState === state ? 'text-primary bg-primary/5' : 'text-slate-600'}`}
                                   >
-                                    <span>{shippingState || "Selecciona un estado"}</span>
-                                    <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${isStateDropdownOpen ? 'rotate-180' : ''}`} />
+                                    {state}
                                   </button>
-
-                                  <AnimatePresence>
-                                    {isStateDropdownOpen && (
-                                      <motion.div
-                                        initial={{ opacity: 0, y: -10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.2 }}
-                                        data-lenis-prevent
-                                        className="absolute top-[calc(100%+8px)] left-0 w-full bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden max-h-60 overflow-y-auto overscroll-contain"
-                                      >
-                                        {VENEZUELAN_STATES.map((state) => (
-                                          <button
-                                            key={state}
-                                            type="button"
-                                            onClick={() => {
-                                              setShippingState(state);
-                                              setIsStateDropdownOpen(false);
-                                            }}
-                                            className={`w-full text-left p-3 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 font-body text-sm font-semibold ${
-                                              shippingState === state ? 'text-primary bg-primary/5' : 'text-slate-600'
-                                            }`}
-                                          >
-                                            {state}
-                                          </button>
-                                        ))}
-                                      </motion.div>
-                                    )}
-                                  </AnimatePresence>
-                                </div>
-                              </div>
-                              <div className="space-y-1">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                  Ciudad <span className="text-primary">*</span>
-                                </label>
-                                <input
-                                  type="text"
-                                  placeholder="Ej: Valencia"
-                                  value={shippingCity}
-                                  onChange={(e) => setShippingCity(e.target.value)}
-                                  className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body text-sm font-semibold text-slate-700 h-[50px]"
-                                />
-                              </div>
-                            </div>
-
-                            <div className="space-y-1">
-                              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                Oficina / Agencia de Retiro <span className="text-primary">*</span>
-                              </label>
-                              <input
-                                type="text"
-                                placeholder="Ej: Oficina Los Sauces"
-                                value={shippingAgency}
-                                onChange={(e) => setShippingAgency(e.target.value)}
-                                className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body text-sm font-semibold text-slate-700 h-[50px]"
-                              />
-                            </div>
-
-                            {/* ¿Quién retira? Selector */}
-                            <div className="space-y-3 pt-2">
-                              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                ¿Quién retira el paquete?
-                              </label>
-                              <div className="flex gap-4">
-                                <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-600">
-                                  <input
-                                    type="radio"
-                                    name="receptorType"
-                                    checked={shippingReceptorType === "same"}
-                                    onChange={() => setShippingReceptorType("same")}
-                                    className="accent-primary"
-                                  />
-                                  Mismo comprador
-                                </label>
-                                <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-600">
-                                  <input
-                                    type="radio"
-                                    name="receptorType"
-                                    checked={shippingReceptorType === "third"}
-                                    onChange={() => setShippingReceptorType("third")}
-                                    className="accent-primary"
-                                  />
-                                  Otra persona
-                                </label>
-                              </div>
-
-                              {shippingReceptorType === "third" && (
-                                <motion.div
-                                  initial={{ opacity: 0, y: -5 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1"
-                                >
-                                  <div className="space-y-1">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                      Nombre Completo <span className="text-primary">*</span>
-                                    </label>
-                                    <input
-                                      type="text"
-                                      placeholder="Ej: Carlos Pérez"
-                                      value={shippingReceptorName}
-                                      onChange={(e) => setShippingReceptorName(e.target.value)}
-                                      className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/5 outline-none transition-all text-xs font-semibold text-slate-700"
-                                    />
-                                  </div>
-                                  <div className="space-y-1">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                      Cédula de Identidad <span className="text-primary">*</span>
-                                    </label>
-                                    <input
-                                      type="text"
-                                      placeholder="Ej: 12345678"
-                                      value={shippingReceptorId}
-                                      onChange={(e) => setShippingReceptorId(e.target.value)}
-                                      className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/5 outline-none transition-all text-xs font-semibold text-slate-700"
-                                    />
-                                  </div>
-                                </motion.div>
-                              )}
-                            </div>
-                          </motion.div>
-                        )}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddressDelete(addr.id);
-                          }}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
                       </div>
-                    ))}
-
-                    {addresses.length < 3 && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <button
-                          onClick={() => {
-                            setShowMap(true);
-                            setMapAutoLocate(false);
-                          }}
-                          className="p-5 rounded-2xl border-2 border-dashed border-slate-200 text-slate-400 hover:border-primary/50 hover:text-primary transition-all flex items-center justify-center gap-2 font-black text-sm uppercase tracking-wider"
-                        >
-                          <MapPin className="w-5 h-5" /> Agregar Dirección
-                        </button>
-                        <button
-                          onClick={() => {
-                            setShowMap(true);
-                            setMapAutoLocate(true);
-                          }}
-                          className="p-5 rounded-2xl border-2 border-slate-100 text-slate-500 hover:border-primary/50 hover:text-primary transition-all flex items-center justify-center gap-2 font-black text-sm uppercase tracking-wider bg-white shadow-sm"
-                        >
-                          <Navigation className="w-5 h-5" /> Ubicación Actual
-                        </button>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Ciudad <span className="text-primary">*</span></label>
+                        <input
+                          type="text"
+                          placeholder="Ej: Valencia"
+                          value={shippingCity}
+                          onChange={(e) => setShippingCity(e.target.value)}
+                          className="w-full p-3 rounded-xl bg-white border border-slate-200 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body text-sm font-semibold text-slate-700 h-[50px]"
+                        />
                       </div>
-                    )}
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Oficina / Agencia de Retiro <span className="text-primary">*</span></label>
+                      <input
+                        type="text"
+                        placeholder="Ej: Oficina Los Sauces"
+                        value={shippingAgency}
+                        onChange={(e) => setShippingAgency(e.target.value)}
+                        className="w-full p-3 rounded-xl bg-white border border-slate-200 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 outline-none transition-all font-body text-sm font-semibold text-slate-700 h-[50px]"
+                      />
+                    </div>
+
+                    <div className="space-y-3 pt-1">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">¿Quién retira el paquete?</label>
+                      <div className="flex gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-600">
+                          <input type="radio" name="receptorType" checked={shippingReceptorType === "same"} onChange={() => setShippingReceptorType("same")} className="accent-primary" />
+                          Mismo comprador
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-600">
+                          <input type="radio" name="receptorType" checked={shippingReceptorType === "third"} onChange={() => setShippingReceptorType("third")} className="accent-primary" />
+                          Otra persona
+                        </label>
+                      </div>
+                      {shippingReceptorType === "third" && (
+                        <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Nombre Completo <span className="text-primary">*</span></label>
+                            <input type="text" placeholder="Ej: Carlos Pérez" value={shippingReceptorName} onChange={(e) => setShippingReceptorName(e.target.value)} className="w-full p-3 rounded-xl bg-white border border-slate-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/5 outline-none transition-all text-xs font-semibold text-slate-700" />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Cédula de Identidad <span className="text-primary">*</span></label>
+                            <input type="text" placeholder="Ej: 12345678" value={shippingReceptorId} onChange={(e) => setShippingReceptorId(e.target.value)} className="w-full p-3 rounded-xl bg-white border border-slate-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/5 outline-none transition-all text-xs font-semibold text-slate-700" />
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {deliveryMethod === 'delivery' && (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 gap-3">
+                      {addresses.map((addr) => (
+                        <div
+                          key={addr.id}
+                          onClick={() => {
+                            setSelectedAddressId(addr.id);
+                            setAddress(addr.formatted_address);
+                            setReferencePoint(addr.reference_point || "");
+                          }}
+                          className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative group ${selectedAddressId === addr.id ? 'border-primary bg-primary/5 shadow-md' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={`mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedAddressId === addr.id ? 'border-primary' : 'border-slate-200'}`}>
+                              {selectedAddressId === addr.id && <div className="w-2.5 h-2.5 bg-primary rounded-full" />}
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-0.5">{addr.label}</p>
+                              <p className="text-sm font-medium text-slate-600 line-clamp-2 pr-8">
+                                {addr.unit ? `${addr.unit}, ` : ''}{addr.formatted_address}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleAddressDelete(addr.id); }}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                      {addresses.length < 3 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <button
+                            onClick={() => { setShowMap(true); setMapAutoLocate(false); }}
+                            className="p-5 rounded-2xl border-2 border-dashed border-slate-200 text-slate-400 hover:border-primary/50 hover:text-primary transition-all flex items-center justify-center gap-2 font-black text-sm uppercase tracking-wider"
+                          >
+                            <MapPin className="w-5 h-5" /> Agregar Dirección
+                          </button>
+                          <button
+                            onClick={() => { setShowMap(true); setMapAutoLocate(true); }}
+                            className="p-5 rounded-2xl border-2 border-slate-100 text-slate-500 hover:border-primary/50 hover:text-primary transition-all flex items-center justify-center gap-2 font-black text-sm uppercase tracking-wider bg-white shadow-sm"
+                          >
+                            <Navigation className="w-5 h-5" /> Ubicación Actual
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex gap-4 pt-6">
                   <button onClick={prevStep} className="flex-1 py-5 font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-wider text-sm bg-slate-100 hover:bg-slate-200 rounded-full">Atrás</button>
                   <button
-                    disabled={deliveryMethod === 'delivery' && (!selectedAddressId || !isShippingValid())}
+                    disabled={(deliveryMethod === 'delivery' && (!selectedAddressId || !isShippingValid())) || (deliveryMethod === 'national' && !isShippingValid())}
                     onClick={() => {
-                      const selectedAddr = addresses.find(a => a.id === selectedAddressId);
-                      const isNational = deliveryMethod === 'delivery' && selectedAddr?.zone === 'NATIONAL';
+                      const isNational = deliveryMethod === 'national';
                       if (isNational && (paymentMethod === 'cash' || paymentMethod === 'pos')) {
                         setPaymentMethod('pm');
                       }
@@ -1432,7 +1373,7 @@ export default function CheckoutPage() {
                           { id: 'cash', name: 'Efectivo', icon: <Wallet className="w-5 h-5 text-white" />, bg: 'bg-[#1D9A5B]' },
                           { id: 'paypal', name: 'PayPal', icon: <span className="font-black text-white text-base italic">P</span>, bg: 'bg-[#00457C]' }
                         ].filter(option => {
-                          const isNational = deliveryMethod === 'delivery' && addresses.find(a => a.id === selectedAddressId)?.zone === 'NATIONAL';
+                          const isNational = deliveryMethod === 'national';
                           if (isNational && (option.id === 'cash' || option.id === 'pos')) {
                             return false;
                           }
@@ -1695,15 +1636,27 @@ export default function CheckoutPage() {
                     const mapsLink = selectedAddr ? `\n📍 *Ubicación:* https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}` : '';
                     const scheduledBadge = isScheduledOrder ? `⚠️ *ORDEN PROGRAMADA (Fuera de horario)* ⚠️\n\n` : '';
                     
-                    const isNational = selectedAddr?.zone === 'NATIONAL';
+                    const isNational = deliveryMethod === 'national';
                     const storeMapLink = pickupStore === 'campoclaro' 
                       ? 'https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D' 
                       : 'https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D';
 
-                    const deliveryText = deliveryMethod === 'delivery' 
-                      ? (isNational ? `Envío Nacional (MRW/Zoom) a: ${address}` : `Delivery a: ${address}`)
-                      : `Pickup en: ${pickupStore === 'campoclaro' ? 'Dolce Candy Campo Claro' : 'Dolce Candy El Bosque'}\n📍 *Mapa Tienda:* ${storeMapLink}`;
-                      
+                    let finalDeliveryText = '';
+                    if (deliveryMethod === 'delivery') {
+                      const selectedAddrObj = addresses.find(a => a.id === selectedAddressId);
+                      if (selectedAddrObj) {
+                        finalDeliveryText = `Delivery Local a: ${selectedAddrObj.formatted_address}${selectedAddrObj.unit ? `\n🏢 *Inmueble:* ${selectedAddrObj.unit}` : ''}${referencePoint ? `\n📍 *Ref:* ${referencePoint}` : ''}`;
+                      }
+                    } else if (deliveryMethod === 'national') {
+                      const courierUpper = shippingCourier.toUpperCase();
+                      const receptorInfo = shippingReceptorType === 'third' 
+                        ? `\n👤 *Receptor:* ${shippingReceptorName} (C.I. ${shippingReceptorId})` 
+                        : '';
+                      finalDeliveryText = `📦 *Envío Nacional por ${courierUpper}*\n📍 *Destino:* ${shippingState} / ${shippingCity}\n🏢 *Agencia:* ${shippingAgency}${receptorInfo}`;
+                    } else {
+                      finalDeliveryText = `Pickup en: ${pickupStore === 'campoclaro' ? 'Dolce Candy Campo Claro' : 'Dolce Candy El Bosque'}\n📍 *Mapa Tienda:* ${storeMapLink}`;
+                    }
+
                     let paymentText = '';
                     if (paymentMethod === 'zelle') paymentText = `Zelle (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
                     if (paymentMethod === 'pm') paymentText = `Pago Móvil - Ref: ${paymentReference || 'Ver Foto'}`;
@@ -1712,30 +1665,6 @@ export default function CheckoutPage() {
                     if (paymentMethod === 'pos') paymentText = `Punto de Venta (POS) - Pago al recibir`;
                       
                     const receiptLinkText = receiptUrl ? `\n📸 *Comprobante:* ${receiptUrl}` : '';
-                    
-                    // Obtener dirección formateada final para WhatsApp
-                    const selectedAddrObj = addresses.find(a => a.id === selectedAddressId);
-                    let finalDeliveryText = deliveryText;
-                    if (deliveryMethod === 'delivery' && selectedAddrObj) {
-                      if (selectedAddrObj.zone === 'NATIONAL') {
-                        const courierUpper = shippingCourier.toUpperCase();
-                        const receptorInfo = shippingReceptorType === 'third' 
-                          ? `\n👤 *Receptor:* ${shippingReceptorName} (C.I. ${shippingReceptorId})` 
-                          : '';
-                        finalDeliveryText = `📦 *Envío Nacional por ${courierUpper}*\n📍 *Ubicación:* ${shippingState} / ${shippingCity}\n🏢 *Agencia:* ${shippingAgency}${receptorInfo}\n📍 *Ref. de Zona:* ${selectedAddrObj.formatted_address}`;
-                      } else {
-                        finalDeliveryText = `Delivery a: ${selectedAddrObj.formatted_address}${selectedAddrObj.unit ? `\n🏢 *Inmueble:* ${selectedAddrObj.unit}` : ''}${referencePoint ? `\n📍 *Ref:* ${referencePoint}` : ''}`;
-                      }
-                    }
-
-                    const paymentMethodNames = {
-                      zelle: "Zelle",
-                      pm: "Pago Móvil",
-                      paypal: "PayPal",
-                      cash: "Efectivo",
-                      pos: "Punto de Venta (POS)"
-                    };
-                    const paymentMethodText = paymentMethodNames[paymentMethod as keyof typeof paymentMethodNames] || paymentMethod;
 
                     const customerName = (hasProfile && customerProfile) 
                       ? `${customerProfile.first_name} ${customerProfile.last_name}`.trim() 
@@ -1745,7 +1674,7 @@ export default function CheckoutPage() {
                     const totalAmount = grandTotal.toFixed(2);
 
                     const totalBsStr = bcvRate ? ` (Bs. ${(grandTotal * bcvRate).toFixed(2)})` : "";
-                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n🛵 *Entrega:*\n${finalDeliveryText}\n\n💳 Método: ${paymentMethodText}\n💰 Total: ref ${totalAmount}${totalBsStr}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
+                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n🛵 *Entrega:*\n${finalDeliveryText}${mapsLink}\n\n💳 *Pago:*\n${paymentText}${receiptLinkText}\n\n💰 Total: ref ${totalAmount}${totalBsStr}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
                     const encodedMsg = encodeURIComponent(orderSummary);
                     window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMsg}`, "_blank");
                     handleFinish();
