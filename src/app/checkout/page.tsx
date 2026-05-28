@@ -83,6 +83,7 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPaymentDropdownOpen, setIsPaymentDropdownOpen] = useState(false);
   const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
+  const [stateSearchQuery, setStateSearchQuery] = useState("");
   const [isAccordionFullyOpen, setIsAccordionFullyOpen] = useState(false);
   const [address, setAddress] = useState(""); // Current selected address string
   const [referencePoint, setReferencePoint] = useState(""); // Nuevo: Punto de referencia
@@ -801,7 +802,7 @@ export default function CheckoutPage() {
 
           {(step > 1 && !authView) && (
             <div className="text-xs space-y-2 bg-black/10 p-4 rounded-3xl border border-white/5">
-              <p className="flex justify-between items-center"><span className="text-white/60 uppercase font-bold tracking-wider text-[10px]">Método de Entrega:</span> <span className="font-bold uppercase text-sm">{deliveryMethod === 'delivery' ? 'Delivery Local' : deliveryMethod === 'national' ? 'Envío Nacional' : 'Retiro en Tienda'}</span></p>
+              <p className="flex justify-between items-center"><span className="text-white/60 uppercase font-bold tracking-wider text-[10px]">Método de Entrega:</span> <span className="font-bold uppercase text-sm">{deliveryMethod === 'national' ? 'Envío Nacional' : deliveryMethod}</span></p>
               {step > 2 && (
                 <p className="flex justify-between items-center pt-2 border-t border-white/10">
                   <span className="text-white/60 uppercase font-bold tracking-wider text-[10px]">Método de Pago:</span> 
@@ -1168,6 +1169,12 @@ export default function CheckoutPage() {
                           ZOOM
                         </button>
                       </div>
+                      <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-3 flex gap-3 items-start mt-2">
+                        <Truck className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
+                        <p className="text-xs text-blue-800 leading-relaxed font-medium">
+                          <span className="font-bold">Nota importante:</span> El costo del flete por MRW o Zoom es bajo la modalidad <span className="font-bold underline decoration-blue-300 underline-offset-2">Cobro a Destino</span> y deberá ser cancelado al momento de retirar el paquete en la agencia seleccionada.
+                        </p>
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1176,7 +1183,7 @@ export default function CheckoutPage() {
                         <div className="relative">
                           <button
                             type="button"
-                            onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
+                            onClick={() => { setIsStateDropdownOpen(!isStateDropdownOpen); setStateSearchQuery(""); }}
                             className="w-full bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all font-body text-sm font-semibold text-slate-700 h-[50px]"
                           >
                             <span>{shippingState || "Selecciona un estado"}</span>
@@ -1190,18 +1197,33 @@ export default function CheckoutPage() {
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.2 }}
                                 data-lenis-prevent
-                                className="absolute top-[calc(100%_+_8px)] left-0 w-full bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden max-h-60 overflow-y-auto overscroll-contain"
+                                className="absolute top-[calc(100%_+_8px)] left-0 w-full bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden"
                               >
-                                {VENEZUELAN_STATES.map((state) => (
-                                  <button
-                                    key={state}
-                                    type="button"
-                                    onClick={() => { setShippingState(state); setIsStateDropdownOpen(false); }}
-                                    className={`w-full text-left p-3 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 font-body text-sm font-semibold ${shippingState === state ? 'text-primary bg-primary/5' : 'text-slate-600'}`}
-                                  >
-                                    {state}
-                                  </button>
-                                ))}
+                                <div className="p-2 border-b border-slate-100">
+                                  <input
+                                    type="text"
+                                    placeholder="Buscar estado..."
+                                    value={stateSearchQuery}
+                                    onChange={(e) => setStateSearchQuery(e.target.value)}
+                                    autoFocus
+                                    className="w-full p-2 rounded-lg bg-slate-50 border border-slate-200 outline-none focus:border-primary/50 font-body text-sm text-slate-700 placeholder:text-slate-400"
+                                  />
+                                </div>
+                                <div className="max-h-48 overflow-y-auto overscroll-contain">
+                                  {VENEZUELAN_STATES.filter((s) => s.toLowerCase().includes(stateSearchQuery.toLowerCase())).map((state) => (
+                                    <button
+                                      key={state}
+                                      type="button"
+                                      onClick={() => { setShippingState(state); setIsStateDropdownOpen(false); setStateSearchQuery(""); }}
+                                      className={`w-full text-left p-3 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 font-body text-sm font-semibold ${shippingState === state ? 'text-primary bg-primary/5' : 'text-slate-600'}`}
+                                    >
+                                      {state}
+                                    </button>
+                                  ))}
+                                  {VENEZUELAN_STATES.filter((s) => s.toLowerCase().includes(stateSearchQuery.toLowerCase())).length === 0 && (
+                                    <p className="p-3 text-sm text-slate-400 text-center">No se encontró ningún estado</p>
+                                  )}
+                                </div>
                               </motion.div>
                             )}
                           </AnimatePresence>

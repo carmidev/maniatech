@@ -85,7 +85,7 @@ export const ProductCard = ({
         
         {/* Imagen con Aspect Ratio divertido */}
         <div 
-          className="relative h-64 overflow-hidden bg-white p-6 cursor-pointer"
+          className="relative h-48 sm:h-64 overflow-hidden bg-white p-4 sm:p-6 cursor-pointer"
           onClick={() => onOpenDetails?.(candy)}
         >
           <img
@@ -101,7 +101,7 @@ export const ProductCard = ({
               {activeBadges.map(badge => BADGE_LABELS[badge] ? (
                 <span
                   key={badge}
-                  className={`text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-lg ${BADGE_STYLES[badge]}`}
+                  className={`text-[9px] sm:text-[10px] font-black uppercase px-2 py-1 sm:px-4 sm:py-1.5 rounded-full shadow-lg ${BADGE_STYLES[badge]}`}
                 >
                   {BADGE_LABELS[badge]}
                 </span>
@@ -110,19 +110,19 @@ export const ProductCard = ({
           )}
 
           {!isMenu && (
-            <div className="absolute top-5 right-5 bg-white/95 backdrop-blur px-3 py-1 rounded-2xl shadow-md border border-white/50">
-              <span className="text-primary font-numbers font-semibold text-xl">ref {candy.price.toFixed(2)}</span>
+            <div className="absolute top-5 right-3 sm:right-5 bg-white/95 backdrop-blur px-2 sm:px-3 py-1 rounded-2xl shadow-md border border-white/50">
+              <span className="text-primary font-numbers font-semibold text-base sm:text-xl">ref {candy.price.toFixed(2)}</span>
             </div>
           )}
         </div>
 
         {/* Info */}
-        <div className="p-7 flex flex-col flex-1 gap-2 bg-white">
-          <h3 className="text-xl font-display text-brand-darkgray leading-tight group-hover:text-primary transition-colors flex items-center gap-2">
+        <div className="p-4 sm:p-7 flex flex-col flex-1 gap-1 sm:gap-2 bg-white">
+          <h3 className="text-base sm:text-xl font-display text-brand-darkgray leading-tight group-hover:text-primary transition-colors flex items-center gap-2">
             <span>{renderWithNumberFont(candy.name)}</span>
-            {isMenu && <Coffee className="w-5 h-5 text-primary" />}
+            {isMenu && <Coffee className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
           </h3>
-          <p className="text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 leading-relaxed flex-1">
+          <p className="text-xs sm:text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 leading-relaxed flex-1">
             {candy.description}
           </p>
           
@@ -131,7 +131,7 @@ export const ProductCard = ({
               whileTap={{ scale: isOutOfStock ? 1 : 0.95 }}
               onClick={handleAdd}
               disabled={isOutOfStock}
-              className={`mt-4 w-full py-4 rounded-[2rem] font-black text-sm transition-all duration-300 flex items-center justify-center gap-3 shadow-lg ${
+              className={`mt-2 sm:mt-4 w-full py-2.5 sm:py-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-[10px] sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 shadow-lg ${
                 isOutOfStock
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
                   : isAdded 

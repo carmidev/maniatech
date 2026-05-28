@@ -398,7 +398,7 @@ const MapContent = ({ onAddressSelect, onClose, autoLocate }: MapSelectorProps) 
               </p>
               <p className="text-xs font-bold text-slate-700 leading-tight">
                 {deliveryStatus === 'OUT_OF_BOUNDS' 
-                  ? "Esta dirección está muy lejos de nuestras tiendas. Por favor, cierra este mapa y selecciona la opción 'Envío Nacional'." 
+                  ? "Esta dirección está muy lejos de nuestras tiendas. Por favor, cierra este mapa y selecciona la opción 'Envío Nacional', o elige una ubicación dentro de Caracas." 
                   : (addressName || "Selecciona un punto en el mapa")}
               </p>
             </div>
