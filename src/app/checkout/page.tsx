@@ -12,14 +12,14 @@ import { supabase } from "@/lib/supabase";
 import { getImagePath } from "@/utils/imagePath";
 
 // Carga dinámica de componentes pesados para agilizar la navegación inicial
-const ProfileForm = dynamic(() => import("@/components/ProfileForm").then(mod => mod.ProfileForm), { 
+const ProfileForm = dynamic(() => import("@/components/ProfileForm").then(mod => mod.ProfileForm), {
   loading: () => <div className="h-40 flex items-center justify-center font-bold text-primary animate-pulse uppercase tracking-widest text-xs">Cargando Formulario...</div>,
-  ssr: false 
+  ssr: false
 });
 
-const MapSelector = dynamic(() => import("@/components/MapSelector").then(mod => mod.MapSelector), { 
+const MapSelector = dynamic(() => import("@/components/MapSelector").then(mod => mod.MapSelector), {
   loading: () => <div className="h-60 bg-slate-50 rounded-3xl flex items-center justify-center font-bold text-primary animate-pulse uppercase tracking-widest text-xs">Cargando Mapa...</div>,
-  ssr: false 
+  ssr: false
 });
 
 type DeliveryMethod = "delivery" | "pickup" | "national";
@@ -137,7 +137,7 @@ export default function CheckoutPage() {
           .single();
 
         if (error) throw error;
-        
+
         if (data && data.value) {
           setBcvRate(parseFloat(data.value));
         } else {
@@ -198,7 +198,7 @@ export default function CheckoutPage() {
   // Horario States & Logic
   const checkIfStoreIsOpen = () => {
     // Sincronización exacta con la hora de Caracas (UTC-4)
-    const caracasString = new Date().toLocaleString("en-US", {timeZone: "America/Caracas"});
+    const caracasString = new Date().toLocaleString("en-US", { timeZone: "America/Caracas" });
     const caracasTime = new Date(caracasString);
     const day = caracasTime.getDay(); // 0 = Dom, 1 = Lun, ..., 6 = Sab
     const hour = caracasTime.getHours();
@@ -288,7 +288,7 @@ export default function CheckoutPage() {
         const fileExt = receiptFile.name.split('.').pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
         const filePath = `${user?.id || 'guest'}/${fileName}`;
-        
+
         const { error: uploadError } = await supabase.storage
           .from('payment_receipts')
           .upload(filePath, receiptFile);
@@ -304,7 +304,7 @@ export default function CheckoutPage() {
       }
 
       const finalItems = [...items];
-      
+
       if (deliveryCost > 0) {
         finalItems.push({
           product: { id: 'delivery', name: 'Costo de Envío / Delivery', price: deliveryCost, images: [], description: 'Tarifa de entrega' },
@@ -325,8 +325,8 @@ export default function CheckoutPage() {
 
       const orderData = {
         user_id: user?.id || null,
-        customer_name: (hasProfile && customerProfile) 
-          ? `${customerProfile.first_name} ${customerProfile.last_name}`.trim() 
+        customer_name: (hasProfile && customerProfile)
+          ? `${customerProfile.first_name} ${customerProfile.last_name}`.trim()
           : (firstName || user?.phone || 'Invitado'),
         customer_email: user?.email || 'no-email@dolce.com',
         customer_phone: customerProfile?.phone || user?.phone || null,
@@ -336,9 +336,12 @@ export default function CheckoutPage() {
         delivery_address: deliveryMethod === 'national' ? (
           (() => {
             const courierUpper = shippingCourier.toUpperCase();
-            const receptorInfo = shippingReceptorType === 'third' 
-              ? `\nReceptor: ${shippingReceptorName} (C.I. ${shippingReceptorId})` 
-              : '';
+            const buyerName = (hasProfile && customerProfile)
+              ? `${customerProfile.first_name || ''} ${customerProfile.last_name || ''}`.trim() || 'Invitado'
+              : (firstName || user?.phone || 'Invitado');
+            const receptorInfo = shippingReceptorType === 'third'
+              ? `\nDestinatario: ${shippingReceptorName} (C.I. ${shippingReceptorId})`
+              : `\nDestinatario: ${buyerName}`;
             return `[${courierUpper}] Envío Nacional a Agencia\nEstado/Ciudad: ${shippingState} / ${shippingCity}\nAgencia: ${shippingAgency}${receptorInfo}`;
           })()
         ) : deliveryMethod === 'delivery' ? (
@@ -350,7 +353,7 @@ export default function CheckoutPage() {
             return address;
           })()
         ) : null,
-        pickup_store: deliveryMethod === 'pickup' 
+        pickup_store: deliveryMethod === 'pickup'
           ? (pickupStore === 'campoclaro' ? 'Dolce Candy Campo Claro' : 'Dolce Candy El Bosque')
           : null,
         payment_method: paymentMethod,
@@ -363,7 +366,7 @@ export default function CheckoutPage() {
 
       const { createOrderAndDeductInventory } = await import('./actions');
       const result = await createOrderAndDeductInventory(orderData, items);
-      
+
       if (!result.success) {
         throw new Error(result.error);
       }
@@ -423,7 +426,7 @@ export default function CheckoutPage() {
               const providers = user?.app_metadata?.providers || [];
               const isGoogle = providers.includes("google") || identities.some((i: any) => i.provider === "google");
               const currentProvider = isGoogle ? "google" : (existingUser.auth_provider === "phone" ? "phone" : "email");
-              
+
               if (currentProvider !== existingUser.auth_provider && !(currentProvider === "email" && existingUser.auth_provider === "phone")) {
                 const expectedMethod = existingUser.auth_provider === "google" ? "Continuar con Google" : "código por correo";
                 await supabase.auth.signOut();
@@ -435,7 +438,7 @@ export default function CheckoutPage() {
                 // El método es correcto, pero el ID cambió (probablemente un usuario eliminado y recreado en Auth).
                 // Vinculamos el nuevo ID a la fila existente.
                 await supabase.from("customers").update({ id: user.id }).eq('email', user.email);
-                
+
                 // Recargamos el perfil
                 const { data: updatedProfile } = await supabase.from("customers").select("*").eq("id", user.id).single();
                 if (updatedProfile) {
@@ -594,9 +597,10 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleProfileComplete = () => {
+  const handleProfileComplete = (profileData?: any) => {
     setAuthView(null);
     setHasProfile(true);
+    if (profileData) setCustomerProfile(profileData);
     nextStep();
   };
 
@@ -702,7 +706,7 @@ export default function CheckoutPage() {
         <h1 className="font-display text-2xl uppercase tracking-wider text-primary mb-3 text-center">
           Golosina en Camino...
         </h1>
-        
+
         <p className="font-body text-slate-500 text-sm text-center max-w-[280px] leading-relaxed">
           Estamos verificando tu acceso. Te llevaremos de vuelta en un instante.
         </p>
@@ -731,16 +735,16 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-slate-50 md:bg-primary flex flex-col md:flex-row">
       {/* Left Side: Summary */}
-      <div className="bg-primary p-6 md:p-10 text-white md:w-5/12 flex flex-col justify-between relative overflow-hidden md:sticky md:top-0 md:h-screen">
+      <div className={`bg-primary text-white md:w-5/12 flex flex-col justify-between relative overflow-hidden md:overflow-y-auto scrollbar-none md:sticky md:top-0 md:h-screen transition-all duration-300 ${step >= 3 ? 'p-6 md:py-8 md:px-10' : 'p-6 md:p-10'}`}>
         <div className="relative z-10">
-          <button 
+          <button
             onClick={() => {
               if (step === 4) {
                 clearCart();
               }
               router.push("/catalogo");
-            }} 
-            className="mb-8 hover:bg-white/10 p-2 rounded-full inline-flex transition-colors"
+            }}
+            className={`hover:bg-white/10 p-2 rounded-full inline-flex transition-colors transition-all duration-300 ${step >= 3 ? 'mb-4' : 'mb-8'}`}
           >
             <X className="w-6 h-6" />
           </button>
@@ -748,8 +752,8 @@ export default function CheckoutPage() {
           <p className="text-white/80 text-sm md:text-base">Casi terminamos de preparar tu magia dulce.</p>
         </div>
 
-        <div className="space-y-4 relative z-10 mt-12 md:mt-0">
-          <div className="bg-white/10 p-6 rounded-[2rem] backdrop-blur-md border border-white/20 shadow-xl">
+        <div className={`relative z-10 mt-12 md:mt-0 transition-all duration-300 ${step >= 3 ? 'space-y-3' : 'space-y-4'}`}>
+          <div className={`bg-white/10 rounded-[2rem] backdrop-blur-md border border-white/20 shadow-xl transition-all duration-300 ${step >= 3 ? 'p-5' : 'p-6'}`}>
             <div className="mb-4 pb-4 border-b border-white/10 space-y-2">
               <div className="flex justify-between items-center text-sm text-white/80">
                 <span>Productos</span>
@@ -763,7 +767,7 @@ export default function CheckoutPage() {
               )}
               {(deliveryMethod === 'delivery' || deliveryMethod === 'national') && (
                 <div className="flex justify-between items-center text-sm text-white/80">
-                  <span>{deliveryMethod === 'national' ? 'Embalaje y Traslado MRW/Zoom' : 'Envío / Delivery'}</span>
+                  <span>{deliveryMethod === 'national' ? 'Traslado hacia Agencia MRW/Zoom' : 'Envío / Delivery'}</span>
                   <span className="font-numbers font-semibold">ref {deliveryCost.toFixed(2)}</span>
                 </div>
               )}
@@ -773,14 +777,14 @@ export default function CheckoutPage() {
             <p className="mb-4 pb-4 border-b border-white/10 text-xs text-white/60 italic">
               Todos nuestros precios incluyen IVA.
             </p>
-            
+
             <p className="text-xs text-white/70 mb-1 uppercase tracking-widest font-body font-bold">Total a pagar</p>
             <div className="flex items-baseline gap-3">
               <p className="text-5xl font-numbers font-semibold">
                 ref {grandTotal.toFixed(2)}
               </p>
             </div>
-            
+
             {bcvRate && (
               <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
                 <span className="text-xs font-bold text-white/60 uppercase tracking-widest">En Bs.</span>
@@ -789,15 +793,15 @@ export default function CheckoutPage() {
                 </span>
               </div>
             )}
-            
+
             {step > 1 && deliveryMethod === 'national' && (
               <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="mt-3 p-2.5 bg-[#231f20] rounded-xl shadow-lg border border-white/5">
-                 <p className="text-[11px] text-white/90 leading-tight">
-                   📦 <strong>Nota de Logística:</strong> Los ref 5.00 cobrados aquí en el total cubren exclusivamente el embalaje de seguridad y el traslado de tu pedido hasta la agencia de MRW / Zoom.
-                 </p>
+                <p className="text-[11px] text-white/90 leading-tight">
+                  📦 <strong>Nota de Logística:</strong> Los ref 5.00 cobrados aquí en el total cubren exclusivamente el embalaje de seguridad y el traslado de tu pedido hasta la agencia de MRW / Zoom.
+                </p>
               </motion.div>
             )}
-            
+
           </div>
 
           {(step > 1 && !authView) && (
@@ -805,12 +809,12 @@ export default function CheckoutPage() {
               <p className="flex justify-between items-center"><span className="text-white/60 uppercase font-bold tracking-wider text-[10px]">Método de Entrega:</span> <span className="font-bold uppercase text-sm">{deliveryMethod === 'national' ? 'Envío Nacional' : deliveryMethod}</span></p>
               {step > 2 && (
                 <p className="flex justify-between items-center pt-2 border-t border-white/10">
-                  <span className="text-white/60 uppercase font-bold tracking-wider text-[10px]">Método de Pago:</span> 
+                  <span className="text-white/60 uppercase font-bold tracking-wider text-[10px]">Método de Pago:</span>
                   <span className="font-bold uppercase text-sm">
-                    {paymentMethod === 'pm' ? 'Pago Móvil' : 
-                     paymentMethod === 'zelle' ? 'Zelle' : 
-                     paymentMethod === 'paypal' ? 'PayPal' : 
-                     paymentMethod === 'pos' ? 'Punto de Venta' : 'Efectivo'}
+                    {paymentMethod === 'pm' ? 'Pago Móvil' :
+                      paymentMethod === 'zelle' ? 'Zelle' :
+                        paymentMethod === 'paypal' ? 'PayPal' :
+                          paymentMethod === 'pos' ? 'Punto de Venta' : 'Efectivo'}
                   </span>
                 </p>
               )}
@@ -818,13 +822,13 @@ export default function CheckoutPage() {
           )}
 
           {hasProfile && customerProfile && !authView && (
-            <div className="bg-black/20 p-4 rounded-3xl border border-white/5 flex items-center justify-between mt-3">
+            <div className={`bg-black/20 p-4 rounded-3xl border border-white/5 flex items-center justify-between transition-all duration-300 ${step >= 3 ? 'mt-2' : 'mt-3'}`}>
               <div>
                 <p className="font-bold text-sm leading-tight">{customerProfile.first_name} {customerProfile.last_name}</p>
                 <p className="text-[10px] text-white/60 uppercase tracking-widest mt-0.5">{customerProfile.id_number}</p>
               </div>
               <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full">
-                <Smartphone className="w-3.5 h-3.5 text-white/50" /> 
+                <Smartphone className="w-3.5 h-3.5 text-white/50" />
                 <p className="text-xs font-medium">{customerProfile.phone}</p>
               </div>
             </div>
@@ -842,11 +846,11 @@ export default function CheckoutPage() {
       {/* Right Side: Flow Content */}
       <div className="flex-1 p-6 md:p-12 bg-white relative flex flex-col justify-center items-center min-h-[60vh] md:min-h-0">
         <div className="w-full max-w-xl mx-auto">
-          
+
           {!authView && step > 1 && step < 4 && deliveryMethod === 'delivery' && addresses.find(a => a.id === selectedAddressId)?.zone === 'NATIONAL' && (
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }} 
-              animate={{ opacity: 1, y: 0 }} 
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
               className="w-full bg-blue-50 border border-blue-200 text-blue-900 p-5 rounded-[2rem] mb-8 flex items-center gap-5 shadow-sm"
             >
               <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center shrink-0">
@@ -862,9 +866,9 @@ export default function CheckoutPage() {
           )}
 
           {!authView && step > 1 && step < 4 && isScheduledOrder && (
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }} 
-              animate={{ opacity: 1, y: 0 }} 
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
               className="w-full bg-amber-50 border border-amber-200 text-amber-900 p-5 rounded-[2rem] mb-8 flex items-center gap-5 shadow-sm"
             >
               <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center shrink-0">
@@ -997,8 +1001,8 @@ export default function CheckoutPage() {
                         disabled={resendTimer > 0 || isSending}
                         className="w-full text-center text-sm font-body text-primary transition-colors font-bold disabled:text-gray-400 disabled:font-medium hover:underline"
                       >
-                        {resendTimer > 0 
-                          ? `Reenviar código en ${resendTimer}s` 
+                        {resendTimer > 0
+                          ? `Reenviar código en ${resendTimer}s`
                           : "¿No recibiste el código? Reenviar ahora"}
                       </button>
                       <button
@@ -1023,7 +1027,7 @@ export default function CheckoutPage() {
                       {firstName ? `Hola ${firstName}, ¿Cómo lo recibes?` : '¿Cómo lo recibes?'}
                     </h3>
                     {user && (
-                      <button 
+                      <button
                         onClick={handleLogout}
                         className="text-xs font-bold text-primary bg-primary/5 px-3 py-1.5 rounded-full hover:bg-primary/10 transition-colors uppercase tracking-wider shrink-0"
                       >
@@ -1071,59 +1075,59 @@ export default function CheckoutPage() {
 
                 {deliveryMethod === "pickup" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                      <div
-                        onClick={() => setPickupStore("campoclaro")}
-                        className={`p-5 rounded-3xl border-2 text-left transition-all relative cursor-pointer ${pickupStore === 'campoclaro' ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 bg-slate-50 hover:border-slate-200'}`}
-                      >
-                        <p className="font-display text-slate-800 mb-1 flex items-center gap-2 text-base leading-tight">
-                          <MapPin className={`w-4 h-4 shrink-0 ${pickupStore === 'campoclaro' ? 'text-primary' : 'text-slate-400'}`} />
-                          Dolce Candy Campo Claro
+                    <div
+                      onClick={() => setPickupStore("campoclaro")}
+                      className={`p-5 rounded-3xl border-2 text-left transition-all relative cursor-pointer ${pickupStore === 'campoclaro' ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 bg-slate-50 hover:border-slate-200'}`}
+                    >
+                      <p className="font-display text-slate-800 mb-1 flex items-center gap-2 text-base leading-tight">
+                        <MapPin className={`w-4 h-4 shrink-0 ${pickupStore === 'campoclaro' ? 'text-primary' : 'text-slate-400'}`} />
+                        Dolce Candy Campo Claro
+                      </p>
+                      <p className="text-[10px] text-slate-500 mb-1 pl-6 leading-relaxed">Avenida Principal de Campo Claro, Edificio San Antonio</p>
+                      <p className="text-[9px] text-slate-400 italic mb-3 pl-6 leading-relaxed">Punto de Referencia: Bajando por la calle de la taberna el greco, en la siguiente esquina, frente a la Pescadería Puerto Santo. Local de toldos de rayas rojas.</p>
+                      <div className="flex items-center justify-between pl-6 gap-2">
+                        <p className="text-[9px] font-black text-primary uppercase tracking-widest flex flex-col gap-0.5">
+                          <span>Lun - Vier: 8:00 AM - 6:00 PM</span>
+                          <span>Sáb: 10:00 AM - 4:00 PM</span>
                         </p>
-                        <p className="text-[10px] text-slate-500 mb-1 pl-6 leading-relaxed">Avenida Principal de Campo Claro, Edificio San Antonio</p>
-                        <p className="text-[9px] text-slate-400 italic mb-3 pl-6 leading-relaxed">Punto de Referencia: Bajando por la calle de la taberna el greco, en la siguiente esquina, frente a la Pescadería Puerto Santo. Local de toldos de rayas rojas.</p>
-                        <div className="flex items-center justify-between pl-6 gap-2">
-                          <p className="text-[9px] font-black text-primary uppercase tracking-widest flex flex-col gap-0.5">
-                            <span>Lun - Vier: 8:00 AM - 6:00 PM</span>
-                            <span>Sáb: 10:00 AM - 4:00 PM</span>
-                          </p>
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              window.open('https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D', '_blank');
-                            }}
-                            className="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-primary transition-colors bg-white/50 py-1 px-2 rounded-lg"
-                          >
-                            <Map className="w-3 h-3" /> Ver mapa
-                          </button>
-                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open('https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D', '_blank');
+                          }}
+                          className="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-primary transition-colors bg-white/50 py-1 px-2 rounded-lg"
+                        >
+                          <Map className="w-3 h-3" /> Ver mapa
+                        </button>
                       </div>
-                      
-                      <div
-                        onClick={() => setPickupStore("elbosque")}
-                        className={`p-5 rounded-3xl border-2 text-left transition-all relative cursor-pointer ${pickupStore === 'elbosque' ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 bg-slate-50 hover:border-slate-200'}`}
-                      >
-                        <p className="font-display text-slate-800 mb-1 flex items-center gap-2 text-base leading-tight">
-                          <MapPin className={`w-4 h-4 shrink-0 ${pickupStore === 'elbosque' ? 'text-primary' : 'text-slate-400'}`} />
-                          Dolce Candy El Bosque
+                    </div>
+
+                    <div
+                      onClick={() => setPickupStore("elbosque")}
+                      className={`p-5 rounded-3xl border-2 text-left transition-all relative cursor-pointer ${pickupStore === 'elbosque' ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10 scale-[1.02]' : 'border-slate-100 bg-slate-50 hover:border-slate-200'}`}
+                    >
+                      <p className="font-display text-slate-800 mb-1 flex items-center gap-2 text-base leading-tight">
+                        <MapPin className={`w-4 h-4 shrink-0 ${pickupStore === 'elbosque' ? 'text-primary' : 'text-slate-400'}`} />
+                        Dolce Candy El Bosque
+                      </p>
+                      <p className="text-[10px] text-slate-500 mb-1 pl-6 leading-relaxed">Av. Principal del Bosque, Edificio El Bosque</p>
+                      <p className="text-[9px] text-slate-400 italic mb-3 pl-6 leading-relaxed">Punto de Referencia: Local de la Esquina con Santa Marias Rojas, Frente al módulo de policía, bajando hacia Chacaito.</p>
+                      <div className="flex items-center justify-between pl-6 gap-2">
+                        <p className="text-[9px] font-black text-primary uppercase tracking-widest flex flex-col gap-0.5">
+                          <span>Lun - Vier: 9:00 AM - 7:00 PM</span>
+                          <span>Sáb: 10:00 AM - 6:00 PM</span>
                         </p>
-                        <p className="text-[10px] text-slate-500 mb-1 pl-6 leading-relaxed">Av. Principal del Bosque, Edificio El Bosque</p>
-                        <p className="text-[9px] text-slate-400 italic mb-3 pl-6 leading-relaxed">Punto de Referencia: Local de la Esquina con Santa Marias Rojas, Frente al módulo de policía, bajando hacia Chacaito.</p>
-                        <div className="flex items-center justify-between pl-6 gap-2">
-                          <p className="text-[9px] font-black text-primary uppercase tracking-widest flex flex-col gap-0.5">
-                            <span>Lun - Vier: 9:00 AM - 7:00 PM</span>
-                            <span>Sáb: 10:00 AM - 6:00 PM</span>
-                          </p>
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              window.open('https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D', '_blank');
-                            }}
-                            className="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-primary transition-colors bg-white/50 py-1 px-2 rounded-lg"
-                          >
-                            <Map className="w-3 h-3" /> Ver mapa
-                          </button>
-                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open('https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D', '_blank');
+                          }}
+                          className="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-primary transition-colors bg-white/50 py-1 px-2 rounded-lg"
+                        >
+                          <Map className="w-3 h-3" /> Ver mapa
+                        </button>
                       </div>
+                    </div>
                   </motion.div>
                 )}
 
@@ -1358,7 +1362,7 @@ export default function CheckoutPage() {
 
                 {/* Dropdown Selector */}
                 <div className="relative">
-                  <button 
+                  <button
                     onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
                     className="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 flex items-center justify-between focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all"
                   >
@@ -1378,13 +1382,13 @@ export default function CheckoutPage() {
                     </div>
                     <ChevronDown className={`w-6 h-6 text-slate-400 transition-transform duration-300 ${isPaymentDropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
-                  
+
                   <AnimatePresence>
                     {isPaymentDropdownOpen && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: -10 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: -10 }} 
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
                         className="absolute top-[calc(100%+8px)] left-0 w-full bg-white border border-slate-200 rounded-2xl shadow-xl z-10 overflow-hidden"
                       >
@@ -1517,7 +1521,7 @@ export default function CheckoutPage() {
                           <label className="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" checked={isExactCash} onChange={(e) => {
                               setIsExactCash(e.target.checked);
-                              if(e.target.checked) setCashAmount(grandTotal.toFixed(2));
+                              if (e.target.checked) setCashAmount(grandTotal.toFixed(2));
                             }} className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" />
                             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Monto Exacto</span>
                           </label>
@@ -1593,8 +1597,8 @@ export default function CheckoutPage() {
                         <div>
                           <p className="font-black text-amber-900 text-sm uppercase tracking-widest mb-1">Punto de Venta (POS)</p>
                           <p className="text-xs font-medium text-amber-800/80 leading-relaxed font-body">
-                            {deliveryMethod === 'delivery' 
-                              ? 'Pagarás con tu tarjeta de crédito o débito al recibir tu pedido. El repartidor llevará el equipo de cobro (POS / Datáfono) a tu dirección.' 
+                            {deliveryMethod === 'delivery'
+                              ? 'Pagarás con tu tarjeta de crédito o débito al recibir tu pedido. El repartidor llevará el equipo de cobro (POS / Datáfono) a tu dirección.'
                               : 'Pagarás con tu tarjeta de crédito o débito directamente en la tienda al momento de retirar tu pedido.'}
                           </p>
                         </div>
@@ -1604,7 +1608,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="pt-6 text-center">
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors flex items-center justify-center gap-2 mx-auto group"
                   >
@@ -1657,10 +1661,10 @@ export default function CheckoutPage() {
                     const selectedAddr = addresses.find(a => a.id === selectedAddressId);
                     const mapsLink = (selectedAddr && deliveryMethod === 'delivery') ? `\n📍 *Ubicación:* https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}` : '';
                     const scheduledBadge = isScheduledOrder ? `⚠️ *ORDEN PROGRAMADA (Fuera de horario)* ⚠️\n\n` : '';
-                    
+
                     const isNational = deliveryMethod === 'national';
-                    const storeMapLink = pickupStore === 'campoclaro' 
-                      ? 'https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D' 
+                    const storeMapLink = pickupStore === 'campoclaro'
+                      ? 'https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D'
                       : 'https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D';
 
                     let finalDeliveryText = '';
@@ -1671,8 +1675,8 @@ export default function CheckoutPage() {
                       }
                     } else if (deliveryMethod === 'national') {
                       const courierUpper = shippingCourier.toUpperCase();
-                      const receptorInfo = shippingReceptorType === 'third' 
-                        ? `\n👤 *Receptor:* ${shippingReceptorName} (C.I. ${shippingReceptorId})` 
+                      const receptorInfo = shippingReceptorType === 'third'
+                        ? `\n👤 *Receptor:* ${shippingReceptorName} (C.I. ${shippingReceptorId})`
                         : '';
                       finalDeliveryText = `📦 *Envío Nacional por ${courierUpper}*\n📍 *Destino:* ${shippingState} / ${shippingCity}\n🏢 *Agencia:* ${shippingAgency}${receptorInfo}`;
                     } else {
@@ -1685,11 +1689,11 @@ export default function CheckoutPage() {
                     if (paymentMethod === 'paypal') paymentText = `PayPal (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
                     if (paymentMethod === 'cash') paymentText = `Efectivo - Monto a entregar: ref ${cashAmount || grandTotal.toFixed(2)}${isExactCash ? ' (Monto Exacto)' : ''}`;
                     if (paymentMethod === 'pos') paymentText = `Punto de Venta (POS) - Pago al recibir`;
-                      
+
                     const receiptLinkText = receiptUrl ? `\n📸 *Comprobante:* ${receiptUrl}` : '';
 
-                    const customerName = (hasProfile && customerProfile) 
-                      ? `${customerProfile.first_name} ${customerProfile.last_name}`.trim() 
+                    const customerName = (hasProfile && customerProfile)
+                      ? `${customerProfile.first_name} ${customerProfile.last_name}`.trim()
                       : (firstName || user?.phone || "Invitado");
 
                     const orderId = createdOrderId ? String(createdOrderId).slice(0, 8).toUpperCase() : "N/A";
@@ -1710,7 +1714,7 @@ export default function CheckoutPage() {
                 {deliveryMethod === 'pickup' && (
                   <button
                     onClick={() => {
-                      const mapLink = pickupStore === 'campoclaro' 
+                      const mapLink = pickupStore === 'campoclaro'
                         ? 'https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D'
                         : 'https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D';
                       window.open(mapLink, '_blank');

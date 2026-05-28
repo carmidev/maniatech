@@ -356,7 +356,7 @@ export default function Home() {
 
 
         {/* ── CONTENIDO TEXTO (IZQUIERDA) - AL FRENTE (z-30) ── */}
-        <div className="min-h-[100dvh] md:min-h-[60dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start relative z-30 px-6 sm:px-8 lg:px-[10%] pt-[100px] md:pt-[160px] lg:pt-52 pointer-events-none">
+        <div className="min-h-[100dvh] md:min-h-[60dvh] lg:min-h-0 flex-none lg:flex-1 flex items-start relative z-30 px-6 sm:px-8 lg:px-[10%] pt-[130px] md:pt-[160px] lg:pt-52 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}

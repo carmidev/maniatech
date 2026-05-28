@@ -7,7 +7,7 @@ import { CountryCodeSelect } from "./CountryCodeSelect";
 import { CustomSelect } from "./CustomSelect";
 
 interface ProfileFormProps {
-  onComplete: () => void;
+  onComplete: (profileData?: any) => void;
   deliveryMethod?: "pickup" | "delivery" | "national";
 }
 
@@ -197,7 +197,7 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
 
       const { error } = await supabase.from("customers").upsert(payload);
       if (error) throw error;
-      onComplete();
+      onComplete(payload);
     } catch (error: any) {
       console.error("Error saving profile:", error);
       alert(`Error: ${error.message || "No se pudo guardar."}`);

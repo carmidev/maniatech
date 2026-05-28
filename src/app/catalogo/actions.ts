@@ -14,7 +14,8 @@ export async function getProductsWithInventory() {
       .select('*, inventory(quantity)')
       .eq('is_archived', false)
       .gt('price', 0)
-      .not('images', 'is', null);
+      .not('images', 'is', null)
+      .order('created_at', { ascending: false });
 
     if (error) throw error;
 

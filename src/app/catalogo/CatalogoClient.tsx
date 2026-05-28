@@ -60,6 +60,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
     { id: "juguetes", label: "Juguetes", icon: "🎁" },
     { id: "chicles", label: "Chicles", icon: "🍬" },
     { id: "caramelos", label: "Caramelos", icon: "🍬" },
+    { id: "sin azucar", label: "Sin Ázucar", icon: "🍃" },
     { id: "lo_mas_vendido", label: "Lo más vendido", icon: "✨" },
     { id: "nuevo", label: "Nuevo", icon: "✨" },
   ];
@@ -333,25 +334,25 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
               </div>
 
               <div className="relative group">
-                {/* Indicador de scroll - Izquierda (Oculto en desktop) */}
+                {/* Indicador de scroll - Izquierda */}
                 <button 
                   onClick={() => handleScroll("left")}
-                  className="absolute left-[-12px] top-1/2 -translate-y-[60%] z-10 lg:hidden flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-full shadow-md text-brand-darkgray hover:text-brand-red transition-all active:scale-90"
+                  className="absolute left-[-12px] top-1/2 -translate-y-[60%] z-10 flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-full shadow-md text-brand-darkgray hover:text-brand-red transition-all active:scale-90"
                 >
                   <ChevronLeft className="w-5 h-5 pr-[2px]" />
                 </button>
                 
-                {/* Indicador de scroll - Derecha (Oculto en desktop) */}
+                {/* Indicador de scroll - Derecha */}
                 <button 
                   onClick={() => handleScroll("right")}
-                  className="absolute right-[-12px] top-1/2 -translate-y-[60%] z-10 lg:hidden flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-full shadow-md text-brand-darkgray hover:text-brand-red transition-all active:scale-90"
+                  className="absolute right-[-12px] top-1/2 -translate-y-[60%] z-10 flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-full shadow-md text-brand-darkgray hover:text-brand-red transition-all active:scale-90"
                 >
                   <ChevronRight className="w-5 h-5 pl-[2px]" />
                 </button>
 
                 <div 
                   ref={scrollContainerRef}
-                  className="flex overflow-x-auto py-2 -mx-6 px-6 gap-3 md:gap-6 no-scrollbar scroll-smooth flex-nowrap items-start"
+                  className="flex overflow-x-auto py-2 -mx-6 px-6 gap-3 md:gap-6 scrollbar-none scroll-smooth flex-nowrap items-start"
                 >
                   {[
                     { key: "all", label: "Todos", icon: <Star className="w-6 h-6" />, color: "bg-slate-100 text-slate-600" },
@@ -367,6 +368,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                     { key: "caramelos", label: "Caramelos", icon: <CandyIcon className="w-6 h-6" />, color: "bg-orange-100 text-orange-500" },
                     { key: "chicles", label: "Chicles", icon: <CandyIcon className="w-6 h-6" />, color: "bg-pink-100 text-pink-600" },
                     { key: "juguetes", label: "Juguetes", icon: <Gift className="w-6 h-6" />, color: "bg-purple-100 text-purple-600" },
+                    { key: "sin azucar", label: "Sin Ázucar", icon: <Sparkles className="w-6 h-6" />, color: "bg-green-100 text-green-600" },
                   ].map((cat) => (
                     <button
                       key={cat.key}
