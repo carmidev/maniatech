@@ -332,7 +332,7 @@ export default function CheckoutPage() {
         customer_phone: customerProfile?.phone || user?.phone || null,
         items: finalItems,
         total_amount: grandTotal,
-        delivery_method: deliveryMethod.toUpperCase(),
+        delivery_method: deliveryMethod === 'national' ? 'DELIVERY' : deliveryMethod.toUpperCase(),
         delivery_address: deliveryMethod === 'national' ? (
           (() => {
             const courierUpper = shippingCourier.toUpperCase();
@@ -1655,7 +1655,7 @@ export default function CheckoutPage() {
                   onClick={() => {
                     const whatsappNumber = "584122861719";
                     const selectedAddr = addresses.find(a => a.id === selectedAddressId);
-                    const mapsLink = selectedAddr ? `\n📍 *Ubicación:* https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}` : '';
+                    const mapsLink = (selectedAddr && deliveryMethod === 'delivery') ? `\n📍 *Ubicación:* https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}` : '';
                     const scheduledBadge = isScheduledOrder ? `⚠️ *ORDEN PROGRAMADA (Fuera de horario)* ⚠️\n\n` : '';
                     
                     const isNational = deliveryMethod === 'national';
