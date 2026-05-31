@@ -543,7 +543,11 @@ export default function CheckoutPage() {
         } else {
           setAuthView(null);
           setHasProfile(true);
-          nextStep();
+          if (deliveryMethod === "pickup") {
+            setStep(3);
+          } else {
+            nextStep();
+          }
         }
       }
     } catch (err: any) {
@@ -601,7 +605,11 @@ export default function CheckoutPage() {
     setAuthView(null);
     setHasProfile(true);
     if (profileData) setCustomerProfile(profileData);
-    nextStep();
+    if (deliveryMethod === "pickup") {
+      setStep(3);
+    } else {
+      nextStep();
+    }
   };
 
   // Pre-fill address if user is logged in and has a profile

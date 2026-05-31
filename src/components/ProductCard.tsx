@@ -35,12 +35,12 @@ const renderWithNumberFont = (text: string) => {
   });
 };
 
-export const ProductCard = ({ 
-  candy, 
-  onOpenDetails 
-}: { 
+export const ProductCard = ({
+  candy,
+  onOpenDetails
+}: {
   candy: Candy;
-  onOpenDetails?: (candy: Candy) => void; 
+  onOpenDetails?: (candy: Candy) => void;
 }) => {
   const { addToCart } = useCart();
   const [isAdded, setIsAdded] = useState(false);
@@ -51,7 +51,7 @@ export const ProductCard = ({
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
-  
+
   const isOutOfStock = candy.stock === 0;
 
   // Determinar el badge en base a las categorías o usar el asignado por defecto
@@ -77,14 +77,14 @@ export const ProductCard = ({
       transition={{ duration: 0.45, ease: "easeOut" }}
       whileHover={{ y: -8, transition: { duration: 0.2 } }}
       className="relative group bg-white shadow-soft transition-all duration-500 overflow-hidden"
-      style={{ 
+      style={{
         borderRadius: '3.5rem 1.5rem 3.5rem 1.5rem',
       }}
     >
       <div className="flex flex-col h-full rounded-[3.5rem_1.5rem_3.5rem_1.5rem] border border-black/5 bg-white overflow-hidden relative">
-        
+
         {/* Imagen con Aspect Ratio divertido */}
-        <div 
+        <div
           className="relative h-48 sm:h-64 overflow-hidden bg-white p-4 sm:p-6 cursor-pointer"
           onClick={() => onOpenDetails?.(candy)}
         >
@@ -94,7 +94,7 @@ export const ProductCard = ({
             className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
+
           {/* Badge flotante */}
           {activeBadges.length > 0 && (
             <div className="absolute top-5 left-5 flex flex-col gap-2 items-start z-10 pointer-events-none">
@@ -122,22 +122,28 @@ export const ProductCard = ({
             <span>{renderWithNumberFont(candy.name)}</span>
             {isMenu && <Coffee className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
           </h3>
+          {candy.flavor && (
+            <div className="flex items-center mb-1">
+              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md bg-[#eab8ac]/30 text-[#633c32] border border-[#eab8ac]/50">
+                {candy.flavor.toLowerCase().includes("premium") || candy.flavor.toLowerCase().includes("pack") || candy.flavor.toLowerCase().includes("tamaño") ? `Variante: ${candy.flavor}` : `Sabor: ${candy.flavor}`}
+              </span>
+            </div>
+          )}
           <p className="text-xs sm:text-sm font-body font-normal text-brand-darkgray/70 line-clamp-2 leading-relaxed flex-1">
             {candy.description}
           </p>
-          
+
           {!isMenu && (
             <motion.button
               whileTap={{ scale: isOutOfStock ? 1 : 0.95 }}
               onClick={handleAdd}
               disabled={isOutOfStock}
-              className={`mt-2 sm:mt-4 w-full py-2.5 sm:py-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-[10px] sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 shadow-lg ${
-                isOutOfStock
+              className={`mt-2 sm:mt-4 w-full py-2.5 sm:py-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-[10px] sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 shadow-lg ${isOutOfStock
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
-                  : isAdded 
-                    ? "bg-green-500 text-white shadow-green-500/30" 
+                  : isAdded
+                    ? "bg-green-500 text-white shadow-green-500/30"
                     : "bg-brand-red text-white hover:opacity-90 shadow-brand-red/20"
-              }`}
+                }`}
             >
               <AnimatePresence mode="wait">
                 {isOutOfStock ? (

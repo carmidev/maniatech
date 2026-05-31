@@ -39,6 +39,9 @@ export default async function CatalogoPage() {
         images: item.images && item.images.length > 0 ? item.images : [CANDIES[0].images[0]],
         category: normalizeCategory(item.category),
         stock: item.inventory?.reduce((sum: number, loc: any) => sum + (loc.quantity || 0), 0) || 0,
+        sku: item.sku,
+        flavor: item.flavor || item.sabor,
+        variant: item.variant,
       }));
     } else {
       console.error("Error fetching products:", result.error);

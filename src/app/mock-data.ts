@@ -9,6 +9,9 @@ export interface Candy {
   tag?: string;
   badge?: "nuevo" | "bestseller" | "viral" | "exclusivo" | "menu" | "top";
   stock?: number;
+  sku?: string;
+  flavor?: string;
+  variant?: string;
 }
 
 export const CANDIES: Candy[] = [

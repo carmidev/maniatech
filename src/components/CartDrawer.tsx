@@ -88,6 +88,11 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                     </div>
                     <div className="flex-1">
                       <h4 className="font-display text-brand-darkgray">{item.name}</h4>
+                      {(item.flavor || (item as any).product?.flavor) && (
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold mb-1">
+                          {((item.flavor || (item as any).product?.flavor || "").toLowerCase().includes("premium") || (item.flavor || (item as any).product?.flavor || "").toLowerCase().includes("pack") || (item.flavor || (item as any).product?.flavor || "").toLowerCase().includes("tamaño")) ? `Variante: ${item.flavor || (item as any).product?.flavor}` : `Sabor: ${item.flavor || (item as any).product?.flavor}`}
+                        </p>
+                      )}
                       <p className="text-primary font-numbers font-semibold">ref {item.price.toFixed(2)}</p>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center gap-3 bg-gray-100 rounded-full px-2 py-1">

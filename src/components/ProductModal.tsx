@@ -6,7 +6,7 @@ import { Candy } from "@/app/mock-data";
 import { useCart } from "@/context/CartContext";
 import { getImagePath } from "@/utils/imagePath";
 import { DolceButton } from "./DolceButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const renderWithNumberFont = (text: string) => {
   return text.split(/(\d+)/).map((part, i) => {
@@ -19,17 +19,28 @@ const renderWithNumberFont = (text: string) => {
 
 interface ProductModalProps {
   candy: Candy | null;
+  allProducts?: Candy[];
   isOpen: boolean;
   onClose: () => void;
   onNavigateToGolosinas?: (category?: string) => void;
 }
 
-export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: ProductModalProps) => {
+export const ProductModal = ({ candy: initialCandy, allProducts = [], isOpen, onClose, onNavigateToGolosinas }: ProductModalProps) => {
   const { addToCart } = useCart();
   const [currentImg, setCurrentImg] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [candy, setCandy] = useState<Candy | null>(initialCandy);
+
+  useEffect(() => {
+    if (isOpen) {
+      setCandy(initialCandy);
+      setCurrentImg(0);
+    }
+  }, [initialCandy, isOpen]);
 
   if (!candy) return null;
+
+  const variants = initialCandy?.sku ? allProducts.filter(p => p.sku === initialCandy.sku) : [];
 
   const nextImg = () => setCurrentImg((prev) => (prev + 1) % candy.images.length);
   const prevImg = () => setCurrentImg((prev) => (prev - 1 + candy.images.length) % candy.images.length);
@@ -76,7 +87,7 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
                 className="w-full h-full object-contain cursor-zoom-in"
                 onClick={() => setIsFullscreen(true)}
               />
-              
+
               {/* Controles Galería */}
               {candy.images.length > 1 && (
                 <>
@@ -101,8 +112,8 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
               <div className="flex-1 overflow-y-auto no-scrollbar">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="bg-primary/10 text-primary px-3 py-0.5 rounded-full text-[9px] font-display uppercase tracking-widest">
-                    {Array.isArray(candy.category) 
-                      ? (candy.category.some(c => ["top", "lo más vendido", "lo mas vendido"].includes((c || "").toLowerCase())) ? "🔥 Lo más vendido" : candy.category.join(", ")) 
+                    {Array.isArray(candy.category)
+                      ? (candy.category.some(c => ["top", "lo más vendido", "lo mas vendido"].includes((c || "").toLowerCase())) ? "🔥 Lo más vendido" : candy.category.join(", "))
                       : (["top", "lo más vendido", "lo mas vendido"].includes((candy.category || "").toLowerCase()) ? "🔥 Lo más vendido" : candy.category)}
                   </span>
                   {!isMenu && (
@@ -112,15 +123,64 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
                     </>
                   )}
                 </div>
-                
+
                 <h2 className="text-3xl md:text-4xl font-display text-brand-darkgray leading-tight mb-3 flex items-center gap-3">
                   <span>{renderWithNumberFont(candy.name)}</span>
                   {isMenu && <Coffee className="w-8 h-8 text-primary" />}
                 </h2>
-                
+
                 <p className="text-brand-darkgray/70 text-base font-body font-normal leading-relaxed mb-6">
                   {candy.description}
                 </p>
+
+                {/* Variantes Selector */}
+                {variants.length > 1 && (
+                  <div className="mb-8 relative z-10">
+                    <h4 className="text-[11px] md:text-xs font-black text-brand-darkgray mb-4 uppercase tracking-[0.15em] flex items-center gap-2">
+                      {variants.some(v => {
+                        const f = (v.flavor || "").toLowerCase();
+                        return f.includes("premium") || f.includes("pack") || f.includes("tamaño") || f.includes("edición");
+                      }) ? "✨ Selecciona tu Variante" : "✨ Selecciona tu Sabor"}
+                    </h4>
+                    <div className="flex flex-wrap gap-3">
+                      {variants.map(v => {
+                        const isOutOfStockVariant = v.stock === 0;
+                        const isSelected = candy.id === v.id;
+                        return (
+                          <button
+                            key={v.id}
+                            onClick={() => {
+                              setCandy(v);
+                              setCurrentImg(0);
+                            }}
+                            className={`relative px-5 py-3 rounded-2xl font-bold text-sm transition-all duration-300 flex items-center gap-3 overflow-hidden border-2 ${
+                              isSelected
+                                ? "bg-white text-primary shadow-md border-primary"
+                                : "bg-white text-slate-600 border-slate-100 hover:border-primary/40 hover:shadow-sm"
+                            } ${isOutOfStockVariant && !isSelected ? "opacity-50 hover:opacity-80" : ""}`}
+                          >
+                            <span className={`flex-shrink-0 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full ${isOutOfStockVariant ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" : "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"}`} />
+                            <span className="relative z-10">{v.flavor || v.name}</span>
+                            {isSelected && (
+                              <div className="absolute inset-0 bg-primary/5 z-0" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {isOutOfStock && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: -5 }} 
+                        animate={{ opacity: 1, y: 0 }} 
+                        className="mt-4 p-3 rounded-xl bg-red-50 border border-red-100 flex items-center gap-2"
+                      >
+                        <span className="text-[11px] font-bold text-red-600 uppercase tracking-widest">
+                          ⚠️ Sin disponibilidad por el momento
+                        </span>
+                      </motion.div>
+                    )}
+                  </div>
+                )}
 
                 {/* Botón de Navegación para el Menú */}
                 {isMenu && (
@@ -178,7 +238,7 @@ export const ProductModal = ({ candy, isOpen, onClose, onNavigateToGolosinas }: 
             onClick={() => setIsFullscreen(false)}
             className="absolute inset-0 bg-black/95 backdrop-blur-sm cursor-zoom-out"
           />
-          
+
           <button
             onClick={() => setIsFullscreen(false)}
             className="absolute top-6 right-6 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"

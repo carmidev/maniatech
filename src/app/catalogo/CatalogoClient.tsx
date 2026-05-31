@@ -92,7 +92,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
 
   const filteredCandies = candiesList.filter((c) => {
     const productCategories = normalizeCategory(c.category);
-    const matchesCategory = activeCategory === "all" || 
+    const matchesCategory = activeCategory === "all" ||
       productCategories.includes(activeCategory) ||
       (activeCategory === "nuevo" && (productCategories.includes("nuevo") || c.badge === "nuevo")) ||
       (activeCategory === "lo_mas_vendido" && (productCategories.includes("lo_mas_vendido") || c.badge === "bestseller"));
@@ -130,7 +130,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
     }
     if (sortBy === "name") return a.name.localeCompare(b.name);
     if (sortBy === "brand") return (a.name.split(" ")[0] || "").localeCompare(b.name.split(" ")[0] || "");
-    
+
     // Default: relevance
     const scoreA = getPriorityScore(a);
     const scoreB = getPriorityScore(b);
@@ -311,9 +311,9 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                 </div>
               )}
             </div>
-            
+
             {activeSection === 'cafe' && (
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="text-brand-darkgray/60 font-body text-lg flex items-center gap-2 mt-2"
@@ -335,22 +335,22 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
 
               <div className="relative group">
                 {/* Indicador de scroll - Izquierda */}
-                <button 
+                <button
                   onClick={() => handleScroll("left")}
                   className="absolute left-[-12px] top-1/2 -translate-y-[60%] z-10 flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-full shadow-md text-brand-darkgray hover:text-brand-red transition-all active:scale-90"
                 >
                   <ChevronLeft className="w-5 h-5 pr-[2px]" />
                 </button>
-                
+
                 {/* Indicador de scroll - Derecha */}
-                <button 
+                <button
                   onClick={() => handleScroll("right")}
                   className="absolute right-[-12px] top-1/2 -translate-y-[60%] z-10 flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-full shadow-md text-brand-darkgray hover:text-brand-red transition-all active:scale-90"
                 >
                   <ChevronRight className="w-5 h-5 pl-[2px]" />
                 </button>
 
-                <div 
+                <div
                   ref={scrollContainerRef}
                   className="flex overflow-x-auto py-2 -mx-6 px-6 gap-3 md:gap-6 scrollbar-none scroll-smooth flex-nowrap items-start"
                 >
@@ -415,11 +415,10 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                       <button
                         key={opt.id}
                         onClick={() => { setSortBy(opt.id); setIsSortOpen(false); }}
-                        className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
-                          sortBy === opt.id
+                        className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${sortBy === opt.id
                             ? "bg-primary/10 text-primary"
                             : "text-slate-600 hover:bg-slate-50"
-                        }`}
+                          }`}
                       >
                         {opt.label}
                         {sortBy === opt.id && <Check className="w-4 h-4 text-primary" />}
@@ -432,7 +431,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
           )}
 
           {/* Grid de productos */}
-          <motion.div 
+          <motion.div
             layout
             className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"
           >
@@ -453,6 +452,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
       <Footer />
       <ProductModal
         candy={selectedProduct}
+        allProducts={[...candiesList, ...coffeeItems]}
         isOpen={!!selectedProduct}
         onClose={() => setSelectedProduct(null)}
         onNavigateToGolosinas={(cat) => {
