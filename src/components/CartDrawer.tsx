@@ -88,11 +88,12 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                     </div>
                     <div className="flex-1">
                       <h4 className="font-display text-brand-darkgray">{item.name}</h4>
-                      {(item.flavor || (item as any).product?.flavor) && (
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold mb-1">
-                          {`Sabor: ${item.flavor || (item as any).product?.flavor}`}
-                        </p>
-                      )}
+                      {((item.flavor || (item as any).product?.flavor) && (item.flavor || (item as any).product?.flavor).toLowerCase() !== 'original') && (
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider bg-slate-100 px-1.5 py-0.5 rounded-md">
+                            {`Sabor: ${item.flavor || (item as any).product?.flavor}`}
+                          </span>
+                        </div>)}
                       <p className="text-primary font-numbers font-semibold">ref {item.price.toFixed(2)}</p>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center gap-3 bg-gray-100 rounded-full px-2 py-1">

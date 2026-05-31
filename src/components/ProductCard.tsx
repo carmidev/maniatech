@@ -109,8 +109,16 @@ export const ProductCard = ({
             </div>
           )}
 
+          {candy.flavor && candy.flavor.toLowerCase() !== 'original' && (
+            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm border border-slate-100 flex items-center gap-1.5 z-10">
+              <span className="text-[9px] font-bold text-slate-600 uppercase tracking-wider">
+                {`Sabor: ${candy.flavor}`}
+              </span>
+            </div>
+          )}
+
           {!isMenu && (
-            <div className="absolute top-5 right-3 sm:right-5 bg-white/95 backdrop-blur px-2 sm:px-3 py-1 rounded-2xl shadow-md border border-white/50">
+            <div className="absolute bottom-5 right-3 sm:right-5 bg-white/95 backdrop-blur px-2 sm:px-3 py-1 rounded-2xl shadow-md border border-white/50">
               <span className="text-primary font-numbers font-semibold text-base sm:text-xl">ref {candy.price.toFixed(2)}</span>
             </div>
           )}
