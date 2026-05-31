@@ -90,6 +90,7 @@ export default function Home() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [featuredCandies, setFeaturedCandies] = useState<Candy[]>(INITIAL_FEATURED);
+  const [allProductsDb, setAllProductsDb] = useState<Candy[]>(CANDIES);
 
   useEffect(() => {
     const fetchFeatured = async () => {
@@ -101,6 +102,9 @@ export default function Home() {
           const allMapped = result.data.map((item: any) => ({
             id: item.id,
             name: item.name,
+            sku: item.sku,
+            flavor: item.flavor || item.sabor,
+            variant: item.variant,
             description: item.description || "",
             ownerReview: item.owner_review || "",
             price: Number(item.price) || 0,
@@ -108,6 +112,8 @@ export default function Home() {
             category: normalizeCategory(item.category),
             stock: item.inventory?.reduce((sum: number, loc: any) => sum + (loc.quantity || 0), 0) || 0,
           }));
+
+          setAllProductsDb(allMapped);
 
           const topMapped = allMapped
             .filter((c: Candy) => {
@@ -734,6 +740,7 @@ export default function Home() {
       />
       <ProductModal
         candy={selectedProduct}
+        allProducts={allProductsDb}
         isOpen={!!selectedProduct}
         onClose={() => setSelectedProduct(null)}
       />

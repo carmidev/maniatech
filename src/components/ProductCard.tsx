@@ -125,7 +125,7 @@ export const ProductCard = ({
           {candy.flavor && (
             <div className="flex items-center mb-1">
               <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md bg-[#eab8ac]/30 text-[#633c32] border border-[#eab8ac]/50">
-                {candy.flavor.toLowerCase().includes("premium") || candy.flavor.toLowerCase().includes("pack") || candy.flavor.toLowerCase().includes("tamaño") ? `Variante: ${candy.flavor}` : `Sabor: ${candy.flavor}`}
+                {`Sabor: ${candy.flavor}`}
               </span>
             </div>
           )}

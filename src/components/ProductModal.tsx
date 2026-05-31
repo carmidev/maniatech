@@ -137,10 +137,7 @@ export const ProductModal = ({ candy: initialCandy, allProducts = [], isOpen, on
                 {variants.length > 1 && (
                   <div className="mb-8 relative z-10">
                     <h4 className="text-[11px] md:text-xs font-black text-brand-darkgray mb-4 uppercase tracking-[0.15em] flex items-center gap-2">
-                      {variants.some(v => {
-                        const f = (v.flavor || "").toLowerCase();
-                        return f.includes("premium") || f.includes("pack") || f.includes("tamaño") || f.includes("edición");
-                      }) ? "✨ Selecciona tu Variante" : "✨ Selecciona tu Sabor"}
+                      ✨ Sabores
                     </h4>
                     <div className="flex flex-wrap gap-3">
                       {variants.map(v => {

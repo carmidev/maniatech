@@ -83,14 +83,14 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
               ) : (
                 items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 rounded-2xl bg-secondary/10 overflow-hidden flex-shrink-0">
-                      <img src={getImagePath(item.images?.[0] || (item as any).image) || undefined} alt={item.name} className="w-full h-full object-cover" />
+                    <div className="w-20 h-20 rounded-2xl bg-slate-50 overflow-hidden flex-shrink-0 p-2 border border-slate-100">
+                      <img src={getImagePath(item.images?.[0] || (item as any).image) || undefined} alt={item.name} className="w-full h-full object-contain" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-display text-brand-darkgray">{item.name}</h4>
                       {(item.flavor || (item as any).product?.flavor) && (
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold mb-1">
-                          {((item.flavor || (item as any).product?.flavor || "").toLowerCase().includes("premium") || (item.flavor || (item as any).product?.flavor || "").toLowerCase().includes("pack") || (item.flavor || (item as any).product?.flavor || "").toLowerCase().includes("tamaño")) ? `Variante: ${item.flavor || (item as any).product?.flavor}` : `Sabor: ${item.flavor || (item as any).product?.flavor}`}
+                          {`Sabor: ${item.flavor || (item as any).product?.flavor}`}
                         </p>
                       )}
                       <p className="text-primary font-numbers font-semibold">ref {item.price.toFixed(2)}</p>
