@@ -36,7 +36,9 @@ export default async function CatalogoPage() {
         description: item.description || "",
         ownerReview: item.owner_review || "",
         price: Number(item.price) || 0,
-        images: item.images && item.images.length > 0 ? item.images : [CANDIES[0].images[0]],
+        images: item.images && item.images.filter((img: string) => img && img.trim() !== '').length > 0 
+          ? item.images.filter((img: string) => img && img.trim() !== '') 
+          : [CANDIES[0].images[0]],
         category: normalizeCategory(item.category),
         stock: item.inventory?.reduce((sum: number, loc: any) => sum + (loc.quantity || 0), 0) || 0,
         sku: item.sku,

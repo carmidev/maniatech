@@ -40,7 +40,9 @@ export const ProductModal = ({ candy: initialCandy, allProducts = [], isOpen, on
 
   if (!candy) return null;
 
-  const variants = initialCandy?.sku ? allProducts.filter(p => p.sku === initialCandy.sku) : [];
+  const variants = initialCandy?.sku 
+    ? allProducts.filter(p => p.sku === initialCandy.sku && p.flavor && p.flavor.trim() !== '' && p.flavor.toLowerCase() !== 'original') 
+    : [];
 
   const nextImg = () => setCurrentImg((prev) => (prev + 1) % candy.images.length);
   const prevImg = () => setCurrentImg((prev) => (prev - 1 + candy.images.length) % candy.images.length);

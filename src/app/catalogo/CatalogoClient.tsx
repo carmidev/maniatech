@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useDeferredValue } from "react";
 import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, ChevronLeft, ChevronRight, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift, Popcorn, Sparkles, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LollipopLogo } from "@/components/LollipopLogo";
@@ -26,7 +26,12 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const deferredSearchQuery = useDeferredValue(searchQuery);
   const [sortBy, setSortBy] = useState("relevance");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 24;
+
+
   const [isSortOpen, setIsSortOpen] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -43,6 +48,10 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
   };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<"golosinas" | "cafe">("golosinas");
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, deferredSearchQuery, sortBy, activeSection]);
   const [selectedProduct, setSelectedProduct] = useState<Candy | null>(null);
   const { totalItems } = useCart();
 
@@ -96,8 +105,8 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
       productCategories.includes(activeCategory) ||
       (activeCategory === "nuevo" && (productCategories.includes("nuevo") || c.badge === "nuevo")) ||
       (activeCategory === "lo_mas_vendido" && (productCategories.includes("lo_mas_vendido") || c.badge === "bestseller"));
-    const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = c.name.toLowerCase().includes(deferredSearchQuery.toLowerCase()) ||
+      c.description.toLowerCase().includes(deferredSearchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -145,6 +154,8 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
   ];
 
   const displayedProducts = activeSection === 'cafe' ? coffeeItems : sortedCandies;
+  const totalPages = Math.ceil(displayedProducts.length / ITEMS_PER_PAGE);
+  const paginatedProducts = displayedProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
     <div className="min-h-screen bg-[#f8f6f6]">
@@ -305,8 +316,25 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                       placeholder="Buscar golosinas..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-11 pr-4 py-4 rounded-[2rem] bg-white border border-slate-200 shadow-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/5 outline-none transition-all font-bold text-sm"
+                      className="w-full pl-11 pr-12 py-4 rounded-[2rem] bg-white border border-slate-200 shadow-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/5 outline-none transition-all font-bold text-sm"
                     />
+                    <AnimatePresence>
+                      {searchQuery && (
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-4">
+                          <motion.button
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 0.15 }}
+                            onClick={() => setSearchQuery("")}
+                            className="p-1 text-slate-400 hover:text-brand-red hover:bg-brand-red/5 rounded-full transition-all active:scale-90"
+                            aria-label="Limpiar búsqueda"
+                          >
+                            <X className="w-4 h-4" />
+                          </motion.button>
+                        </div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
               )}
@@ -436,7 +464,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
             className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"
           >
             <AnimatePresence mode="popLayout">
-              {displayedProducts.map((candy) => (
+              {paginatedProducts.map((candy) => (
                 <ProductCard
                   key={candy.id}
                   candy={candy}
@@ -445,6 +473,37 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
               ))}
             </AnimatePresence>
           </motion.div>
+
+          {/* Paginación */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-10">
+              <button
+                onClick={() => {
+                  setCurrentPage(p => Math.max(1, p - 1));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                disabled={currentPage === 1}
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              
+              <div className="flex items-center px-4">
+                <span className="text-sm font-bold text-slate-600">Página {currentPage} de {totalPages}</span>
+              </div>
+
+              <button
+                onClick={() => {
+                  setCurrentPage(p => Math.min(totalPages, p + 1));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                disabled={currentPage === totalPages}
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          )}
         </div>
       </main>
 

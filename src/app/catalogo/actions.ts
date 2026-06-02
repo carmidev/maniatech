@@ -9,17 +9,36 @@ export async function getProductsWithInventory() {
   );
 
   try {
-    const { data, error } = await supabaseAdmin
-      .from('products')
-      .select('*, inventory(quantity)')
-      .eq('is_archived', false)
-      .gt('price', 0)
-      .not('images', 'is', null)
-      .order('created_at', { ascending: false });
+    let allProducts: any[] = [];
+    let hasMore = true;
+    let page = 0;
+    const limit = 1000;
 
-    if (error) throw error;
+    while (hasMore) {
+      const { data, error } = await supabaseAdmin
+        .from('products')
+        .select('*, inventory(quantity)')
+        .eq('is_archived', false)
+        .gt('price', 0)
+        .not('images', 'is', null)
+        .order('created_at', { ascending: false })
+        .range(page * limit, (page + 1) * limit - 1);
 
-    return { success: true, data };
+      if (error) throw error;
+
+      if (data) {
+        allProducts = [...allProducts, ...data];
+        if (data.length < limit) {
+          hasMore = false;
+        } else {
+          page++;
+        }
+      } else {
+        hasMore = false;
+      }
+    }
+
+    return { success: true, data: allProducts };
   } catch (error: any) {
     console.error("Error fetching products:", error);
     return { success: false, error: error.message };

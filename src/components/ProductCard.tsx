@@ -130,7 +130,7 @@ export const ProductCard = ({
             <span>{renderWithNumberFont(candy.name)}</span>
             {isMenu && <Coffee className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
           </h3>
-          {candy.flavor && (
+          {candy.flavor && candy.flavor.toLowerCase() !== 'original' && (
             <div className="flex items-center mb-1">
               <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md bg-[#eab8ac]/30 text-[#633c32] border border-[#eab8ac]/50">
                 {`Sabor: ${candy.flavor}`}
@@ -147,10 +147,10 @@ export const ProductCard = ({
               onClick={handleAdd}
               disabled={isOutOfStock}
               className={`mt-2 sm:mt-4 w-full py-2.5 sm:py-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-[10px] sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 shadow-lg ${isOutOfStock
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
-                  : isAdded
-                    ? "bg-green-500 text-white shadow-green-500/30"
-                    : "bg-brand-red text-white hover:opacity-90 shadow-brand-red/20"
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+                : isAdded
+                  ? "bg-green-500 text-white shadow-green-500/30"
+                  : "bg-brand-red text-white hover:opacity-90 shadow-brand-red/20"
                 }`}
             >
               <AnimatePresence mode="wait">
