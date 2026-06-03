@@ -316,7 +316,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
                       placeholder="Buscar golosinas..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-11 pr-12 py-4 rounded-[2rem] bg-white border border-slate-200 shadow-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/5 outline-none transition-all font-bold text-sm"
+                      className="w-full pl-11 pr-12 py-4 rounded-[2rem] bg-white border border-slate-200 shadow-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/5 outline-none transition-all font-bold text-base md:text-sm"
                     />
                     <AnimatePresence>
                       {searchQuery && (
