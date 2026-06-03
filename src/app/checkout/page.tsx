@@ -1666,14 +1666,7 @@ export default function CheckoutPage() {
                 <button
                   onClick={() => {
                     const whatsappNumber = "584122861719";
-                    const selectedAddr = addresses.find(a => a.id === selectedAddressId);
-                    const mapsLink = (selectedAddr && deliveryMethod === 'delivery') ? `\n📍 *Ubicación:* https://www.google.com/maps/search/?api=1&query=${selectedAddr.lat},${selectedAddr.lng}` : '';
                     const scheduledBadge = isScheduledOrder ? `⚠️ *ORDEN PROGRAMADA (Fuera de horario)* ⚠️\n\n` : '';
-
-                    const isNational = deliveryMethod === 'national';
-                    const storeMapLink = pickupStore === 'campoclaro'
-                      ? 'https://www.google.com/maps/place/Dolce+Candy+boutique/@10.4918386,-66.8312842,17z/data=!4m6!3m5!1s0x8c2a592bab8cb72b:0x193d00d576f1fa49!8m2!3d10.49191!4d-66.8312609!16s%2Fg%2F11sg06nlzq?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D'
-                      : 'https://www.google.com/maps/place/Dolce+Candy+Boutique/@10.4943073,-66.8678368,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59005758af9d:0x726cc440dca98fcf!8m2!3d10.4943073!4d-66.8678368!16s%2Fg%2F11xn3czjry?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D';
 
                     let finalDeliveryText = '';
                     if (deliveryMethod === 'delivery') {
@@ -1688,17 +1681,15 @@ export default function CheckoutPage() {
                         : '';
                       finalDeliveryText = `📦 *Envío Nacional por ${courierUpper}*\n📍 *Destino:* ${shippingState} / ${shippingCity}\n🏢 *Agencia:* ${shippingAgency}${receptorInfo}`;
                     } else {
-                      finalDeliveryText = `Pickup en: ${pickupStore === 'campoclaro' ? 'Dolce Candy Campo Claro' : 'Dolce Candy El Bosque'}\n📍 *Mapa Tienda:* ${storeMapLink}`;
+                      finalDeliveryText = `Pickup en: ${pickupStore === 'campoclaro' ? 'Dolce Candy Campo Claro' : 'Dolce Candy El Bosque'}`;
                     }
 
                     let paymentText = '';
-                    if (paymentMethod === 'zelle') paymentText = `Zelle (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
-                    if (paymentMethod === 'pm') paymentText = `Pago Móvil - Ref: ${paymentReference || 'Ver Foto'}`;
-                    if (paymentMethod === 'paypal') paymentText = `PayPal (Titular: ${paymentHolder || 'N/A'}) - Ref: ${paymentReference || 'Ver Foto'}`;
-                    if (paymentMethod === 'cash') paymentText = `Efectivo - Monto a entregar: ref ${cashAmount || grandTotal.toFixed(2)}${isExactCash ? ' (Monto Exacto)' : ''}`;
-                    if (paymentMethod === 'pos') paymentText = `Punto de Venta (POS) - Pago al recibir`;
-
-                    const receiptLinkText = receiptUrl ? `\n📸 *Comprobante:* ${receiptUrl}` : '';
+                    if (paymentMethod === 'zelle') paymentText = `Zelle`;
+                    if (paymentMethod === 'pm') paymentText = `Pago Móvil`;
+                    if (paymentMethod === 'paypal') paymentText = `PayPal`;
+                    if (paymentMethod === 'cash') paymentText = `Efectivo`;
+                    if (paymentMethod === 'pos') paymentText = `Punto de Venta (POS)`;
 
                     const customerName = (hasProfile && customerProfile)
                       ? `${customerProfile.first_name} ${customerProfile.last_name}`.trim()
@@ -1706,9 +1697,9 @@ export default function CheckoutPage() {
 
                     const orderId = createdOrderId ? String(createdOrderId).slice(0, 8).toUpperCase() : "N/A";
                     const totalAmount = grandTotal.toFixed(2);
-
                     const totalBsStr = bcvRate ? ` (Bs. ${(grandTotal * bcvRate).toFixed(2)})` : "";
-                    const orderSummary = `¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n🛵 *Entrega:*\n${finalDeliveryText}${mapsLink}\n\n💳 *Pago:*\n${paymentText}${receiptLinkText}\n\n💰 Total: ref ${totalAmount}${totalBsStr}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
+
+                    const orderSummary = `${scheduledBadge}¡Hola Dolce Candy! 🍭✨ He realizado un pedido y acabo de subir mi comprobante de pago en la web. Aquí tienes los detalles para la validación:\n\n🆔 Orden: #${orderId}\n👤 Cliente: ${customerName}\n🛵 *Entrega:*\n${finalDeliveryText}\n💳 *Pago:* ${paymentText}\n\n💰 Total: ref ${totalAmount}${totalBsStr}\n\nQuedo a la espera de su confirmación para el despacho. ¡Gracias! 🙏`;
                     const encodedMsg = encodeURIComponent(orderSummary);
                     window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMsg}`, "_blank");
                     handleFinish();
