@@ -43,7 +43,7 @@ const outfitNumbers = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Dolce Candy Boutique | Dulces Raros y Exclusivos",
+  title: "Dolce Candy Boutique",
   description: "Descubre los dulces más raros y deliciosos del mundo. Como un niño en una dulcería.",
   icons: {
     icon: "/images/Favicondc.png",
