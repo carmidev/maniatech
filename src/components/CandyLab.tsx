@@ -14,7 +14,7 @@ export const CandyLab = () => {
   return (
     <div className="pt-0 pb-20 bg-transparent overflow-visible relative">
       {/* Decoración: Chupeta 2 (Oculta en móvil para mudarse a la tarjeta de abajo) */}
-      <div className="hidden xl:block absolute lg:top-[0%] xl:right-[-5%] 2xl:right-[2%] pointer-events-none z-0">
+      <div className="hidden xl:block absolute lg:top-[0%] xl:right-[1%] 2xl:right-[2%] pointer-events-none z-0">
         <motion.div
           animate={{ y: [0, 20, 0], rotate: [0, -5, 5, 0] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
@@ -23,7 +23,7 @@ export const CandyLab = () => {
           <img
             src={getImagePath("/images/chupeta3.png")}
             alt="Decoración Chupeta"
-            className="xl:w-48 2xl:w-72 h-auto drop-shadow-2xl opacity-100"
+            className="xl:w-56 2xl:w-72 h-auto drop-shadow-2xl opacity-100"
           />
         </motion.div>
       </div>
