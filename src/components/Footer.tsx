@@ -75,9 +75,41 @@ export const Footer = () => {
 
         <div className="pt-10 border-t border-white/5 flex flex-col lg:flex-row items-center justify-between gap-6 text-gray-500 font-bold text-xs uppercase tracking-widest">
           <p>© 2026 Dolce Candy Boutique.</p>
-          <p className="text-gray-600">
-            Desarrollado y Diseñado por <span className="text-gray-400">CarMiDev</span>
-          </p>
+          <div className="flex items-center gap-2 text-gray-600">
+            <span>Desarrollado y Diseñado por</span>
+            <a 
+              href="https://wa.me/message/R76OMSCAFXNTG1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative h-[19px] group/logo cursor-pointer shrink-0 block"
+            >
+              <style>{`
+                @keyframes neonGlowPulse {
+                  0%, 100% {
+                    filter: brightness(0) saturate(100%) invert(67%) sepia(93%) saturate(3020%) hue-rotate(150deg) brightness(105%) contrast(106%) drop-shadow(0 0 2px rgba(0, 229, 255, 0.5));
+                  }
+                  50% {
+                    filter: brightness(0) saturate(100%) invert(67%) sepia(93%) saturate(3020%) hue-rotate(150deg) brightness(105%) contrast(106%) drop-shadow(0 0 8px rgba(0, 229, 255, 0.95));
+                  }
+                }
+                .carmidev-logo-hover {
+                  animation: neonGlowPulse 2s infinite ease-in-out;
+                }
+              `}</style>
+              {/* Logo blanco base */}
+              <img
+                src={getImagePath("/images/logo-carmidev.png")}
+                alt="CarMiDev Logo"
+                className="h-[19px] w-auto object-contain opacity-100 transition-opacity duration-300 group-hover/logo:opacity-0"
+              />
+              {/* Logo cyan eléctrico superpuesto */}
+              <img
+                src={getImagePath("/images/logo-carmidev.png")}
+                alt="CarMiDev Hover"
+                className="carmidev-logo-hover absolute inset-0 w-full h-full object-contain opacity-0 transition-opacity duration-300 group-hover/logo:opacity-100"
+              />
+            </a>
+          </div>
         </div>
       </div>
     </footer>
