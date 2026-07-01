@@ -73,7 +73,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="pt-10 border-t border-white/5 flex flex-col lg:flex-row items-center justify-between gap-6 text-gray-500 font-bold text-[10px] lg:text-xs uppercase tracking-widest">
+        <div className="pt-10 border-t border-white/5 flex flex-col lg:flex-row items-center justify-between gap-6 text-gray-500 font-bold text-[10px] lg:text-xs uppercase tracking-widest lg:pr-[140px]">
           <p>© 2026 Dolce Candy Boutique.</p>
           <div className="flex flex-col items-center gap-1.5 lg:flex-row lg:gap-2 text-gray-600">
             <span>Desarrollado y Diseñado por</span>
