@@ -406,7 +406,7 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, -10, 0], rotate: [5, -5, 5] }}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[20px] -right-[69px] z-10 md:hidden pointer-events-none"
+                className="absolute top-[20px] -right-[69px] z-10 md:hidden pointer-events-none xl-mobile-candy-chupeta1"
               >
                 <img
                   src={getImagePath("/images/chupeta1.png")}
@@ -419,7 +419,7 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, -6, 0], rotate: [-10, -5, -10] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[40px] -left-16 z-10 md:hidden pointer-events-none"
+                className="absolute top-[40px] -left-16 z-10 md:hidden pointer-events-none xl-mobile-candy-chocolate"
               >
                 <img
                   src={getImagePath("/images/chocolate.svg")}

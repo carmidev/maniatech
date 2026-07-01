@@ -70,3 +70,30 @@
 
 .animate-float { animation: float 6s ease-in-out infinite; }
 .animate-float-delayed { animation: float-delayed 8s ease-in-out infinite; }
+
+/* Ajustes responsivos quirúrgicos para móviles de gran tamaño (ej: Pro Max, Plus, etc.) */
+@media (min-width: 420px) and (min-height: 840px) {
+  .xl-mobile-candy-chupeta1 {
+    top: 32px !important;
+    right: -85px !important;
+  }
+  .xl-mobile-candy-chupeta1 img {
+    width: 140px !important;
+  }
+
+  .xl-mobile-candy-chocolate {
+    top: 60px !important;
+    left: -80px !important;
+  }
+  .xl-mobile-candy-chocolate img {
+    width: 160px !important;
+  }
+
+  .xl-mobile-candy-lab {
+    top: -40px !important;
+    right: -80px !important;
+  }
+  .xl-mobile-candy-lab img {
+    width: 290px !important;
+  }
+}

@@ -46,7 +46,7 @@ export const CandyLab = () => {
 
           <div className="relative w-full sm:w-auto flex flex-col items-center gap-4 bg-secondary/5 p-6 lg:p-8 rounded-[2rem] lg:rounded-5xl border-2 border-dashed border-secondary/30">
             {/* Chupeta Móvil (Mudada aquí - Solo visible en móvil) */}
-            <div className="absolute -top-7 -right-16 lg:hidden pointer-events-none z-20">
+            <div className="absolute -top-7 -right-16 lg:hidden pointer-events-none z-20 xl-mobile-candy-lab">
               <motion.div
                 animate={{ y: [0, 10, 0], rotate: [0, -5, 5, 0] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
