@@ -78,7 +78,7 @@ export const Footer = () => {
           <div className="flex flex-col items-center gap-1.5 lg:flex-row lg:gap-2 text-gray-600">
             <span>Desarrollado y Diseñado por</span>
             <a 
-              href="https://wa.me/message/R76OMSCAFXNTG1"
+              href="https://carmidev.com"
               target="_blank"
               rel="noopener noreferrer"
               className="relative h-[19px] group/logo cursor-pointer shrink-0 block"
