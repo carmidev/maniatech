@@ -588,9 +588,15 @@ export default function Home() {
                       );
                     })()}
                     {/* Precio sobre la imagen */}
-                    <span className="absolute bottom-3 right-3 bg-white/95 backdrop-blur text-primary font-numbers font-semibold text-xl px-3 py-1 rounded-2xl shadow-sm">
-                      ref {candy.price.toFixed(2)}
-                    </span>
+                    <div className="absolute bottom-3 right-3 flex flex-col items-end gap-1">
+                      <div className="bg-brand-red text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-10">
+                        -10% OFF
+                      </div>
+                      <div className="bg-white/95 backdrop-blur px-3 py-1 rounded-2xl shadow-sm flex flex-col items-end leading-tight mt-[-6px]">
+                        <span className="text-slate-400 font-numbers text-[10px] line-through decoration-slate-300">ref {candy.price.toFixed(2)}</span>
+                        <span className="text-primary font-numbers font-bold text-xl">ref {(candy.price * 0.9).toFixed(2)}</span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Info (Textos) */}
