@@ -7,7 +7,7 @@ export const metadata = {
   description: "Explora nuestras golosinas y cafés exclusivos.",
 };
 
-export const revalidate = 30;
+export const revalidate = 5;
 
 const normalizeCategory = (cat: string | string[] | null): string[] => {
   if (!cat) return ["top"];
