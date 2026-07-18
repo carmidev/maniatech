@@ -86,7 +86,7 @@ export const ProductModal = ({ candy: initialCandy, allProducts = [], isOpen, on
                 animate={{ opacity: 1 }}
                 src={getImagePath(candy.images[currentImg]) || undefined}
                 alt={candy.name}
-                className="w-full h-full object-contain cursor-zoom-in"
+                className="w-full h-full object-contain cursor-zoom-in mix-blend-multiply"
                 onClick={() => setIsFullscreen(true)}
               />
 
