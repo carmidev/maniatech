@@ -118,8 +118,14 @@ export const ProductCard = ({
           )}
 
           {!isMenu && (
-            <div className="absolute bottom-5 right-3 sm:right-5 bg-white/95 backdrop-blur px-2 sm:px-3 py-1 rounded-2xl shadow-md border border-white/50">
-              <span className="text-primary font-numbers font-semibold text-base sm:text-xl">ref {candy.price.toFixed(2)}</span>
+            <div className="absolute bottom-5 right-3 sm:right-5 flex flex-col items-end gap-1">
+              <div className="bg-brand-red text-white text-[9px] sm:text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg z-10">
+                -10% OFF
+              </div>
+              <div className="bg-white/95 backdrop-blur px-2 sm:px-3 py-1 rounded-2xl shadow-md border border-white/50 flex flex-col items-end leading-tight mt-[-6px]">
+                <span className="text-slate-400 font-numbers text-[10px] sm:text-xs line-through decoration-slate-300">ref {candy.price.toFixed(2)}</span>
+                <span className="text-primary font-numbers font-bold text-base sm:text-xl">ref {(candy.price * 0.9).toFixed(2)}</span>
+              </div>
             </div>
           )}
         </div>

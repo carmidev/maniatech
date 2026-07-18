@@ -8,7 +8,7 @@ import { getImagePath } from "@/utils/imagePath";
 import { useRouter, usePathname } from "next/navigation";
 
 export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, onClose: () => void, onCheckout: () => void }) => {
-  const { items, removeFromCart, updateQuantity, totalPrice, totalItems, clearCart } = useCart();
+  const { items, removeFromCart, updateQuantity, totalPrice, subtotal, discountAmount, totalItems, clearCart } = useCart();
   const router = useRouter();
   const pathname = usePathname();
   const [isNavigating, setIsNavigating] = useState(false);
@@ -94,7 +94,10 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
                             {`Sabor: ${item.flavor || (item as any).product?.flavor}`}
                           </span>
                         </div>)}
-                      <p className="text-primary font-numbers font-semibold">ref {item.price.toFixed(2)}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-slate-400 font-numbers text-sm line-through decoration-slate-300">ref {item.price.toFixed(2)}</p>
+                        <p className="text-primary font-numbers font-bold">ref {(item.price * 0.9).toFixed(2)}</p>
+                      </div>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center gap-3 bg-gray-100 rounded-full px-2 py-1">
                           <button 
@@ -127,9 +130,19 @@ export const CartDrawer = ({ isOpen, onClose, onCheckout }: { isOpen: boolean, o
             {/* Footer */}
             {items.length > 0 && (
               <div className="p-6 bg-gray-50 border-t space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-500 font-bold">Total Estimado</span>
-                  <span className="text-3xl font-black text-primary">ref {totalPrice.toFixed(2)}</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500 font-medium">Subtotal</span>
+                    <span className="text-gray-900 font-numbers font-medium">ref {subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-brand-red font-bold">Descuento Especial (10% OFF)</span>
+                    <span className="text-brand-red font-numbers font-bold">- ref {discountAmount.toFixed(2)}</span>
+                  </div>
+                  <div className="pt-2 border-t flex items-center justify-between">
+                    <span className="text-gray-500 font-bold">Total Estimado</span>
+                    <span className="text-3xl font-black text-primary">ref {totalPrice.toFixed(2)}</span>
+                  </div>
                 </div>
                 <button 
                   disabled={isNavigating}

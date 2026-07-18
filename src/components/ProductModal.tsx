@@ -112,7 +112,7 @@ export const ProductModal = ({ candy: initialCandy, allProducts = [], isOpen, on
             {/* Información y Reseña de la Dueña */}
             <div className="md:w-1/2 p-6 md:p-10 bg-white flex flex-col overflow-hidden">
               <div className="flex-1 overflow-y-auto no-scrollbar">
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex flex-wrap items-center gap-3 mb-2">
                   <span className="bg-primary/10 text-primary px-3 py-0.5 rounded-full text-[9px] font-display uppercase tracking-widest">
                     {Array.isArray(candy.category)
                       ? (candy.category.some(c => ["top", "lo más vendido", "lo mas vendido"].includes((c || "").toLowerCase())) ? "🔥 Lo más vendido" : candy.category.join(", "))
@@ -121,7 +121,15 @@ export const ProductModal = ({ candy: initialCandy, allProducts = [], isOpen, on
                   {!isMenu && (
                     <>
                       <span className="text-slate-300">|</span>
-                      <span className="text-primary font-numbers font-semibold text-2xl">ref {candy.price.toFixed(2)}</span>
+                      <div className="flex items-center gap-2">
+                        <div className="flex flex-col leading-none justify-center">
+                          <span className="text-slate-400 font-numbers text-xs line-through decoration-slate-300">ref {candy.price.toFixed(2)}</span>
+                          <span className="text-primary font-numbers font-bold text-2xl">ref {(candy.price * 0.9).toFixed(2)}</span>
+                        </div>
+                        <span className="bg-brand-red text-white text-[10px] font-black uppercase px-2 py-1 rounded-full shadow-md">
+                          -10% OFF
+                        </span>
+                      </div>
                     </>
                   )}
                 </div>

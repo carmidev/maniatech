@@ -65,7 +65,7 @@ const VENEZUELAN_STATES = [
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, totalPrice, clearCart } = useCart();
+  const { items, totalPrice, subtotal, discountAmount, clearCart } = useCart();
   const { user, loading: authLoading, signInWithGoogle } = useAuth();
 
   // Navigation & Checkout States
@@ -361,7 +361,7 @@ export default function CheckoutPage() {
         payment_reference: paymentReference || null,
         payment_cash_amount: cashAmount ? parseFloat(cashAmount) : null,
         payment_receipt_url: uploadedUrl,
-        admin_notes: null
+        admin_notes: `Descuento global aplicado: - ref ${discountAmount.toFixed(2)} (10% OFF)`
       };
 
       const { createOrderAndDeductInventory } = await import('./actions');
@@ -764,8 +764,12 @@ export default function CheckoutPage() {
           <div className={`bg-white/10 rounded-[2rem] backdrop-blur-md border border-white/20 shadow-xl transition-all duration-300 ${step >= 3 ? 'p-5' : 'p-6'}`}>
             <div className="mb-4 pb-4 border-b border-white/10 space-y-2">
               <div className="flex justify-between items-center text-sm text-white/80">
-                <span>Productos</span>
-                <span className="font-numbers font-semibold">ref {totalPrice.toFixed(2)}</span>
+                <span>Productos (Subtotal)</span>
+                <span className="font-numbers font-semibold">ref {subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm text-green-300 font-bold">
+                <span>Descuento Especial (10% OFF)</span>
+                <span className="font-numbers font-semibold">- ref {discountAmount.toFixed(2)}</span>
               </div>
               {bagFeeCost > 0 && (
                 <div className="flex justify-between items-center text-sm text-white/80">
