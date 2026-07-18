@@ -323,6 +323,16 @@ export default function CheckoutPage() {
         } as any);
       }
 
+      // Añadir el descuento como un ítem negativo para que la matemática cuadre perfecto en el panel de administrador
+      if (discountAmount > 0) {
+        finalItems.push({
+          product: { id: 'discount_10', name: 'Descuento Especial (10% OFF)', price: -discountAmount, images: [], description: 'Descuento global de la tienda' },
+          quantity: 1,
+          price: -discountAmount,
+          subtotal: -discountAmount
+        } as any);
+      }
+
       const orderData = {
         user_id: user?.id || null,
         customer_name: (hasProfile && customerProfile)
