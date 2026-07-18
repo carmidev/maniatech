@@ -777,7 +777,7 @@ export default function CheckoutPage() {
                 <span>Productos (Subtotal)</span>
                 <span className="font-numbers font-semibold">ref {subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between items-center text-sm text-green-300 font-bold">
+              <div className="flex justify-between items-center text-sm text-black font-bold">
                 <span>Descuento Especial (10% OFF)</span>
                 <span className="font-numbers font-semibold">- ref {discountAmount.toFixed(2)}</span>
               </div>
