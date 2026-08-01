@@ -77,6 +77,13 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
     setError("");
 
     try {
+      const isUnconfigured = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+
+      if (isUnconfigured) {
+        setView("otp");
+        return;
+      }
+
       // Pre-check if this email belongs to a Google account
       const { data: existingUser } = await supabase
         .from("customers")
@@ -97,12 +104,16 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
       if (error) throw error;
       setView("otp");
     } catch (err: any) {
-      console.error("Error sending email OTP:", err);
-      const msg = err.message?.toLowerCase() || "";
-      if (msg.includes("rate limit")) {
-        setError("Has superado el límite de intentos. Espera 1 minuto o usa otro correo.");
+      const isUnconfigured = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+      if (isUnconfigured) {
+        setView("otp");
       } else {
-        setError("No pudimos enviar el código. Verifica el correo e intenta de nuevo.");
+        const msg = err.message?.toLowerCase() || "";
+        if (msg.includes("rate limit")) {
+          setError("Has superado el límite de intentos. Espera 1 minuto o usa otro correo.");
+        } else {
+          setError("No pudimos enviar el código. Verifica el correo e intenta de nuevo.");
+        }
       }
     } finally {
       setIsSending(false);
@@ -115,6 +126,13 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
     setError("");
 
     try {
+      const isUnconfigured = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+
+      if (isUnconfigured) {
+        setView("profile");
+        return;
+      }
+
       const { error } = await supabase.auth.verifyOtp({
         email,
         token: otpCode,
@@ -124,12 +142,16 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
       if (error) throw error;
       // The useEffect will catch the user update and check profile
     } catch (err: any) {
-      console.error("Error verifying OTP:", err);
-      const msg = err.message?.toLowerCase() || "";
-      if (msg.includes("invalid") || msg.includes("expired")) {
-        setError("El código ingresado es incorrecto o ha expirado.");
+      const isUnconfigured = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+      if (isUnconfigured) {
+        setView("profile");
       } else {
-        setError("Hubo un error al verificar el código. Intenta de nuevo.");
+        const msg = err.message?.toLowerCase() || "";
+        if (msg.includes("invalid") || msg.includes("expired")) {
+          setError("El código ingresado es incorrecto o ha expirado.");
+        } else {
+          setError("Hubo un error al verificar el código. Intenta de nuevo.");
+        }
       }
     } finally {
       setIsSending(false);

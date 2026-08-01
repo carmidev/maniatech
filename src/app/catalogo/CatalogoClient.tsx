@@ -1,533 +1,457 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef, useDeferredValue } from "react";
-import { ShoppingBasket, ArrowRight, Search, SlidersHorizontal, ChevronDown, ChevronLeft, ChevronRight, Menu, X, Flame, Zap, CupSoda, Star, Candy as CandyIcon, Cookie, Gift, Popcorn, Sparkles, Check } from "lucide-react";
+import { 
+  ShoppingBag, ArrowRight, Search, SlidersHorizontal, ChevronDown, 
+  Menu, X, Zap, Headphones, Mouse, Keyboard, Video, Mic, HardDrive, 
+  Gamepad2, Sparkles, Filter, RotateCcw, CheckCircle2, ShieldCheck, MapPin
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LollipopLogo } from "@/components/LollipopLogo";
 import { ProductCard } from "@/components/ProductCard";
-import { CANDIES, Candy } from "@/app/mock-data";
+import { Candy } from "@/app/mock-data";
 import { useCart } from "@/context/CartContext";
 import { CartDrawer } from "@/components/CartDrawer";
 import Link from "next/link";
-
 import { ProductModal } from "@/components/ProductModal";
 import { Footer } from "@/components/Footer";
-import { getImagePath } from "@/utils/imagePath";
-import { DolceButton } from "@/components/DolceButton";
 import { FloatingCart } from "@/components/FloatingCart";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
-import { getProductsWithInventory } from './actions';
+import { useRouter, useSearchParams } from "next/navigation";
+import { getImagePath } from "@/utils/imagePath";
 
+// Categorías del ecosistema Mania Tech
+const CATEGORIES = [
+  { id: "all", label: "Todo el Catálogo", icon: Sparkles },
+  { id: "audifonos", label: "Audífonos & Audio", icon: Headphones },
+  { id: "mouses", label: "Mouses & Mousepads", icon: Mouse },
+  { id: "teclados", label: "Teclados Mecánicos", icon: Keyboard },
+  { id: "streaming", label: "Cámaras & Streaming", icon: Video },
+  { id: "microfonos", label: "Micrófonos & Mixers", icon: Mic },
+  { id: "almacenamiento", label: "Almacenamiento SSD", icon: HardDrive },
+  { id: "controles", label: "Mandos & Controles", icon: Gamepad2 },
+];
+
+// Marcas aliadas
+const BRANDS = [
+  "Todas las Marcas",
+  "Logitech G",
+  "Razer",
+  "Redragon",
+  "Fantech",
+  "Corsair",
+  "Maono",
+  "Hollyland",
+  "Sony",
+  "Kingston"
+];
 
 export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Parámetros de URL iniciales
+  const initialCategoryParam = searchParams.get("cat") || "all";
+  const initialSearchParam = searchParams.get("search") || "";
+
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState(initialCategoryParam);
+  const [selectedBrand, setSelectedBrand] = useState("Todas las Marcas");
+  const [searchQuery, setSearchQuery] = useState(initialSearchParam);
   const deferredSearchQuery = useDeferredValue(searchQuery);
   const [sortBy, setSortBy] = useState("relevance");
+  const [maxPriceFilter, setMaxPriceFilter] = useState<number>(300);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Candy | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const ITEMS_PER_PAGE = 24;
 
-
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const sortDropdownRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const handleScroll = (direction: "left" | "right") => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 250;
-      scrollContainerRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
-    }
-  };
-
-  const handleOpenCart = () => {
-    setIsCartOpen(true);
-  };
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<"golosinas" | "cafe">("golosinas");
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeCategory, deferredSearchQuery, sortBy, activeSection]);
-  const [selectedProduct, setSelectedProduct] = useState<Candy | null>(null);
   const { totalItems } = useCart();
 
-  // Local storage logic moved to checkout page
+  // Actualizar filtros si cambia el parámetro de la URL
+  useEffect(() => {
+    const cat = searchParams.get("cat");
+    if (cat) setActiveCategory(cat);
+    const search = searchParams.get("search");
+    if (search) setSearchQuery(search);
+  }, [searchParams]);
 
-  const categories = [
-    { id: "all", label: "Todos", icon: "⭐" },
-    { id: "chocolates", label: "Chocolates", icon: "🍪" },
-    { id: "gomitas", label: "Gomitas", icon: "🧬" },
-    { id: "acidos", label: "Ácidos", icon: "⚡" },
-    { id: "picantes", label: "Picantes", icon: "🔥" },
-    { id: "galletas", label: "Galletas", icon: "🍪" },
-    { id: "snacks", label: "Snacks", icon: "🍿" },
-    { id: "bebidas", label: "Bebidas", icon: "🥤" },
-    { id: "juguetes", label: "Juguetes", icon: "🎁" },
-    { id: "chicles", label: "Chicles", icon: "🍬" },
-    { id: "caramelos", label: "Caramelos", icon: "🍬" },
-    { id: "sin azucar", label: "Sin Ázucar", icon: "🍃" },
-    { id: "lo_mas_vendido", label: "Lo más vendido", icon: "✨" },
-    { id: "nuevo", label: "Nuevo", icon: "✨" },
-  ];
+  // Reset de página cuando cambian los filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, selectedBrand, deferredSearchQuery, sortBy, maxPriceFilter]);
 
-  const normalizeCategory = (cat: string | string[] | null): string[] => {
-    if (!cat) return ["lo_mas_vendido"];
-    const cats = Array.isArray(cat) ? cat : [cat];
-    return cats.map(c =>
-      String(c)
-        .toLowerCase()
-        .trim()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace("pikantes", "picantes")
-        .replace("tendencias", "lo_mas_vendido")
-        .replace("top", "lo_mas_vendido")
-        .replace("lo mas vendido", "lo_mas_vendido")
-        .replace("viral", "nuevo")
-    );
+  // Filtrado y ordenamiento de productos
+  const filteredProducts = useMemo(() => {
+    return initialProducts.filter((product) => {
+      // 1. Filtrado por categoría
+      if (activeCategory !== "all") {
+        const prodCats = Array.isArray(product.category) ? product.category : [product.category];
+        const hasCat = prodCats.some(
+          c => String(c).toLowerCase().trim() === activeCategory.toLowerCase().trim()
+        );
+        if (!hasCat) return false;
+      }
+
+      // 2. Filtrado por marca
+      if (selectedBrand !== "Todas las Marcas") {
+        const brandMatch = (product.flavor || product.variant || "").toLowerCase().includes(selectedBrand.toLowerCase()) ||
+                           product.name.toLowerCase().includes(selectedBrand.toLowerCase());
+        if (!brandMatch) return false;
+      }
+
+      // 3. Filtrado por precio máximo
+      if (product.price > maxPriceFilter) {
+        return false;
+      }
+
+      // 4. Búsqueda por texto (nombre, descripción, marca)
+      if (deferredSearchQuery.trim()) {
+        const query = deferredSearchQuery.toLowerCase().trim();
+        const inName = product.name.toLowerCase().includes(query);
+        const inDesc = product.description.toLowerCase().includes(query);
+        const inBrand = (product.flavor || product.variant || "").toLowerCase().includes(query);
+        if (!inName && !inDesc && !inBrand) return false;
+      }
+
+      return true;
+    }).sort((a, b) => {
+      if (sortBy === "price-low") return a.price - b.price;
+      if (sortBy === "price-high") return b.price - a.price;
+      if (sortBy === "popular") return (b.stock || 0) - (a.stock || 0);
+      return 0; // relevancia por defecto
+    });
+  }, [initialProducts, activeCategory, selectedBrand, maxPriceFilter, deferredSearchQuery, sortBy]);
+
+  // Paginación
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE) || 1;
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+
+  const handleResetFilters = () => {
+    setActiveCategory("all");
+    setSelectedBrand("Todas las Marcas");
+    setSearchQuery("");
+    setSortBy("relevance");
+    setMaxPriceFilter(300);
   };
-
-  // Aplicar normalización a los datos mock iniciales para que sean coherentes con la DB
-  const normalizedMockCandies = CANDIES.map(c => ({
-    ...c,
-    category: normalizeCategory(c.category)
-  }));
-
-  const [candiesList, setCandiesList] = useState<Candy[]>(initialProducts);
-
-  const filteredCandies = candiesList.filter((c) => {
-    const productCategories = normalizeCategory(c.category);
-    const matchesCategory = activeCategory === "all" ||
-      productCategories.includes(activeCategory) ||
-      (activeCategory === "nuevo" && (productCategories.includes("nuevo") || c.badge === "nuevo")) ||
-      (activeCategory === "lo_mas_vendido" && (productCategories.includes("lo_mas_vendido") || c.badge === "bestseller"));
-    const matchesSearch = c.name.toLowerCase().includes(deferredSearchQuery.toLowerCase()) ||
-      c.description.toLowerCase().includes(deferredSearchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
-  const SORT_OPTIONS = [
-    { id: "relevance", label: "Relevancia" },
-    { id: "price_asc", label: "Precio más bajo" },
-    { id: "price_desc", label: "Precio más alto" },
-    { id: "name", label: "Nombre (A-Z)" },
-    { id: "brand", label: "Marca (A-Z)" },
-  ];
-
-  const getPriorityScore = (c: Candy) => {
-    if (c.badge === "top") return 2;
-    if (c.badge === "nuevo" || c.badge === "viral") return 1;
-    const cats = Array.isArray(c.category) ? c.category : [c.category];
-    const safeCats = cats.map(cat => (cat || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim());
-    if (safeCats.includes("top") || safeCats.includes("tendencias") || safeCats.includes("lo mas vendido") || safeCats.includes("lo_mas_vendido") || safeCats.includes("bestseller")) return 2;
-    if (safeCats.includes("nuevo") || safeCats.includes("viral")) return 1;
-    return 0;
-  };
-
-  const sortedCandies = [...filteredCandies].sort((a, b) => {
-    if (sortBy === "price_asc") {
-      const diff = Number(a.price || 0) - Number(b.price || 0);
-      return diff !== 0 ? diff : a.name.localeCompare(b.name);
-    }
-    if (sortBy === "price_desc") {
-      const diff = Number(b.price || 0) - Number(a.price || 0);
-      return diff !== 0 ? diff : a.name.localeCompare(b.name);
-    }
-    if (sortBy === "name") return a.name.localeCompare(b.name);
-    if (sortBy === "brand") return (a.name.split(" ")[0] || "").localeCompare(b.name.split(" ")[0] || "");
-
-    // Default: relevance
-    const scoreA = getPriorityScore(a);
-    const scoreB = getPriorityScore(b);
-    return scoreB - scoreA;
-  });
-
-  const coffeeItems: Candy[] = [
-    { id: "cafe1", name: "Menú Café", description: "Explora nuestra variedad de cafés preparados con granos seleccionados.", price: 0, images: ["/images/cafe 1.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
-    { id: "cafe2", name: "Menú Café", description: "Disfruta de nuestras especialidades de la casa en un ambiente acogedor.", price: 0, images: ["/images/cafe 2.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
-    { id: "cafe3", name: "Menú Café", description: "Acompaña tu café con nuestra deliciosa selección de golosinas.", price: 0, images: ["/images/cafe 3.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
-    { id: "cafe4", name: "Menú Café", description: "El complemento perfecto para tu momento Dolce.", price: 0, images: ["/images/cafe 4.jpeg"], category: ["cafe"], stock: 99, badge: "menu", ownerReview: "" },
-  ];
-
-  const displayedProducts = activeSection === 'cafe' ? coffeeItems : sortedCandies;
-  const totalPages = Math.ceil(displayedProducts.length / ITEMS_PER_PAGE);
-  const paginatedProducts = displayedProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-[#f8f6f6]">
-
-      {/* ── NAVBAR PÍLDORA FLOTANTE (REDUCCIÓN EXTREMA PREVENCIÓN OVERFLOW) ── */}
-      <div className="fixed top-4 inset-x-0 z-[99] flex justify-center pointer-events-none px-3 sm:px-6 lg:px-0">
-        <nav className="pointer-events-auto w-full lg:w-max lg:min-w-[740px] max-w-4xl bg-white/95 backdrop-blur-xl rounded-full shadow-xl shadow-black/10 h-[58px] lg:h-20 flex items-center justify-between border border-white/60 px-3 sm:px-5 lg:px-8">
-          <Link href="/" className="flex items-center gap-1 md:gap-2 cursor-pointer p-0 relative shrink-0">
-            {/* Logo Móvil - Escalado para contrarrestar el padding transparente de la imagen */}
-            <div className="relative lg:hidden w-[48px] h-[48px] flex items-center justify-center shrink-0 -ml-1">
-              <img
-                src={getImagePath("/images/espiraldolce-con-nombre.png")}
-                alt="Dolce Candy Oficial"
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-[2px] w-[118px] h-[118px] max-w-none object-contain pointer-events-none drop-shadow-sm"
-              />
-            </div>
-
-            {/* Logo Desktop */}
-            <div className="hidden lg:flex items-center shrink-0">
-              <div className="relative w-[52px] h-[52px] flex items-center justify-center -ml-3">
-                <img
-                  src={getImagePath("/images/espiraldolce-con-nombre.png")}
-                  alt="Dolce Candy Oficial"
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-[3px] w-[175px] h-[175px] max-w-none object-contain pointer-events-none drop-shadow-sm"
-                />
-              </div>
-            </div>
+    <div className="min-h-screen bg-[#0B0B0C] text-white selection:bg-[#8A2BE2] selection:text-white font-body relative overflow-x-hidden">
+      
+      {/* 1. HEADER GLASSMORPHISM */}
+      <header className="sticky top-0 z-50 bg-[#0B0B0C]/90 backdrop-blur-xl border-b border-white/10 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between gap-4">
+          
+          {/* Logo Mania Tech Oficial */}
+          <Link href="/" className="flex items-center gap-3 shrink-0 group py-1">
+            <img
+              src={getImagePath("/images/logo maniatech.png")}
+              alt="Mania Tech Logo"
+              className="h-16 sm:h-[96px] w-auto object-contain group-hover:scale-110 transition-transform duration-300 filter drop-shadow-[0_0_16px_rgba(138,43,226,0.5)]"
+            />
           </Link>
 
-          <div className="flex items-center gap-1 sm:gap-4 lg:gap-8 shrink-0">
-            <div className="hidden lg:flex items-center gap-7 font-display text-sm tracking-wide">
-              <Link href="/catalogo" className="text-primary">
-                Catálogo
-              </Link>
-              <Link href="/#lab" className="text-gray-600 hover:text-primary transition-colors">
-                Candy Reviews
-              </Link>
-              <Link href="/#ubicaciones" className="text-gray-600 hover:text-primary transition-colors">
-                Ubicaciones
-              </Link>
-            </div>
-
-            <div className="flex items-center gap-0.5 sm:gap-2 lg:gap-3">
-              <Link
-                href="/"
-                className="flex bg-brand-red text-white px-4 sm:px-4 lg:px-5 py-2 lg:py-2.5 rounded-full font-black text-[11px] lg:text-sm hover:scale-105 transition-all shadow-md shadow-brand-red/30 items-center gap-1 sm:gap-1 shrink-0"
-              >
-                <span className="hidden lg:inline">Volver al Inicio</span>
-                <span className="lg:hidden uppercase tracking-tighter">Inicio</span>
-                <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4 stroke-[3]" />
-              </Link>
+          {/* Buscador Central */}
+          <div className="hidden md:flex flex-1 max-w-md relative mx-4">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar por nombre, modelo o marca (ej. G502 X, Kumara)..."
+              className="w-full bg-[#141416] border border-white/10 rounded-full py-2.5 pl-11 pr-10 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#8A2BE2] focus:ring-1 focus:ring-[#8A2BE2] transition-all"
+            />
+            <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+            {searchQuery && (
               <button
-                onClick={handleOpenCart}
-                className="relative p-2 sm:p-2.5 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
               >
-                <ShoppingBasket className="w-6 h-6 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-gray-700" />
-                {totalItems > 0 && (
-                  <span className="absolute top-0 right-0 bg-primary text-white text-[10px] lg:text-[12px] font-black w-[18px] h-[18px] lg:w-5 lg:h-5 flex items-center justify-center rounded-full border-2 border-white">
-                    {totalItems}
-                  </span>
-                )}
+                <X className="w-4 h-4" />
               </button>
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0"
-                aria-label="Toggle Menu"
-              >
-                {isMobileMenuOpen ? <X className="w-6 h-6 sm:w-6 sm:h-6 text-gray-900" /> : <Menu className="w-6 h-6 sm:w-6 sm:h-6 text-gray-900" />}
-              </button>
-            </div>
-          </div>
-        </nav>
-
-        {/* MENÚ MÓVIL DESPLEGABLE */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-              className="absolute top-[calc(100%+10px)] left-0 w-full bg-white/95 backdrop-blur-3xl rounded-[24px] shadow-xl shadow-black/10 border border-black/5 overflow-hidden md:hidden flex flex-col p-5 gap-4 pointer-events-auto"
-            >
-              <nav className="flex flex-col gap-3 text-center">
-                <Link
-                  href="/"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
-                >
-                  Inicio
-                </Link>
-                <Link
-                  href="/#lab"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
-                >
-                  Candy Reviews
-                </Link>
-                <Link
-                  href="/#ubicaciones"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-[15px] font-semibold tracking-wide text-brand-darkgray hover:text-primary transition-colors py-1"
-                >
-                  Ubicaciones
-                </Link>
-              </nav>
-              <Link
-                href="/"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-brand-red text-white w-full py-3 rounded-full font-black text-[14px] tracking-wide hover:scale-105 active:scale-95 transition-all text-center flex items-center justify-center gap-1.5 shadow-md shadow-brand-red/30 mt-1"
-              >
-                Volver al Inicio <ArrowRight className="w-4 h-4 stroke-[3]" />
-              </Link>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* ── CONTENIDO ── */}
-      <main className="max-w-7xl mx-auto px-6 pt-28 pb-20">
-        <div className="flex flex-col gap-6">
-
-          {/* Header, Section Selector & Search */}
-          <div className="flex flex-col gap-4">
-            <motion.h1
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-4xl md:text-5xl font-display-main font-bold tracking-main text-brand-darkgray"
-            >
-              Catálogo <span className="text-primary text-glow-sm">Dolce Candy</span>
-            </motion.h1>
-
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-3">
-              {/* Section Selector (Píldora) - Extremo Izquierdo */}
-              <div className="bg-white p-1.5 rounded-full shadow-lg shadow-black/5 border border-slate-100 flex gap-1 w-fit">
-                <button
-                  onClick={() => setActiveSection("golosinas")}
-                  className={`px-6 md:px-8 py-2.5 rounded-full font-black text-xs md:text-sm transition-all duration-300 ${activeSection === 'golosinas' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-slate-600'}`}
-                >
-                  Golosinas
-                </button>
-                <button
-                  onClick={() => setActiveSection("cafe")}
-                  className={`px-6 md:px-8 py-2.5 rounded-full font-black text-xs md:text-sm transition-all duration-300 ${activeSection === 'cafe' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-slate-600'}`}
-                >
-                  Café
-                </button>
-              </div>
-
-              {/* Buscador - Extremo Derecho */}
-              {activeSection === 'golosinas' && (
-                <div className="w-full md:w-80">
-                  <div className="relative group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
-                    <input
-                      type="text"
-                      placeholder="Buscar golosinas..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-11 pr-12 py-4 rounded-[2rem] bg-white border border-slate-200 shadow-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/5 outline-none transition-all font-bold text-base md:text-sm"
-                    />
-                    <AnimatePresence>
-                      {searchQuery && (
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-4">
-                          <motion.button
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            transition={{ duration: 0.15 }}
-                            onClick={() => setSearchQuery("")}
-                            className="p-1 text-slate-400 hover:text-brand-red hover:bg-brand-red/5 rounded-full transition-all active:scale-90"
-                            aria-label="Limpiar búsqueda"
-                          >
-                            <X className="w-4 h-4" />
-                          </motion.button>
-                        </div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {activeSection === 'cafe' && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-brand-darkgray/60 font-body text-lg flex items-center gap-2 mt-2"
-              >
-                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                ¡Disfrútalos directamente en nuestra tienda!
-              </motion.p>
             )}
           </div>
 
-          {/* Categorías Horizontales */}
-          {activeSection === 'golosinas' && (
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-display text-brand-darkgray uppercase tracking-widest">Categorías</h3>
-                </div>
-              </div>
+          {/* Acciones & Carrito */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2.5 rounded-full bg-[#141416] border border-white/10 hover:border-[#8A2BE2]/50 transition-all text-white group"
+              aria-label="Carrito de compras"
+            >
+              <ShoppingBag className="w-5 h-5 text-[#8A2BE2] group-hover:scale-110 transition-transform" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#00FF00] text-[#0B0B0C] font-black text-xs flex items-center justify-center shadow-lg shadow-[#00FF00]/50 animate-bounce">
+                  {totalItems}
+                </span>
+              )}
+            </button>
 
-              <div className="relative group">
-                {/* Indicador de scroll - Izquierda */}
-                <button
-                  onClick={() => handleScroll("left")}
-                  className="absolute left-[-12px] top-1/2 -translate-y-[60%] z-10 flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-full shadow-md text-brand-darkgray hover:text-brand-red transition-all active:scale-90"
-                >
-                  <ChevronLeft className="w-5 h-5 pr-[2px]" />
-                </button>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden p-2.5 rounded-full bg-[#141416] border border-white/10 text-white"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
 
-                {/* Indicador de scroll - Derecha */}
-                <button
-                  onClick={() => handleScroll("right")}
-                  className="absolute right-[-12px] top-1/2 -translate-y-[60%] z-10 flex items-center justify-center w-8 h-8 bg-white border border-slate-200 rounded-full shadow-md text-brand-darkgray hover:text-brand-red transition-all active:scale-90"
-                >
-                  <ChevronRight className="w-5 h-5 pl-[2px]" />
-                </button>
+        </div>
 
-                <div
-                  ref={scrollContainerRef}
-                  className="flex overflow-x-auto py-2 -mx-6 px-6 gap-3 md:gap-6 scrollbar-none scroll-smooth flex-nowrap items-start"
-                >
-                  {[
-                    { key: "all", label: "Todos", icon: <Star className="w-6 h-6" />, color: "bg-slate-100 text-slate-600" },
-                    { key: "lo_mas_vendido", label: "Lo más vendido", icon: <Star className="w-6 h-6" fill="currentColor" />, color: "bg-brand-lightbrown/20 text-brand-brown" },
-                    { key: "nuevo", label: "Nuevo", icon: <Sparkles className="w-6 h-6" />, color: "bg-brand-blue/20 text-brand-blue" },
-                    { key: "chocolates", label: "Chocolates", icon: <Cookie className="w-6 h-6" />, color: "bg-brand-brown/10 text-brand-brown" },
-                    { key: "gomitas", label: "Gomitas", icon: <CandyIcon className="w-6 h-6" />, color: "bg-accent/10 text-accent" },
-                    { key: "acidos", label: "Ácidos", icon: <Zap className="w-6 h-6" />, color: "bg-secondary/10 text-secondary" },
-                    { key: "picantes", label: "Picantes", icon: <Flame className="w-6 h-6" />, color: "bg-brand-darkred/10 text-brand-darkred" },
-                    { key: "galletas", label: "Galletas", icon: <Cookie className="w-6 h-6" />, color: "bg-orange-100 text-orange-600" },
-                    { key: "snacks", label: "Snacks", icon: <Popcorn className="w-6 h-6" />, color: "bg-yellow-100 text-yellow-600" },
-                    { key: "bebidas", label: "Bebidas", icon: <CupSoda className="w-6 h-6" />, color: "bg-brand-blue/10 text-brand-blue" },
-                    { key: "caramelos", label: "Caramelos", icon: <CandyIcon className="w-6 h-6" />, color: "bg-orange-100 text-orange-500" },
-                    { key: "chicles", label: "Chicles", icon: <CandyIcon className="w-6 h-6" />, color: "bg-pink-100 text-pink-600" },
-                    { key: "juguetes", label: "Juguetes", icon: <Gift className="w-6 h-6" />, color: "bg-purple-100 text-purple-600" },
-                    { key: "sin azucar", label: "Sin Ázucar", icon: <Sparkles className="w-6 h-6" />, color: "bg-green-100 text-green-600" },
-                  ].map((cat) => (
-                    <button
-                      key={cat.key}
-                      onClick={() => setActiveCategory(cat.key)}
-                      className="flex flex-col items-center gap-2 md:gap-3 shrink-0 transition-all group/cat"
-                    >
-                      <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center border-2 transition-all p-1 ${activeCategory === cat.key ? "border-brand-red scale-110 shadow-lg shadow-brand-red/10" : "border-slate-100 group-hover/cat:border-brand-red/30"}`}>
-                        <div className={`w-full h-full rounded-full flex items-center justify-center transition-colors ${activeCategory === cat.key ? "bg-brand-red text-white" : cat.color}`}>
-                          {cat.icon}
-                        </div>
-                      </div>
-                      <span className={`text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${activeCategory === cat.key ? "text-brand-red" : "text-slate-500 group-hover/cat:text-brand-red"}`}>
-                        {cat.label}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Dropdown Ordenar - debajo del slider, alineado a la izquierda */}
-          {activeSection === 'golosinas' && (
-            <div className="relative w-fit" ref={sortDropdownRef}>
+        {/* Buscador Móvil */}
+        <div className="md:hidden px-4 pb-3">
+          <div className="relative w-full">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar en el catálogo..."
+              className="w-full bg-[#141416] border border-white/10 rounded-full py-2 pl-10 pr-8 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#8A2BE2]"
+            />
+            <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            {searchQuery && (
               <button
-                onClick={() => setIsSortOpen(!isSortOpen)}
-                className="flex items-center gap-2 px-5 py-3 rounded-[2rem] bg-white border border-slate-200 shadow-sm hover:border-primary/40 transition-all font-bold text-sm text-slate-600 whitespace-nowrap"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
               >
-                <SlidersHorizontal className="w-4 h-4 text-primary" />
-                <span>Ordenar: {SORT_OPTIONS.find(o => o.id === sortBy)?.label || "Relevancia"}</span>
-                <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isSortOpen ? "rotate-180" : ""}`} />
+                <X className="w-3.5 h-3.5" />
               </button>
+            )}
+          </div>
+        </div>
+      </header>
 
-              <AnimatePresence>
-                {isSortOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute top-[calc(100%+8px)] left-0 z-50 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/10 border border-white/60 p-1.5 min-w-[200px]"
-                  >
-                    {SORT_OPTIONS.map((opt) => (
-                      <button
-                        key={opt.id}
-                        onClick={() => { setSortBy(opt.id); setIsSortOpen(false); }}
-                        className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${sortBy === opt.id
-                            ? "bg-primary/10 text-primary"
-                            : "text-slate-600 hover:bg-slate-50"
-                          }`}
-                      >
-                        {opt.label}
-                        {sortBy === opt.id && <Check className="w-4 h-4 text-primary" />}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
-
-          {/* Grid de productos */}
+      {/* Menú Móvil Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
           <motion.div
-            layout
-            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="lg:hidden fixed inset-x-0 top-28 bg-[#0B0B0C]/95 backdrop-blur-2xl border-b border-white/10 z-40 px-6 py-6 space-y-4"
           >
-            <AnimatePresence mode="popLayout">
-              {paginatedProducts.map((candy) => (
+            <Link href="/" className="block text-gray-300 font-semibold py-2">
+              ← Volver al Inicio
+            </Link>
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-gray-400">
+              <span className="text-[#00FF00] font-semibold">🟢 6 Meses de Garantía en Chacao</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 2. HERO / CABECERA DEL CATÁLOGO */}
+      <section className="relative py-8 sm:py-12 bg-gradient-to-b from-[#141416] to-[#0B0B0C] border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8A2BE2]/10 border border-[#8A2BE2]/30 text-[#8A2BE2] text-xs font-semibold mb-3">
+                <Zap className="w-3.5 h-3.5" /> Ecosistema Hardware & Gaming Venezuela
+              </div>
+              <h1 className="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+                Catálogo de Productos
+              </h1>
+              <p className="text-gray-400 text-sm mt-2 max-w-xl">
+                Explora el inventario de periféricos, mandos y herramientas para creadores. Precios al mayor disponibles desde 3 piezas.
+              </p>
+            </div>
+
+            {/* Badges de Garantía */}
+            <div className="flex items-center gap-4 text-xs font-semibold text-gray-300">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#141416] border border-white/10">
+                <ShieldCheck className="w-4 h-4 text-[#8A2BE2]" />
+                <span>6 Meses de Garantía</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#141416] border border-white/10">
+                <MapPin className="w-4 h-4 text-[#00FF00]" />
+                <span>Tienda en Chacao</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Slider de Categorías (Horizontal Scrollable) */}
+          <div className="mt-8 pt-6 border-t border-white/5">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none snap-x">
+              {CATEGORIES.map((cat) => {
+                const Icon = cat.icon;
+                const isActive = activeCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`snap-start shrink-0 px-4 py-2.5 rounded-xl font-display font-semibold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer ${
+                      isActive
+                        ? "bg-[#8A2BE2] text-white shadow-lg shadow-[#8A2BE2]/30 border border-[#8A2BE2]"
+                        : "bg-[#141416] text-gray-300 hover:bg-[#1C1C20] border border-white/5 hover:border-white/15"
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-[#8A2BE2]"}`} />
+                    <span>{cat.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 3. BARRA DE FILTROS & BÚSQUEDA SECUNDARIA */}
+      <section className="py-4 bg-[#0B0B0C] border-b border-white/5 sticky top-20 z-30 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            
+            {/* Filtros Rápidos (Marcas & Ordenamiento) */}
+            <div className="flex items-center gap-3 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+              
+              {/* Select de Marcas */}
+              <div className="relative shrink-0">
+                <select
+                  value={selectedBrand}
+                  onChange={(e) => setSelectedBrand(e.target.value)}
+                  className="bg-[#141416] border border-white/10 rounded-xl py-2 px-3 pr-8 text-xs text-gray-200 font-semibold focus:outline-none focus:border-[#8A2BE2] appearance-none cursor-pointer"
+                >
+                  {BRANDS.map((brand, idx) => (
+                    <option key={idx} value={brand} className="bg-[#141416] text-white">
+                      {brand}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-gray-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+
+              {/* Select de Ordenamiento */}
+              <div className="relative shrink-0">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-[#141416] border border-white/10 rounded-xl py-2 px-3 pr-8 text-xs text-gray-200 font-semibold focus:outline-none focus:border-[#8A2BE2] appearance-none cursor-pointer"
+                >
+                  <option value="relevance" className="bg-[#141416] text-white">Ordenar por: Relevancia</option>
+                  <option value="price-low" className="bg-[#141416] text-white">Precio: Menor a Mayor</option>
+                  <option value="price-high" className="bg-[#141416] text-white">Precio: Mayor a Menor</option>
+                  <option value="popular" className="bg-[#141416] text-white">Más Populares / Stock</option>
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-gray-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+
+              {/* Botón de Reset Filtros */}
+              {(activeCategory !== "all" || selectedBrand !== "Todas las Marcas" || searchQuery || sortBy !== "relevance") && (
+                <button
+                  onClick={handleResetFilters}
+                  className="px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Limpiar</span>
+                </button>
+              )}
+
+            </div>
+
+            {/* Contador de Resultados */}
+            <div className="text-xs text-gray-400 font-semibold w-full sm:w-auto text-right">
+              Mostrando <span className="text-white font-bold">{filteredProducts.length}</span> productos
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 4. GRID DE PRODUCTOS */}
+      <section className="py-12 bg-[#0B0B0C] min-h-[500px]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {paginatedProducts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {paginatedProducts.map((product) => (
                 <ProductCard
-                  key={candy.id}
-                  candy={candy}
-                  onOpenDetails={(c) => setSelectedProduct(c)}
+                  key={product.id}
+                  candy={product}
+                  onOpenDetails={(candy) => setSelectedProduct(candy)}
                 />
               ))}
-            </AnimatePresence>
-          </motion.div>
+            </div>
+          ) : (
+            /* Estado Sin Resultados */
+            <div className="text-center py-20 bg-[#141416] rounded-3xl border border-white/5 max-w-xl mx-auto p-8">
+              <div className="w-16 h-16 rounded-2xl bg-[#8A2BE2]/10 flex items-center justify-center text-[#8A2BE2] mx-auto mb-4 border border-[#8A2BE2]/20">
+                <Search className="w-8 h-8" />
+              </div>
+              <h3 className="font-display font-bold text-2xl text-white mb-2">
+                No encontramos productos con estos filtros
+              </h3>
+              <p className="text-gray-400 text-sm mb-6">
+                Intenta ajustar la búsqueda, elegir otra categoría o seleccionar "Todas las Marcas".
+              </p>
+              <button
+                onClick={handleResetFilters}
+                className="px-6 py-3 rounded-xl bg-[#8A2BE2] text-white font-display font-bold text-sm hover:bg-[#6441A5] transition-all shadow-lg shadow-[#8A2BE2]/30"
+              >
+                Restablecer Filtros
+              </button>
+            </div>
+          )}
 
           {/* Paginación */}
           {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-10">
+            <div className="mt-14 flex items-center justify-center gap-2">
               <button
-                onClick={() => {
-                  setCurrentPage(p => Math.max(1, p - 1));
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
                 disabled={currentPage === 1}
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                className="px-4 py-2 rounded-xl bg-[#141416] border border-white/10 text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#1C1C20] text-white"
               >
-                <ChevronLeft className="w-5 h-5" />
+                Anterior
               </button>
-              
-              <div className="flex items-center px-4">
-                <span className="text-sm font-bold text-slate-600">Página {currentPage} de {totalPages}</span>
+
+              <div className="flex items-center gap-1.5 px-3">
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`w-8 h-8 rounded-lg text-xs font-bold font-mono transition-all ${
+                      currentPage === i + 1
+                        ? "bg-[#8A2BE2] text-white shadow-md"
+                        : "bg-[#141416] text-gray-400 hover:text-white border border-white/5"
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
               </div>
 
               <button
-                onClick={() => {
-                  setCurrentPage(p => Math.min(totalPages, p + 1));
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                className="px-4 py-2 rounded-xl bg-[#141416] border border-white/10 text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#1C1C20] text-white"
               >
-                <ChevronRight className="w-5 h-5" />
+                Siguiente
               </button>
             </div>
           )}
+
         </div>
-      </main>
+      </section>
 
-
+      {/* 5. FOOTER & COMPONENTES FLOTANTES */}
       <Footer />
-      <ProductModal
-        candy={selectedProduct}
-        allProducts={[...candiesList, ...coffeeItems]}
-        isOpen={!!selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-        onNavigateToGolosinas={(cat) => {
-          setActiveSection("golosinas");
-          if (cat) setActiveCategory(cat);
-          setSelectedProduct(null);
-        }}
-      />
+
+      <FloatingCart onClick={() => setIsCartOpen(true)} />
 
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
-        onCheckout={() => { router.push('/checkout'); }}
+        onCheckout={() => { setIsCartOpen(false); router.push('/checkout'); }}
       />
 
-      <FloatingCart onClick={handleOpenCart} />
+      {selectedProduct && (
+        <ProductModal
+          candy={selectedProduct}
+          isOpen={!!selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
+
     </div>
   );
 }

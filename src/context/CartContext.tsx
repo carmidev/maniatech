@@ -26,7 +26,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   // LocalStorage persistence
   useEffect(() => {
-    const savedCart = localStorage.getItem('dolce_cart');
+    const savedCart = localStorage.getItem('maniatech_cart');
     if (savedCart) {
       try {
         setItems(JSON.parse(savedCart));
@@ -37,7 +37,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('dolce_cart', JSON.stringify(items));
+    localStorage.setItem('maniatech_cart', JSON.stringify(items));
   }, [items]);
 
   const addToCart = (candy: Candy) => {

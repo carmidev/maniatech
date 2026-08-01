@@ -6,12 +6,19 @@ import { AuthProvider } from "@/context/AuthContext";
 import { WhatsAppWidget } from "@/components/WhatsAppWidget";
 import SmoothScroll from "@/components/SmoothScroll";
 
-import { Pacifico } from "next/font/google";
+import { Outfit, Pacifico } from "next/font/google";
 
 const pacifico = Pacifico({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-script",
+});
+
+const outfitNumbers = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit-numbers",
+  weight: ["400", "600", "700", "800"],
+  display: "swap",
 });
 
 const cocogooseMain = localFont({
@@ -35,16 +42,9 @@ const interDisplay = localFont({
   display: "swap",
 });
 
-const outfitNumbers = localFont({
-  src: "../../public/Fonts/outfit-numbers.ttf",
-  variable: "--font-outfit-numbers",
-  weight: "600",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "Dolce Candy Boutique",
-  description: "Descubre los dulces más raros y deliciosos del mundo. Como un niño en una dulcería.",
+  title: "Mania Tech | E-Commerce Gaming, Hardware & Creadores",
+  description: "El ecosistema de hardware y periféricos más completo de Venezuela. Audífonos, mouses, teclados, cámaras y accesorios con 6 meses de garantía local.",
   icons: {
     icon: "/images/Favicondc.png",
   },

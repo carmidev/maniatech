@@ -10,36 +10,41 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#e81e25", // Rojo Principal (Vibrant)
+          DEFAULT: "#8A2BE2", // Morado Twitch / Neón
+          dark: "#6441A5",
           foreground: "#FFFFFF",
         },
-        secondary: {
-          DEFAULT: "#ea9000", // Ocre
-          foreground: "#FFFFFF",
+        dark: {
+          DEFAULT: "#0B0B0C", // Fondo principal
+          card: "#141416",     // Fondo de cards
+          hover: "#1F1F23",    // Hover de elementos
+          border: "#26262B",   // Bordes sutiles
         },
         accent: {
-          DEFAULT: "#ea6060", // Coral
-          foreground: "#1F2937",
+          green: "#00FF00",   // Verde Neón Razer (En Stock / Éxito)
+          red: "#FF0033",     // Rojo Neón (Ofertas / Hot Deals)
+          purple: "#8A2BE2",  // Morado Acento
         },
         brand: {
-          red: "#bd2926", // Rojo-Logo (Darker)
-          darkred: "#a50404", // Rojo oscuro
-          brown: "#633c32", // Marrón Osc.
-          lightbrown: "#9b6a59", // Marrón Claro
-          cream: "#eab8ac", // Crema
-          blue: "#86ccef", // Azul claro
-          darkgray: "#231f20", // Gris Oscuro
+          purple: "#6441A5",
+          neonPurple: "#8A2BE2",
+          neonGreen: "#00FF00",
+          neonRed: "#FF0033",
+          darkBg: "#0B0B0C",
+          cardBg: "#141416",
+          lightGray: "#E0E0E0",
+          muted: "#8E8E93",
         }
       },
       fontFamily: {
-        'display-main': ["var(--font-cocogoose-main)", "sans-serif"],
-        display: ["var(--font-cocogoose-titles)", "sans-serif"],
+        'display-main': ["var(--font-inter-display)", "sans-serif"],
+        display: ["var(--font-inter-display)", "sans-serif"],
         body: ["var(--font-inter-display)", "system-ui", "sans-serif"],
-        numbers: ["var(--font-outfit-numbers)", "sans-serif"],
+        numbers: ["var(--font-outfit-numbers)", "system-ui", "sans-serif"],
         script: ["var(--font-script)", "cursive"],
       },
       letterSpacing: {
-        main: '-0.05em', // -50pt en Illustrator equivale a -0.05em (tracking-main)
+        main: '-0.05em',
       },
       borderRadius: {
         "4xl": "2rem",
