@@ -2,11 +2,11 @@
 
 import { useState, useMemo, useEffect, useRef, useDeferredValue } from "react";
 import { 
-  ShoppingBag, ArrowRight, Search, SlidersHorizontal, ChevronDown, 
+  ShoppingCart, ArrowRight, Search, SlidersHorizontal, ChevronDown, 
   Menu, X, Zap, Headphones, Mouse, Keyboard, Video, Mic, HardDrive, 
   Gamepad2, Sparkles, Filter, RotateCcw, CheckCircle2, ShieldCheck, MapPin
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { ProductCard } from "@/components/ProductCard";
 import { Candy } from "@/app/mock-data";
 import { useCart } from "@/context/CartContext";
@@ -63,6 +63,41 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Candy | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/catalogo?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  // Referencia, estado y físicas de Framer Motion con gradientes dinámicos
+  const categoryConstraintsRef = useRef<HTMLDivElement>(null);
+  const categoryInnerRef = useRef<HTMLDivElement>(null);
+  const [dragWidth, setDragWidth] = useState(0);
+  const dragX = useMotionValue(0);
+  const [showLeftFade, setShowLeftFade] = useState(false);
+  const [showRightFade, setShowRightFade] = useState(true);
+
+  useEffect(() => {
+    const updateConstraints = () => {
+      if (categoryInnerRef.current && categoryConstraintsRef.current) {
+        const innerW = categoryInnerRef.current.scrollWidth;
+        const outerW = categoryConstraintsRef.current.offsetWidth;
+        const maxScroll = Math.max(0, innerW - outerW);
+        setDragWidth(maxScroll);
+        setShowRightFade(maxScroll > 10);
+      }
+    };
+    updateConstraints();
+    window.addEventListener("resize", updateConstraints);
+    return () => window.removeEventListener("resize", updateConstraints);
+  }, []);
+
+  useMotionValueEvent(dragX, "change", (latest) => {
+    setShowLeftFade(latest < -10);
+    setShowRightFade(latest > -dragWidth + 10);
+  });
 
   const ITEMS_PER_PAGE = 24;
 
@@ -146,16 +181,18 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between gap-4">
           
           {/* Logo Mania Tech Oficial */}
-          <Link href="/" className="flex items-center gap-3 shrink-0 group py-1">
+          <Link href="/" className="flex items-center gap-3 shrink-0 group py-2">
             <img
               src={getImagePath("/images/logo maniatech.png")}
               alt="Mania Tech Logo"
-              className="h-16 sm:h-[96px] w-auto object-contain group-hover:scale-110 transition-transform duration-300 filter drop-shadow-[0_0_16px_rgba(138,43,226,0.5)]"
+              loading="lazy"
+              decoding="async"
+              className="h-16 sm:h-20 w-auto object-contain group-hover:scale-105 transition-transform duration-300 filter drop-shadow-[0_0_16px_rgba(138,43,226,0.5)]"
             />
           </Link>
 
-          {/* Buscador Central */}
-          <div className="hidden md:flex flex-1 max-w-md relative mx-4">
+          {/* Buscador Central PC */}
+          <form onSubmit={handleSearchSubmit} className="hidden md:flex flex-1 max-w-md relative mx-4">
             <input
               type="text"
               value={searchQuery}
@@ -166,13 +203,30 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
             <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
             {searchQuery && (
               <button
+                type="button"
                 onClick={() => setSearchQuery("")}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
             )}
-          </div>
+          </form>
+
+          {/* Nav Links Desktop */}
+          <nav className="hidden lg:flex items-center gap-7 text-xs uppercase tracking-wider font-bold text-gray-300 mx-4">
+            <Link href="/catalogo" onClick={() => setActiveCategory("all")} className="hover:text-[#8A2BE2] transition-colors">
+              CATÁLOGO
+            </Link>
+            <button onClick={() => setActiveCategory("teclados")} className="hover:text-[#8A2BE2] transition-colors uppercase">
+              PC
+            </button>
+            <button onClick={() => setSearchQuery("apple")} className="hover:text-[#8A2BE2] transition-colors uppercase">
+              MANZANA
+            </button>
+            <button onClick={() => setActiveCategory("controles")} className="hover:text-[#8A2BE2] transition-colors uppercase">
+              JUEGOS
+            </button>
+          </nav>
 
           {/* Acciones & Carrito */}
           <div className="flex items-center gap-3">
@@ -181,7 +235,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
               className="relative p-2.5 rounded-full bg-[#141416] border border-white/10 hover:border-[#8A2BE2]/50 transition-all text-white group"
               aria-label="Carrito de compras"
             >
-              <ShoppingBag className="w-5 h-5 text-[#8A2BE2] group-hover:scale-110 transition-transform" />
+              <ShoppingCart className="w-5 h-5 text-[#8A2BE2] group-hover:scale-110 transition-transform" />
               {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#00FF00] text-[#0B0B0C] font-black text-xs flex items-center justify-center shadow-lg shadow-[#00FF00]/50 animate-bounce">
                   {totalItems}
@@ -199,27 +253,6 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
 
         </div>
 
-        {/* Buscador Móvil */}
-        <div className="md:hidden px-4 pb-3">
-          <div className="relative w-full">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar en el catálogo..."
-              className="w-full bg-[#141416] border border-white/10 rounded-full py-2 pl-10 pr-8 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#8A2BE2]"
-            />
-            <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-        </div>
       </header>
 
       {/* Menú Móvil Overlay */}
@@ -229,7 +262,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="lg:hidden fixed inset-x-0 top-28 bg-[#0B0B0C]/95 backdrop-blur-2xl border-b border-white/10 z-40 px-6 py-6 space-y-4"
+            className="lg:hidden fixed inset-x-0 top-24 bg-[#0B0B0C]/95 backdrop-blur-2xl border-b border-white/10 z-40 px-6 py-6 space-y-4 shadow-2xl"
           >
             <Link href="/" className="block text-gray-300 font-semibold py-2">
               ← Volver al Inicio
@@ -258,7 +291,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
             </div>
 
             {/* Badges de Garantía */}
-            <div className="flex items-center gap-4 text-xs font-semibold text-gray-300">
+            <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-gray-300">
               <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#141416] border border-white/10">
                 <ShieldCheck className="w-4 h-4 text-[#8A2BE2]" />
                 <span>6 Meses de Garantía</span>
@@ -270,27 +303,49 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
             </div>
           </div>
 
-          {/* Slider de Categorías (Horizontal Scrollable) */}
-          <div className="mt-8 pt-6 border-t border-white/5">
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none snap-x">
-              {CATEGORIES.map((cat) => {
-                const Icon = cat.icon;
-                const isActive = activeCategory === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={`snap-start shrink-0 px-4 py-2.5 rounded-xl font-display font-semibold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer ${
-                      isActive
-                        ? "bg-[#8A2BE2] text-white shadow-lg shadow-[#8A2BE2]/30 border border-[#8A2BE2]"
-                        : "bg-[#141416] text-gray-300 hover:bg-[#1C1C20] border border-white/5 hover:border-white/15"
-                    }`}
-                  >
-                    <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-[#8A2BE2]"}`} />
-                    <span>{cat.label}</span>
-                  </button>
-                );
-              })}
+          {/* Slider de Categorías (Físicas Framer Motion con Gradientes Dinámicos en Bordes) */}
+          <div ref={categoryConstraintsRef} className="mt-8 pt-6 border-t border-white/5 relative overflow-hidden">
+            {/* Indicadores Dinámicos de Desbordamiento (Fades laterales adaptativos) */}
+            <div
+              className={`pointer-events-none absolute left-0 top-6 bottom-0 w-12 bg-gradient-to-r from-[#0B0B0C] via-[#0B0B0C]/90 to-transparent z-10 transition-opacity duration-300 ${
+                showLeftFade ? "opacity-100" : "opacity-0"
+              }`}
+            />
+            <div
+              className={`pointer-events-none absolute right-0 top-6 bottom-0 w-16 bg-gradient-to-l from-[#0B0B0C] via-[#0B0B0C]/90 to-transparent z-10 transition-opacity duration-300 ${
+                showRightFade ? "opacity-100" : "opacity-0"
+              }`}
+            />
+
+            <div className="overflow-hidden w-full py-1 cursor-grab active:cursor-grabbing select-none">
+              <motion.div
+                ref={categoryInnerRef}
+                drag="x"
+                style={{ x: dragX }}
+                dragConstraints={{ left: -dragWidth, right: 0 }}
+                dragElastic={0.12}
+                dragTransition={{ power: 0.25, timeConstant: 250 }}
+                className="flex items-center gap-2.5 w-max"
+              >
+                {CATEGORIES.map((cat) => {
+                  const Icon = cat.icon;
+                  const isActive = activeCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={`shrink-0 px-4 py-2.5 rounded-xl font-display font-semibold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer select-none ${
+                        isActive
+                          ? "bg-[#8A2BE2] text-white shadow-lg shadow-[#8A2BE2]/30 border border-[#8A2BE2]"
+                          : "bg-[#141416] text-gray-300 hover:bg-[#1C1C20] border border-white/5 hover:border-white/15"
+                      }`}
+                    >
+                      <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-[#8A2BE2]"}`} />
+                      <span>{cat.label}</span>
+                    </button>
+                  );
+                })}
+              </motion.div>
             </div>
           </div>
 
@@ -363,7 +418,7 @@ export function CatalogoClient({ initialProducts }: { initialProducts: Candy[] }
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {paginatedProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
               {paginatedProducts.map((product) => (
                 <ProductCard
                   key={product.id}

@@ -66,7 +66,7 @@ export const CountryCodeSelect = ({ value, onChange, className = "" }: CountryCo
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 rounded-2xl bg-gray-200 py-3 lg:py-4 px-4 font-body font-medium outline-none ring-primary/30 transition-all focus:ring-2 h-full w-full justify-between"
+        className="flex items-center gap-2 rounded-xl bg-[#1C1C22] border border-white/10 py-3 lg:py-4 px-4 font-body font-bold text-white outline-none focus:border-[#8A2BE2] focus:ring-1 focus:ring-[#8A2BE2] transition-all h-full w-full justify-between"
       >
         <div className="flex items-center gap-2">
           <img
@@ -74,9 +74,9 @@ export const CountryCodeSelect = ({ value, onChange, className = "" }: CountryCo
             alt={selectedCountry.name}
             className="w-5 h-auto rounded-sm shadow-sm shrink-0"
           />
-          <span className="text-sm lg:text-base whitespace-nowrap">{selectedCountry.code}</span>
+          <span className="text-sm lg:text-base whitespace-nowrap text-white">{selectedCountry.code}</span>
         </div>
-        <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-4 h-4 shrink-0 transition-transform text-gray-400 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       <AnimatePresence>
@@ -86,16 +86,16 @@ export const CountryCodeSelect = ({ value, onChange, className = "" }: CountryCo
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             onWheel={(e) => e.stopPropagation()}
-            className="absolute left-0 top-[110%] z-[200] w-36 max-h-80 overflow-hidden rounded-3xl bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 flex flex-col"
+            className="absolute left-0 top-[110%] z-[200] w-36 max-h-80 overflow-hidden rounded-2xl bg-[#1C1C22] shadow-2xl border border-white/10 flex flex-col"
           >
             {/* Search Input */}
-            <div className="p-2 border-b border-gray-50 bg-gray-50/50">
+            <div className="p-2 border-b border-white/10 bg-[#141418]">
               <input
                 type="text"
                 placeholder="Buscar..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full rounded-xl bg-white border border-gray-200 py-1.5 px-3 text-[11px] font-body outline-none focus:border-primary/30 transition-all"
+                className="w-full rounded-lg bg-[#1C1C22] border border-white/10 py-1.5 px-3 text-[11px] font-body text-white placeholder-gray-500 outline-none focus:border-[#8A2BE2] transition-all"
               />
             </div>
 
@@ -111,8 +111,8 @@ export const CountryCodeSelect = ({ value, onChange, className = "" }: CountryCo
                       setIsOpen(false);
                       setSearchTerm("");
                     }}
-                    className={`flex w-full items-center gap-2.5 rounded-xl p-2 text-left transition-all hover:bg-gray-100 ${
-                      value === country.code ? "bg-primary/5 text-primary" : "text-gray-700"
+                    className={`flex w-full items-center gap-2.5 rounded-lg p-2 text-left transition-all hover:bg-[#25252E] ${
+                      value === country.code ? "bg-[#8A2BE2]/20 text-[#8A2BE2] font-bold" : "text-gray-200"
                     }`}
                   >
                     <img
@@ -127,7 +127,7 @@ export const CountryCodeSelect = ({ value, onChange, className = "" }: CountryCo
                   </button>
                 ))
               ) : (
-                <div className="p-4 text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                <div className="p-4 text-center text-[10px] text-gray-500 font-bold uppercase tracking-widest">
                   No se encontró el país
                 </div>
               )}

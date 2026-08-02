@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation";
 
 export const WhatsAppWidget = () => {
   const pathname = usePathname();
-  const phoneNumber = "584122861719";
-  const message = "¡Hola Dolce Candy! 🍭 Estoy interesado/a en hacer una compra. ¿Me podrían ayudar con mi pedido? ✨";
+  const phoneNumber = "584241807106";
+  const message = "¡Hola Mania Tech! 🎮 Estoy interesado/a en consultar sobre el catálogo de hardware y periféricos. ¿Me podrían asesorar? ⚡";
   
-  const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   if (pathname === '/checkout') return null;
 
@@ -28,7 +28,7 @@ export const WhatsAppWidget = () => {
       
       {/* Tooltip hint */}
       <div className="absolute right-full mr-4 bg-white text-slate-800 px-4 py-2 rounded-2xl shadow-xl text-xs font-black opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-slate-100">
-        ¡Hablemos por WhatsApp! 🍭
+        ¡Hablemos por WhatsApp! 🎮
       </div>
 
       {/* Glow pulse */}

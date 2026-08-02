@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   title: "Mania Tech | E-Commerce Gaming, Hardware & Creadores",
   description: "El ecosistema de hardware y periféricos más completo de Venezuela. Audífonos, mouses, teclados, cámaras y accesorios con 6 meses de garantía local.",
   icons: {
-    icon: "/images/Favicondc.png",
+    icon: "/images/logo-carmidev.png",
   },
 };
 

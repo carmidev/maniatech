@@ -6,7 +6,7 @@ import { MessageCircle } from "lucide-react";
 export const WhatsAppBubble = () => {
   return (
     <motion.a
-      href="https://wa.me/1234567890" // Reemplazar con el número real si es necesario
+      href="https://wa.me/584241807106"
       target="_blank"
       rel="noopener noreferrer"
       initial={{ scale: 0, opacity: 0 }}
@@ -30,7 +30,7 @@ export const WhatsAppBubble = () => {
       
       {/* Tooltip opcional */}
       <span className="absolute right-full mr-4 bg-white text-gray-800 px-4 py-2 rounded-xl text-sm font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-gray-100">
-        ¿Necesitas ayuda? ¡Escríbenos! 🍭
+        ¿Necesitas ayuda? ¡Escríbenos a WhatsApp! 🎮
       </span>
     </motion.a>
   );

@@ -173,22 +173,22 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
-            className={`relative w-full overflow-hidden rounded-3xl bg-white shadow-2xl max-h-[90vh] flex flex-col ${view === "profile" ? "max-w-lg" : "max-w-md"}`}
+            className={`relative w-full overflow-hidden rounded-3xl bg-[#141418] border border-white/10 text-white shadow-2xl max-h-[90vh] flex flex-col ${view === "profile" ? "max-w-lg" : "max-w-md"}`}
           >
             {/* Header with brand color */}
-            <div className="bg-primary p-8 text-center text-white">
+            <div className="bg-[#1C1C22] border-b border-white/10 p-8 text-center text-white relative">
               <button
                 onClick={onClose}
-                className="absolute right-4 top-4 rounded-full bg-white/20 p-2 transition-colors hover:bg-white/40"
+                className="absolute right-4 top-4 rounded-full bg-white/10 p-2 transition-colors hover:bg-white/20 text-gray-300 hover:text-white cursor-pointer"
               >
                 <X size={20} />
               </button>
-              <h2 className="font-display text-2xl uppercase tracking-wider">
-                {view === "login" && "¡Hola, Amigo!"}
+              <h2 className="font-display font-black text-2xl uppercase tracking-wider text-white">
+                {view === "login" && "¡Hola, Gamer!"}
                 {view === "otp" && "Revisa tu Correo"}
                 {view === "profile" && "¡Bienvenido!"}
               </h2>
-              <p className="mt-2 font-body opacity-90 text-sm">
+              <p className="mt-2 font-body text-gray-400 text-sm">
                 {view === "login" && "Inicia sesión para continuar con tu pedido."}
                 {view === "otp" && `Ingresa el código que enviamos a ${email}`}
                 {view === "profile" && "Por favor, completa tu perfil para continuar."}
@@ -197,7 +197,7 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
 
             <div className="p-8 overflow-y-auto custom-scrollbar">
               {error && (
-                <div className="mb-6 rounded-xl bg-red-50 p-4 text-xs font-medium text-red-500 border border-red-100">
+                <div className="mb-6 rounded-xl bg-red-500/10 p-4 text-xs font-medium text-red-400 border border-red-500/30">
                   {error}
                 </div>
               )}
@@ -223,14 +223,14 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                           placeholder="tucorreo@ejemplo.com"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full rounded-2xl bg-gray-100 py-4 pl-12 pr-4 font-body outline-none ring-primary/30 transition-all focus:ring-2 focus:bg-white"
+                          className="w-full rounded-xl bg-[#1C1C22] border border-white/10 py-4 pl-12 pr-4 font-body text-white placeholder-gray-500 outline-none focus:border-[#8A2BE2] focus:ring-1 focus:ring-[#8A2BE2] transition-all"
                           required
                         />
                       </div>
                       <button
                         type="submit"
                         disabled={isSending}
-                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary py-4 font-body font-bold text-white shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+                        className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#8A2BE2] hover:bg-[#6441A5] py-4 font-body font-bold text-white shadow-xl shadow-[#8A2BE2]/25 transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
                       >
                         <Sparkles size={20} />
                         {isSending ? "Enviando código..." : "Enviar código"}
@@ -239,9 +239,9 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
 
                     <div className="relative flex items-center justify-center py-2">
                       <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-100"></div>
+                        <div className="w-full border-t border-white/10"></div>
                       </div>
-                      <span className="relative bg-white px-4 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                      <span className="relative bg-[#141418] px-4 text-[10px] font-black uppercase tracking-widest text-gray-500">
                         O
                       </span>
                     </div>
@@ -250,7 +250,7 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                     <form onSubmit={(e) => { e.preventDefault(); signInWithGoogle(); }}>
                       <button
                         type="submit"
-                        className="flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-gray-100 py-4 font-body font-medium transition-all hover:bg-gray-50 active:scale-[0.98] cursor-pointer"
+                        className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-[#1C1C22] hover:bg-[#25252E] py-4 font-body font-medium text-white transition-all active:scale-[0.98] cursor-pointer"
                       >
                         <svg className="w-6 h-6" viewBox="0 0 24 24">
                           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -279,20 +279,20 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                         placeholder="0 0 0 0 0 0"
                         value={otpCode}
                         onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                        className="w-full text-center text-3xl tracking-[0.5em] font-numbers rounded-2xl bg-gray-200 py-6 outline-none ring-primary/30 transition-all focus:ring-2"
+                        className="w-full text-center text-3xl tracking-[0.5em] font-numbers rounded-xl bg-[#1C1C22] border border-white/10 text-white py-6 outline-none focus:border-[#8A2BE2] focus:ring-1 focus:ring-[#8A2BE2] transition-all"
                         required
                       />
                       <button
                         type="submit"
                         disabled={isSending || otpCode.length < 6}
-                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary py-4 font-body font-bold text-white shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+                        className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#8A2BE2] hover:bg-[#6441A5] py-4 font-body font-bold text-white shadow-xl shadow-[#8A2BE2]/25 transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
                       >
                         {isSending ? "Verificando..." : "Verificar Código"}
                       </button>
                     </form>
                     <button
                       onClick={() => setView("login")}
-                      className="w-full text-center text-sm font-body text-gray-400 hover:text-primary transition-colors"
+                      className="w-full text-center text-sm font-body text-gray-400 hover:text-[#8A2BE2] transition-colors cursor-pointer"
                     >
                       ¿Correo incorrecto? Volver atrás
                     </button>
@@ -310,8 +310,8 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
                 )}
               </AnimatePresence>
 
-              <p className="mt-8 text-center text-[10px] text-gray-400 font-body uppercase tracking-widest">
-                Dolce Candy Boutique © 2026
+              <p className="mt-8 text-center text-[10px] text-gray-500 font-body uppercase tracking-widest">
+                Mania Tech © 2026
               </p>
             </div>
           </motion.div>

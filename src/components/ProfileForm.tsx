@@ -221,7 +221,7 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
               type="text"
               value={formData.first_name}
               onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-              className="w-full rounded-2xl bg-slate-50 border border-slate-200 py-3.5 px-4 font-body outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all text-base"
+              className="w-full rounded-xl bg-[#1C1C22] border border-white/10 py-3.5 px-4 font-body text-white placeholder-gray-500 outline-none focus:border-[#8A2BE2] focus:ring-1 focus:ring-[#8A2BE2] transition-all text-base"
               required
             />
           </div>
@@ -231,7 +231,7 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
               type="text"
               value={formData.last_name}
               onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-              className="w-full rounded-2xl bg-slate-50 border border-slate-200 py-3.5 px-4 font-body outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all text-base"
+              className="w-full rounded-xl bg-[#1C1C22] border border-white/10 py-3.5 px-4 font-body text-white placeholder-gray-500 outline-none focus:border-[#8A2BE2] focus:ring-1 focus:ring-[#8A2BE2] transition-all text-base"
               required
             />
           </div>
@@ -245,11 +245,11 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             onBlur={handleEmailBlur}
-            className={`w-full rounded-2xl bg-slate-50 border py-3.5 px-4 font-body outline-none focus:ring-4 transition-all text-base ${emailError || duplicateErrors.email ? 'border-primary focus:border-primary focus:ring-primary/10' : 'border-slate-200 focus:border-primary/50 focus:ring-primary/10'}`}
+            className={`w-full rounded-xl bg-[#1C1C22] border py-3.5 px-4 font-body text-white placeholder-gray-500 outline-none focus:ring-1 transition-all text-base ${emailError || duplicateErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-white/10 focus:border-[#8A2BE2] focus:ring-[#8A2BE2]'}`}
             required
           />
           {(emailError || duplicateErrors.email) && (
-            <span className="text-[10px] font-black text-primary ml-1 block mt-1">
+            <span className="text-[10px] font-black text-red-400 ml-1 block mt-1">
               {emailError || duplicateErrors.email}
             </span>
           )}
@@ -277,12 +277,12 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
                 value={idNumber}
                 onChange={handleIdNumberChange}
                 onBlur={handleIdBlur}
-                className={`w-full rounded-2xl bg-slate-50 border py-3.5 px-4 font-body outline-none focus:ring-4 transition-all text-base ${idError || duplicateErrors.id_number ? 'border-primary focus:border-primary focus:ring-primary/10' : 'border-slate-200 focus:border-primary/50 focus:ring-primary/10'}`}
+                className={`w-full rounded-xl bg-[#1C1C22] border py-3.5 px-4 font-body text-white placeholder-gray-500 outline-none focus:ring-1 transition-all text-base ${idError || duplicateErrors.id_number ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-white/10 focus:border-[#8A2BE2] focus:ring-[#8A2BE2]'}`}
                 required
               />
             </div>
             {(idError || duplicateErrors.id_number) && (
-              <span className="text-[10px] font-black text-primary ml-1 block mt-1">
+              <span className="text-[10px] font-black text-red-400 ml-1 block mt-1">
                 {idError || duplicateErrors.id_number}
               </span>
             )}
@@ -318,12 +318,12 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
               value={formData.phone}
               onChange={handlePhoneChange}
               onBlur={handlePhoneBlur}
-              className={`w-full rounded-2xl bg-slate-50 border py-3.5 px-4 font-body outline-none focus:ring-4 transition-all text-base ${phoneError || duplicateErrors.phone ? 'border-primary focus:border-primary focus:ring-primary/10' : 'border-slate-200 focus:border-primary/50 focus:ring-primary/10'}`}
+              className={`w-full rounded-xl bg-[#1C1C22] border py-3.5 px-4 font-body text-white placeholder-gray-500 outline-none focus:ring-1 transition-all text-base ${phoneError || duplicateErrors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-white/10 focus:border-[#8A2BE2] focus:ring-[#8A2BE2]'}`}
               required
             />
           </div>
           {(phoneError || duplicateErrors.phone) && (
-            <span className="text-[10px] font-black text-primary ml-1 block mt-1">
+            <span className="text-[10px] font-black text-red-400 ml-1 block mt-1">
               {phoneError || duplicateErrors.phone}
             </span>
           )}
@@ -332,7 +332,7 @@ export const ProfileForm = ({ onComplete, deliveryMethod }: ProfileFormProps) =>
         <button
           type="submit"
           disabled={loading || Object.keys(duplicateErrors).length > 0}
-          className="w-full bg-primary text-white py-4 md:py-5 rounded-2xl font-black shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 mt-6 text-lg tracking-wider uppercase"
+          className="w-full bg-[#8A2BE2] hover:bg-[#6441A5] text-white py-4 md:py-5 rounded-xl font-bold shadow-xl shadow-[#8A2BE2]/25 transition-all active:scale-[0.98] disabled:opacity-50 mt-6 text-lg tracking-wider uppercase cursor-pointer"
         >
           {loading ? "Guardando..." : "Guardar Perfil ✨"}
         </button>

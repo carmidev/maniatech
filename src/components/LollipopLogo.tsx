@@ -13,6 +13,8 @@ export const LollipopLogo = ({ className = "w-12 h-12" }: { className?: string }
       <img
         src={getImagePath("/images/logo maniatech.png")}
         alt="Mania Tech Logo"
+        loading="lazy"
+        decoding="async"
         className="w-full h-full object-contain drop-shadow-lg"
       />
     </motion.div>

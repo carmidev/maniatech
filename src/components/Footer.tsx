@@ -17,6 +17,8 @@ export const Footer = () => {
               <img
                 src={getImagePath("/images/logo maniatech.png")}
                 alt="Mania Tech Logo"
+                loading="lazy"
+                decoding="async"
                 className="h-20 sm:h-32 w-auto object-contain group-hover:scale-105 transition-transform duration-300 filter drop-shadow-[0_0_20px_rgba(138,43,226,0.6)]"
               />
             </Link>
@@ -105,7 +107,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-3 justify-center lg:justify-start">
                 <Phone className="w-4 h-4 text-[#8A2BE2] shrink-0" />
-                <a href="https://wa.me/584120000000" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                <a href="https://wa.me/584241807106" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   Atención WhatsApp Directa
                 </a>
               </li>
