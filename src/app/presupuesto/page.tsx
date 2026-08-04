@@ -252,27 +252,30 @@ export default function PresupuestoPage() {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
                 {/* Plan Core */}
                 <div
                   onClick={() => setActivePlanKey("core")}
-                  className={`p-6 rounded-3xl transition-all duration-300 flex flex-col justify-between h-full cursor-pointer relative bg-[#141418]/90 backdrop-blur-md ${
+                  className={`p-6 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col justify-between h-full cursor-pointer relative bg-[#141418]/90 backdrop-blur-md ${
                     activePlanKey === "core"
-                      ? "border-2 border-[#8A2BE2] shadow-[0_0_30px_rgba(138,43,226,0.3)]"
+                      ? "border-2 border-[#00FF00] shadow-[0_0_35px_rgba(0,255,0,0.3)]"
                       : "border border-white/10 hover:border-white/30"
                   }`}
                 >
+                  <div className="absolute -top-3.5 right-6 bg-[#00FF00] text-black font-mono text-xs font-black px-3.5 py-1 rounded-full uppercase flex items-center gap-1 shadow-lg">
+                    <Star className="w-3.5 h-3.5 fill-current" /> RECOMENDADO MVP
+                  </div>
                   <div className="space-y-4">
                     <div className="space-y-1">
-                      <span className="text-xs font-mono text-[#8A2BE2] font-bold">{config.plans.core.tag}</span>
-                      <h3 className="font-heading font-bold text-2xl text-white">{config.plans.core.title}</h3>
-                      <p className="text-[11px] font-mono text-gray-400">{config.plans.core.desc}</p>
+                      <span className="text-xs font-mono text-[#00FF00] font-bold">{config.plans.core.tag}</span>
+                      <h3 className="font-heading font-bold text-2xl sm:text-3xl text-white">{config.plans.core.title}</h3>
+                      <p className="text-xs font-mono text-gray-400">{config.plans.core.desc}</p>
                     </div>
                     <div className="border-t border-white/10 pt-3">
                       <span className="text-xs font-mono text-gray-400 block">Inversión Fija MVP</span>
-                      <div className="font-mono text-2xl font-black text-[#00FF00]">{config.plans.core.price}</div>
+                      <div className="font-mono text-3xl font-black text-[#00FF00]">{config.plans.core.price}</div>
                     </div>
-                    <ul className="space-y-2 font-mono text-[11px] text-gray-300">
+                    <ul className="space-y-2 font-mono text-xs text-gray-300 pt-1">
                       {config.plans.core.deliverables.map((item, idx) => (
                         <li key={idx}>{item}</li>
                       ))}
@@ -285,50 +288,7 @@ export default function PresupuestoPage() {
                         setActivePlanKey("core");
                         goToSlide(2);
                       }}
-                      className="w-full py-3 bg-[#8A2BE2] hover:bg-purple-700 text-white rounded-xl font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all"
-                    >
-                      <span>Ver Detalles & Entregables</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Plan Momentum */}
-                <div
-                  onClick={() => setActivePlanKey("momentum")}
-                  className={`p-6 rounded-3xl transition-all duration-300 flex flex-col justify-between h-full cursor-pointer relative bg-[#141418]/95 backdrop-blur-md ${
-                    activePlanKey === "momentum"
-                      ? "border-2 border-[#00FF00] shadow-[0_0_35px_rgba(0,255,0,0.3)]"
-                      : "border border-white/15 hover:border-[#00FF00]/40"
-                  }`}
-                >
-                  <div className="absolute -top-3.5 right-6 bg-[#00FF00] text-black font-mono text-xs font-black px-3.5 py-1 rounded-full uppercase flex items-center gap-1 shadow-lg">
-                    <Star className="w-3.5 h-3.5 fill-current" /> RECOMENDADO
-                  </div>
-                  <div className="space-y-4">
-                    <div className="space-y-1">
-                      <span className="text-xs font-mono text-[#00FF00] font-bold">{config.plans.momentum.tag}</span>
-                      <h3 className="font-heading font-bold text-2xl text-white">{config.plans.momentum.title}</h3>
-                      <p className="text-[11px] font-mono text-gray-400">{config.plans.momentum.desc}</p>
-                    </div>
-                    <div className="border-t border-white/10 pt-3">
-                      <span className="text-xs font-mono text-gray-400 block">Inversión Desarrollo + Admin IA</span>
-                      <div className="font-mono text-2xl font-black text-[#00FF00]">{config.plans.momentum.price}</div>
-                    </div>
-                    <ul className="space-y-2 font-mono text-[11px] text-gray-300">
-                      {config.plans.momentum.deliverables.map((item, idx) => (
-                        <li key={idx}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="pt-6 mt-auto">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActivePlanKey("momentum");
-                        goToSlide(2);
-                      }}
-                      className="w-full py-3 bg-[#00FF00] hover:bg-emerald-400 text-black font-mono text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all"
+                      className="w-full py-3.5 bg-[#00FF00] hover:bg-emerald-400 text-black font-mono text-xs font-black uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 shadow-md transition-all"
                     >
                       <span>Ver Detalles & Entregables</span>
                       <ArrowRight className="w-4 h-4" />
@@ -339,19 +299,23 @@ export default function PresupuestoPage() {
                 {/* Plan A La Carta */}
                 <div
                   onClick={() => setActivePlanKey("alacarta")}
-                  className={`p-6 rounded-3xl transition-all duration-300 flex flex-col justify-between h-full cursor-pointer relative bg-[#141418]/90 backdrop-blur-md ${
+                  className={`p-6 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col justify-between h-full cursor-pointer relative bg-[#141418]/90 backdrop-blur-md ${
                     activePlanKey === "alacarta"
-                      ? "border-2 border-purple-500 shadow-[0_0_25px_rgba(168,85,247,0.3)]"
+                      ? "border-2 border-[#8A2BE2] shadow-[0_0_30px_rgba(138,43,226,0.3)]"
                       : "border border-white/10 hover:border-white/30"
                   }`}
                 >
                   <div className="space-y-4">
                     <div className="space-y-1">
-                      <span className="text-xs font-mono text-purple-400 font-bold">{config.plans.alacarta.tag}</span>
-                      <h3 className="font-heading font-bold text-2xl text-white">{config.plans.alacarta.title}</h3>
-                      <p className="text-[11px] font-mono text-gray-400">{config.plans.alacarta.desc}</p>
+                      <span className="text-xs font-mono text-[#8A2BE2] font-bold">{config.plans.alacarta.tag}</span>
+                      <h3 className="font-heading font-bold text-2xl sm:text-3xl text-white">{config.plans.alacarta.title}</h3>
+                      <p className="text-xs font-mono text-gray-400">{config.plans.alacarta.desc}</p>
                     </div>
-                    <ul className="space-y-2 font-mono text-[11px] text-gray-300 pt-2">
+                    <div className="border-t border-white/10 pt-3">
+                      <span className="text-xs font-mono text-gray-400 block">Modalidad</span>
+                      <div className="font-mono text-2xl font-black text-[#8A2BE2]">Módulos Sueltos</div>
+                    </div>
+                    <ul className="space-y-2 font-mono text-xs text-gray-300 pt-1">
                       {config.plans.alacarta.deliverables.map((item, idx) => (
                         <li key={idx}>{item}</li>
                       ))}
@@ -364,9 +328,9 @@ export default function PresupuestoPage() {
                         setActivePlanKey("alacarta");
                         goToSlide(2);
                       }}
-                      className="w-full py-3 bg-purple-900/60 hover:bg-purple-800 text-purple-200 border border-purple-500/40 rounded-xl font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all"
+                      className="w-full py-3.5 bg-[#8A2BE2] hover:bg-purple-700 text-white rounded-xl font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all"
                     >
-                      <span>Ver Detalles & Entregables</span>
+                      <span>Ver Módulos & Tarifas</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
