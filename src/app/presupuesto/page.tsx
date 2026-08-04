@@ -21,6 +21,7 @@ import {
 
 import { budgetConfig as defaultBudgetConfig, BudgetConfig } from "./budget.config";
 import { fetchProposalBySlug } from "./supabaseProposalFetcher";
+import { getImagePath } from "@/utils/imagePath";
 
 type PlanKey = "core" | "momentum" | "alacarta";
 
@@ -128,9 +129,11 @@ export default function PresupuestoPage() {
       {/* HEADER FLOATING NAVIGATION */}
       <header className="fixed top-0 left-0 right-0 z-40 px-6 py-4 flex items-center justify-between pointer-events-none">
         <div className="flex items-center gap-3 bg-[#141418]/90 backdrop-blur-md border border-[#8A2BE2]/30 px-4 py-2 rounded-full shadow-lg pointer-events-auto">
-          <div className="w-8 h-8 rounded-full bg-[#8A2BE2]/20 border border-[#8A2BE2]/40 flex items-center justify-center">
-            <Gamepad2 className="w-4 h-4 text-[#8A2BE2]" />
-          </div>
+          <img
+            src={getImagePath("/images/logo maniatech.png")}
+            alt="ManiaTech Logo"
+            className="h-6 sm:h-7 w-auto object-contain shrink-0"
+          />
           <div>
             <h1 className="font-heading font-black text-sm uppercase text-white leading-none">
               {config.clientName}
@@ -360,6 +363,13 @@ export default function PresupuestoPage() {
                       <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
                       <span>Volver a los Planes</span>
                     </button>
+                    <button
+                      onClick={() => goToSlide(3)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#8A2BE2]/20 hover:bg-[#8A2BE2] text-[#8A2BE2] hover:text-white rounded-xl font-mono text-xs font-bold transition-all border border-[#8A2BE2]/30 group"
+                    >
+                      <span>Costos Operativos</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    </button>
                   </div>
                   <span className="block font-mono text-xs text-[#00FF00] font-bold uppercase tracking-widest">
                     {tableData.tag}
@@ -406,6 +416,15 @@ export default function PresupuestoPage() {
                         </tr>
                       ))}
                     </tbody>
+                    <tfoot className="font-bold border-t border-white/20 text-white sticky bottom-0 z-20 bg-[#1C1C22] shadow-[0_-6px_16px_rgba(0,0,0,0.4)]">
+                      <tr>
+                        <td colSpan={5} className="p-3 text-center text-[11px] font-mono tracking-widest text-[#00FF00] uppercase">
+                          {activePlanKey === "alacarta"
+                            ? "MODALIDAD A LA CARTA · TARIFAS POR COMPONENTES INDEPENDIENTES"
+                            : `PLAN SELECCIONADO: ${tableData.title.toUpperCase()} · TOTAL ${tableData.total}`}
+                        </td>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
               </div>
