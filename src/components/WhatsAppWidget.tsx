@@ -11,7 +11,7 @@ export const WhatsAppWidget = () => {
   
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
-  if (pathname === '/checkout') return null;
+  if (pathname === '/checkout' || pathname?.startsWith('/presupuesto')) return null;
 
   return (
     <motion.a

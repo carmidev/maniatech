@@ -51,7 +51,7 @@ export default function PresupuestoPage() {
 
   const nextSlide = () => {
     if (currentSlide === 1) {
-      goToSlide(2);
+      goToSlide(3);
     } else if (currentSlide < totalSlides - 1) {
       goToSlide(currentSlide + 1);
     }
@@ -74,20 +74,7 @@ export default function PresupuestoPage() {
 
       if (Math.abs(e.deltaY) < 35) return;
 
-      if (currentSlide === 2) {
-        const tableContainer = document.querySelector("#presupuesto-table-scroll");
-        if (tableContainer) {
-          const { scrollTop, scrollHeight, clientHeight } = tableContainer;
-          if (e.deltaY < 0 && scrollTop <= 5) {
-            lastScrollTime.current = now;
-            goToSlide(1);
-          } else if (e.deltaY > 0 && scrollTop + clientHeight >= scrollHeight - 5) {
-            lastScrollTime.current = now;
-            goToSlide(3);
-          }
-        }
-        return;
-      }
+      if (currentSlide === 2) return;
 
       if (e.deltaY > 0) {
         lastScrollTime.current = now;
@@ -470,6 +457,7 @@ export default function PresupuestoPage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -40 * direction, scale: 0.95 }}
               transition={{ duration: 0.35, ease: "easeInOut" }}
+              onWheel={(e) => e.stopPropagation()}
               className="max-w-5xl w-full space-y-6"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -538,11 +526,30 @@ export default function PresupuestoPage() {
                     </thead>
                     <tbody className="divide-y divide-white/10">
                       {tableData.rows.map((r, i) => (
-                        <tr key={i} className="hover:bg-[#8A2BE2]/10 transition-colors">
+                        <tr
+                          key={i}
+                          className={
+                            r.isSeoRow
+                              ? "bg-sky-950/70 hover:bg-sky-900/80 transition-colors border-l-4 border-sky-400 font-medium"
+                              : "hover:bg-[#8A2BE2]/10 transition-colors"
+                          }
+                        >
                           <td className="p-4 font-bold text-white">{r.name}</td>
                           <td className="p-4 text-center text-gray-400">{r.time}</td>
-                          <td className="p-4 text-right text-gray-500 line-through">{r.standard}</td>
-                          <td className="p-4 text-right font-bold text-[#00FF00]">{r.final}</td>
+                          <td
+                            className={`p-4 text-right ${
+                              r.isStrikethrough ? "text-gray-500 line-through" : "text-[#E2E8F0] font-bold"
+                            }`}
+                          >
+                            {r.standard}
+                          </td>
+                          <td
+                            className={`p-4 text-right font-bold ${
+                              r.isSeoRow ? "text-sky-300 font-extrabold" : "text-[#00FF00]"
+                            }`}
+                          >
+                            {r.final}
+                          </td>
                           <td className="p-4 text-center">
                             <span className={`px-2.5 py-1 ${r.statusBg} rounded-full font-bold text-[10px]`}>
                               {r.status}

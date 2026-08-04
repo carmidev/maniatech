@@ -1,3 +1,14 @@
+export interface BudgetTableRow {
+  name: string;
+  time: string;
+  standard: string;
+  final: string;
+  status: string;
+  statusBg: string;
+  isStrikethrough?: boolean;
+  isSeoRow?: boolean;
+}
+
 export interface BudgetConfig {
   clientName: string;
   clientSubtitle: string;
@@ -59,7 +70,7 @@ export interface BudgetConfig {
       strikethroughTotal: string;
       time: string;
       hitos: { label: string; amount: string; color: string }[];
-      rows: { name: string; time: string; standard: string; final: string; status: string; statusBg: string }[];
+      rows: BudgetTableRow[];
     };
     momentum: {
       title: string;
@@ -68,7 +79,7 @@ export interface BudgetConfig {
       strikethroughTotal: string;
       time: string;
       hitos: { label: string; amount: string; color: string }[];
-      rows: { name: string; time: string; standard: string; final: string; status: string; statusBg: string }[];
+      rows: BudgetTableRow[];
     };
     alacarta: {
       title: string;
@@ -77,10 +88,18 @@ export interface BudgetConfig {
       strikethroughTotal: string;
       time: string;
       hitos: { label: string; amount: string; color: string }[];
-      rows: { name: string; time: string; standard: string; final: string; status: string; statusBg: string }[];
+      rows: BudgetTableRow[];
     };
   };
 }
+
+export const createWhatsAppMessage = (
+  planName: string,
+  clientName: string,
+  priceText: string,
+  hitoText: string = "$1,050 USD"
+) =>
+  `¡Hola CarMiDev! Quiero aprobar el Plan ${planName} (${priceText}) para ${clientName}. Deseo iniciar el desarrollo del MVP (Landing + E-Commerce + Checkout + WhatsApp API + Supabase DB) con el Hito 1 de ${hitoText}.`;
 
 export const budgetConfig: BudgetConfig = {
   clientName: "ManiaTech C.A.",
@@ -120,13 +139,13 @@ export const budgetConfig: BudgetConfig = {
       deliverables: [
         "✓ Landing Page Corporativa de Alta Conversión.",
         "✓ Catálogo de Productos Reactivo con Modales.",
-        "✓ Carrito de Compras Transaccional con Tasa BCV.",
+        "✓ Carrito con Tasa BCV Oficial.",
         "✓ Checkout Integrado Directo a WhatsApp API.",
         "✓ Base de Datos Supabase + Panel Admin de Inventarios.",
         "✓ Seguridad RLS (Row Level Security) e Infraestructura.",
       ],
-      whatsappText: "Aprobar Plan CarMi Core ($2,100)",
-      whatsappMsg: "¡Hola! Quiero aprobar el Plan CarMi Core para ManiaTech C.A. ($2,100 USD).",
+      whatsappText: "Aprobar Plan CarMi Core ($2,100 USD)",
+      whatsappMsg: createWhatsAppMessage("🟢 CarMi Core", "ManiaTech C.A.", "$2,100 USD", "$1,050 USD"),
     },
     momentum: {
       tag: "🔵 FASE 1 + ATRACCIÓN DE CLIENTES",
@@ -142,7 +161,7 @@ export const budgetConfig: BudgetConfig = {
         "✓ Reportes mensuales de métricas de crecimiento y atracción de clientes.",
       ],
       whatsappText: "Aprobar Plan CarMi Momentum ($2,100 + SEO)",
-      whatsappMsg: "¡Hola! Quiero aprobar el Plan CarMi Momentum para ManiaTech C.A. ($2,100 USD + SEO).",
+      whatsappMsg: createWhatsAppMessage("🔵 CarMi Momentum", "ManiaTech C.A.", "$2,100 USD inicial + SEO", "$1,050 USD"),
     },
     alacarta: {
       tag: "📦 CONTRATACIÓN INDEPENDIENTE",
@@ -160,7 +179,7 @@ export const budgetConfig: BudgetConfig = {
         "• ⚡ Plataformas Custom Enterprise (Desarrolladas a tus necesidades y medidas) → Bajo Cotización.",
       ],
       whatsappText: "Cotizar Módulos A la Carta",
-      whatsappMsg: "¡Hola! Me interesa cotizar Módulos A la Carta para ManiaTech C.A.",
+      whatsappMsg: "¡Hola CarMiDev! Me interesa cotizar Módulos A la Carta para ManiaTech C.A. Quisiera evaluar la contratación de componentes independientes para nuestro proyecto.",
     },
   },
   tableData: {
@@ -175,12 +194,12 @@ export const budgetConfig: BudgetConfig = {
         { label: "Hito 2 (50%)", amount: "$1,050.00 USD", color: "bg-[#00FF00] text-black font-bold" },
       ],
       rows: [
-        { name: "1. Arquitectura Base & Design System", time: "3 Días", standard: "$350.00", final: "$250.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40" },
-        { name: "2. Landing Page & Hero Celosía Interactivo", time: "1.5 Semanas", standard: "$1,200.00", final: "$550.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40" },
-        { name: "3. Catálogo, Modales & Carrito Reactivo", time: "1 Semana", standard: "$800.00", final: "$400.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40" },
-        { name: "4. Checkout & WhatsApp API", time: "1.5 Semanas", standard: "$600.00", final: "$500.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40" },
-        { name: "5. QA, Responsive & Ajustes UI", time: "2 Días", standard: "$350.00", final: "$200.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40" },
-        { name: "6. Supabase DB, Panel Admin & RLS", time: "3 Días", standard: "$850.00", final: "$200.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40" },
+        { name: "1. Arquitectura Base & Design System", time: "3 Días", standard: "$350.00", final: "$250.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
+        { name: "2. Landing Page & Hero Celosía Interactivo", time: "1.5 Semanas", standard: "$1,200.00", final: "$550.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
+        { name: "3. Catálogo, Modales & Carrito Reactivo", time: "1 Semana", standard: "$800.00", final: "$400.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
+        { name: "4. Checkout & WhatsApp API", time: "1.5 Semanas", standard: "$600.00", final: "$500.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40", isStrikethrough: true },
+        { name: "5. QA, Responsive & Ajustes UI", time: "2 Días", standard: "$350.00", final: "$200.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
+        { name: "6. Supabase DB, Panel Admin & RLS", time: "3 Días", standard: "$850.00", final: "$200.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40", isStrikethrough: true },
       ],
     },
     momentum: {
@@ -194,13 +213,13 @@ export const budgetConfig: BudgetConfig = {
         { label: "Suscripción SEO", amount: "$250 – $350/mes", color: "bg-[#00FF00] text-black font-bold" },
       ],
       rows: [
-        { name: "1. Arquitectura Base & Design System", time: "3 Días", standard: "$350.00", final: "$250.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40" },
-        { name: "2. Landing Page & Hero Celosía Interactivo", time: "1.5 Semanas", standard: "$1,200.00", final: "$550.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40" },
-        { name: "3. Catálogo, Modales & Carrito Reactivo", time: "1 Semana", standard: "$800.00", final: "$400.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40" },
-        { name: "4. Checkout & WhatsApp API", time: "1.5 Semanas", standard: "$600.00", final: "$500.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40" },
-        { name: "5. QA, Responsive & Ajustes UI", time: "2 Días", standard: "$350.00", final: "$200.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40" },
-        { name: "6. Supabase DB, Panel Admin & RLS", time: "3 Días", standard: "$850.00", final: "$200.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40" },
-        { name: "7. Estrategia & Posicionamiento SEO Continuo", time: "Continuo", standard: "$400.00/mo", final: "$250 – $350/mo", status: "SEO Mensual", statusBg: "bg-sky-900/60 text-sky-300 border border-sky-500/40" },
+        { name: "1. Arquitectura Base & Design System", time: "3 Días", standard: "$350.00", final: "$250.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
+        { name: "2. Landing Page & Hero Celosía Interactivo", time: "1.5 Semanas", standard: "$1,200.00", final: "$550.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
+        { name: "3. Catálogo, Modales & Carrito Reactivo", time: "1 Semana", standard: "$800.00", final: "$400.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
+        { name: "4. Checkout & WhatsApp API", time: "1.5 Semanas", standard: "$600.00", final: "$500.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40", isStrikethrough: true },
+        { name: "5. QA, Responsive & Ajustes UI", time: "2 Días", standard: "$350.00", final: "$200.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
+        { name: "6. Supabase DB, Panel Admin & RLS", time: "3 Días", standard: "$850.00", final: "$200.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40", isStrikethrough: true },
+        { name: "7. Estrategia & Posicionamiento SEO Continuo", time: "Continuo", standard: "$400.00/mo", final: "$250 – $350/mo", status: "SEO Mensual", statusBg: "bg-sky-900/60 text-sky-300 border border-sky-500/40", isStrikethrough: false, isSeoRow: true },
       ],
     },
     alacarta: {
@@ -214,13 +233,13 @@ export const budgetConfig: BudgetConfig = {
         { label: "Suma Total Suelta", amount: "$8,550.00 USD", color: "bg-[#00FF00] text-black font-bold" },
       ],
       rows: [
-        { name: "1. Admin Inteligente (Auto-carga de E-Commerce, IA en fotos, Inventario & KPIs)", time: "2 Semanas", standard: "$4,000.00", final: "Producto Estrella ⭐", status: "Módulo Top", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40 font-bold" },
-        { name: "2. Landing Page Corporativa (Sin E-Commerce)", time: "1.5 Semanas", standard: "$1,200.00", final: "Sin Descuento", status: "Módulo Individual", statusBg: "bg-slate-800 text-slate-300" },
-        { name: "3. E-Commerce & Checkout Venezolano (Carrito BCV & WhatsApp API)", time: "2 Semanas", standard: "$1,400.00", final: "Sin Descuento", status: "Módulo Individual", statusBg: "bg-slate-800 text-slate-300" },
-        { name: "4. Chatbot IA & Automatización de Respuestas 24/7", time: "1.5 Semanas", standard: "$1,100.00", final: "Sin Descuento", status: "Módulo Individual", statusBg: "bg-slate-800 text-slate-300" },
-        { name: "5. Estrategia & Auditoría SEO Mensual (Independiente)", time: "Continuo", standard: "$400.00/mo", final: "$400.00 / mes", status: "SEO Mensual", statusBg: "bg-sky-900/60 text-sky-300 border border-sky-500/40" },
-        { name: "6. 🤖 Soluciones & Agentes con IA", time: "A Medida", standard: "Bajo Cotización", final: "Según Requerimientos", status: "Cotización IA", statusBg: "bg-purple-900/60 text-purple-300 border border-purple-500/40" },
-        { name: "7. ⚡ Plataformas Custom Enterprise (Desarrolladas a tus necesidades y medidas)", time: "A Medida", standard: "Bajo Cotización", final: "Según Requerimientos", status: "Enterprise Custom", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40" },
+        { name: "1. Admin Inteligente (Auto-carga de E-Commerce, IA en fotos, Inventario & KPIs)", time: "2 Semanas", standard: "$4,000.00", final: "Producto Estrella ⭐", status: "Módulo Top", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40 font-bold", isStrikethrough: false },
+        { name: "2. Landing Page Corporativa (Sin E-Commerce)", time: "1.5 Semanas", standard: "$1,200.00", final: "Sin Descuento", status: "Módulo Individual", statusBg: "bg-slate-800 text-slate-300", isStrikethrough: false },
+        { name: "3. E-Commerce & Checkout Venezolano (Carrito BCV & WhatsApp API)", time: "2 Semanas", standard: "$1,400.00", final: "Sin Descuento", status: "Módulo Individual", statusBg: "bg-slate-800 text-slate-300", isStrikethrough: false },
+        { name: "4. Chatbot IA & Automatización de Respuestas 24/7", time: "1.5 Semanas", standard: "$1,100.00", final: "Sin Descuento", status: "Módulo Individual", statusBg: "bg-slate-800 text-slate-300", isStrikethrough: false },
+        { name: "5. Estrategia & Auditoría SEO Mensual (Independiente)", time: "Continuo", standard: "$400.00/mo", final: "$400.00 / mes", status: "SEO Mensual", statusBg: "bg-sky-900/60 text-sky-300 border border-sky-500/40", isStrikethrough: false, isSeoRow: true },
+        { name: "6. 🤖 Soluciones & Agentes con IA", time: "A Medida", standard: "Bajo Cotización", final: "Según Requerimientos", status: "Cotización IA", statusBg: "bg-purple-900/60 text-purple-300 border border-purple-500/40", isStrikethrough: false },
+        { name: "7. ⚡ Plataformas Custom Enterprise (Desarrolladas a tus necesidades y medidas)", time: "A Medida", standard: "Bajo Cotización", final: "Según Requerimientos", status: "Enterprise Custom", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: false },
       ],
     },
   },
