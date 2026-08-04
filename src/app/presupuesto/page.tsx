@@ -412,7 +412,7 @@ export default function PresupuestoPage() {
             </motion.section>
           )}
 
-          {/* SLIDE 3: INFRAESTRUCTURA & COSTOS */}
+          {/* SLIDE 3: INFRAESTRUCTURA & COSTOS OPERATIVOS */}
           {currentSlide === 3 && (
             <motion.section
               key="slide-3"
@@ -424,33 +424,76 @@ export default function PresupuestoPage() {
               className="max-w-5xl w-full space-y-6"
             >
               <div className="text-center space-y-2 max-w-2xl mx-auto">
-                <span className="text-xl sm:text-2xl text-[#00FF00] font-bold block">Arquitectura Serverless Transparente</span>
+                <span className="font-mono text-xs text-[#00FF00] font-bold uppercase tracking-widest">
+                  Eficiencia Operativa & Escalabilidad
+                </span>
                 <h2 className="font-heading font-black text-3xl sm:text-4xl uppercase text-white">
-                  Infraestructura & Costos Operativos
+                  Costos Operativos
                 </h2>
+                <div className="pt-1 flex justify-center">
+                  <span
+                    className={`px-4 py-1.5 rounded-full font-mono text-xs font-bold uppercase tracking-wider shadow-md flex items-center gap-2 ${
+                      activePlanKey === "core"
+                        ? "bg-[#00FF00]/15 border border-[#00FF00]/40 text-[#00FF00]"
+                        : "bg-[#8A2BE2]/15 border border-[#8A2BE2]/40 text-[#8A2BE2]"
+                    }`}
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>
+                      Plan Seleccionado:{" "}
+                      {activePlanKey === "core"
+                        ? "🟢 CarMi Core ($2,100 USD)"
+                        : "📦 Módulos A la Carta"}
+                    </span>
+                  </span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-[#141418]/90 border border-white/10 p-6 rounded-3xl space-y-3">
-                  <Server className="w-8 h-8 text-[#8A2BE2]" />
-                  <h3 className="font-heading font-bold text-lg text-white">Hosting Vercel Serverless</h3>
-                  <p className="text-xs text-gray-400">Capa Hobby 100% Gratuita para el volumen inicial de ManiaTech. Escalable a Pro ($20/mo) según demanda.</p>
-                </div>
-                <div className="bg-[#141418]/90 border border-white/10 p-6 rounded-3xl space-y-3">
-                  <ShieldCheck className="w-8 h-8 text-[#00FF00]" />
-                  <h3 className="font-heading font-bold text-lg text-white">Base de Datos Supabase</h3>
-                  <p className="text-xs text-gray-400">PostgreSQL Cloud con RLS & Backups automáticos incluidos en el tier Free de Supabase HQ.</p>
-                </div>
-                <div className="bg-[#141418]/90 border border-white/10 p-6 rounded-3xl space-y-3">
-                  <Zap className="w-8 h-8 text-[#8A2BE2]" />
-                  <h3 className="font-heading font-bold text-lg text-white">Licencia & Código</h3>
-                  <p className="text-xs text-gray-400">Código custom entregado a ManiaTech sin comisiones por ventas ni ataduras de licencias de terceros.</p>
+              <div className="max-w-2xl mx-auto w-full">
+                <div className="bg-[#141418]/90 backdrop-blur-md p-6 sm:p-8 rounded-3xl space-y-5 border border-white/10 shadow-2xl">
+                  <h3 className="font-heading font-bold text-xl text-white flex items-center gap-2">
+                    <Server className="w-5 h-5 text-[#8A2BE2]" />
+                    <span>Infraestructura Serverless (Costos $0/mes)</span>
+                  </h3>
+
+                  <div className="space-y-3 font-mono text-xs">
+                    <div className="flex justify-between items-center p-3.5 bg-[#1C1C22] rounded-xl border border-white/10 shadow-sm">
+                      <div>
+                        <strong className="block text-white text-sm">Hosting & Edge CDN</strong>
+                        <span className="text-[10px] text-gray-400">Vercel Hobby Tier</span>
+                      </div>
+                      <span className="font-bold text-[#00FF00]">$0.00 USD / mes</span>
+                    </div>
+
+                    <div className="flex justify-between items-center p-3.5 bg-[#1C1C22] rounded-xl border border-white/10 shadow-sm">
+                      <div>
+                        <strong className="block text-white text-sm">Base de Datos PostgreSQL & Auth</strong>
+                        <span className="text-[10px] text-gray-400">Supabase Free Tier (500 MB / 50k users)</span>
+                      </div>
+                      <span className="font-bold text-[#00FF00]">$0.00 USD / mes</span>
+                    </div>
+
+                    <div className="flex justify-between items-center p-3.5 bg-[#1C1C22] rounded-xl border border-white/10 shadow-sm">
+                      <div>
+                        <strong className="block text-white text-sm">Dominio Web Personalizado</strong>
+                        <span className="text-[10px] text-gray-400">NIC.ve / Cloudflare (`maniatech.com`)</span>
+                      </div>
+                      <span className="font-bold text-gray-200">~$12.00 USD / año</span>
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 bg-[#8A2BE2]/10 border border-[#8A2BE2]/30 rounded-xl font-mono text-[10px] text-gray-300 space-y-1">
+                    <strong className="text-[#00FF00] block text-xs">📌 Nota de Transparencia & Escalabilidad (Pay-as-you-grow):</strong>
+                    <span>
+                      La arquitectura inicial opera a $0.00/mes. Si el volumen supera los 500 MB o 50.000 usuarios/mes, los planes Pro (Vercel $20/mes | Supabase $25/mes) se contratarán directamente a nombre del cliente según el crecimiento real del negocio.
+                    </span>
+                  </div>
                 </div>
               </div>
             </motion.section>
           )}
 
-          {/* SLIDE 4: CALL TO ACTION & WHATSAPP */}
+          {/* SLIDE 4: DESPLIEGUE, ALIANZA & CONTACTO DIRECTO */}
           {currentSlide === 4 && (
             <motion.section
               key="slide-4"
@@ -459,33 +502,114 @@ export default function PresupuestoPage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -40 * direction, scale: 0.95 }}
               transition={{ duration: 0.35, ease: "easeInOut" }}
-              className="max-w-3xl w-full text-center space-y-6"
+              className="max-w-3xl w-full text-center space-y-4 sm:space-y-5"
             >
-              <div className="w-16 h-16 rounded-full bg-[#8A2BE2] text-white mx-auto flex items-center justify-center shadow-xl border border-[#00FF00]/40">
-                <MessageCircle className="w-8 h-8 text-[#00FF00]" />
+              <div className="w-14 h-14 rounded-full bg-[#8A2BE2] text-white mx-auto flex items-center justify-center shadow-xl border border-[#00FF00]/40">
+                <Gamepad2 className="w-7 h-7 text-[#00FF00]" />
               </div>
 
-              <div className="space-y-2">
-                <span className="text-2xl sm:text-3xl text-[#00FF00] font-bold block leading-none">¡Listos para llevar ManiaTech al siguiente nivel!</span>
+              <div className="space-y-1 sm:space-y-1.5">
+                <span className="text-2xl sm:text-3xl text-[#00FF00] font-bold block leading-none">¡Listos para lanzar a producción!</span>
                 <h2 className="font-heading font-black text-3xl sm:text-4xl uppercase text-white leading-tight">
-                  Aceptación & Contacto Directo
+                  Despliegue & Entrega Final
                 </h2>
-                <p className="text-xs sm:text-sm text-gray-300 max-w-lg mx-auto">
-                  Selecciona la opción elegida o aclara tus dudas técnicas directamente con el equipo de CarMiDev HQ a través de WhatsApp.
+                <p className="font-mono text-xs sm:text-sm text-gray-300 max-w-xl mx-auto leading-relaxed pt-1">
+                  Tu plataforma para ManiaTech C.A. está desarrollada, optimizada y lista para recibir clientes. Solo falta tu aprobación para hacer el lanzamiento oficial.
                 </p>
               </div>
 
-              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+              {/* Insignia de Alianza Estratégica */}
+              <div className="bg-[#141418] text-white p-4 sm:p-4.5 rounded-2xl border border-[#8A2BE2]/40 shadow-2xl max-w-lg mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 relative overflow-hidden group">
+                <div className="absolute -top-6 -right-6 w-32 h-32 bg-[#00FF00]/15 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
+
+                <div className="flex items-center gap-3 text-left">
+                  <div className="w-9 h-9 rounded-full bg-[#8A2BE2]/20 border border-[#8A2BE2]/40 flex items-center justify-center shrink-0">
+                    <Gamepad2 className="w-4 h-4 text-[#8A2BE2]" />
+                  </div>
+                  <div>
+                    <span className="text-[9.5px] font-mono text-[#00FF00] font-bold uppercase tracking-widest block">
+                      Alianza Estratégica
+                    </span>
+                    <h4 className="font-heading font-black text-base uppercase text-white leading-tight">
+                      ManiaTech <span className="text-[#8A2BE2] font-normal">C.A.</span>
+                    </h4>
+                  </div>
+                </div>
+
+                <span className="text-[#00FF00] font-black text-xl font-heading hidden sm:block">×</span>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono text-gray-400 sm:hidden">en alianza con</span>
+                  <a
+                    href="https://carmidev.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center group/logo cursor-pointer"
+                    title="Visitar carmidev.com"
+                  >
+                    <img
+                      src="/Group 4.png"
+                      alt="CarMiDev Logo"
+                      className="h-7 sm:h-8 w-auto object-contain transition-all duration-300 group-hover/logo:scale-105 [filter:drop-shadow(0_0_12px_#0066FF)]"
+                    />
+                  </a>
+                </div>
+              </div>
+
+              {/* Micro-card: Esquema de Inversión */}
+              <div className="bg-[#141418]/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-white/10 max-w-lg mx-auto shadow-lg text-left space-y-2">
+                <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                  <span className="font-heading font-black text-xs uppercase text-white">
+                    Esquema de Inversión — {activePlanKey === "core" ? "CarMi Core" : "Módulos A la Carta"}
+                  </span>
+                  <span className="font-mono text-xs font-bold text-[#00FF00]">
+                    {activePlanKey === "core" ? "$2,100.00 USD" : "Tarifas A la Carta"}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px] font-mono">
+                  <div className="p-2.5 rounded-xl bg-[#8A2BE2]/15 border border-[#8A2BE2]/30 space-y-0.5">
+                    <span className="text-[#8A2BE2] text-[9.5px] block font-bold">1. Pago Inicial (50%):</span>
+                    <strong className="text-white font-black block text-xs">
+                      {activePlanKey === "alacarta" ? "50% Anticipo" : "$1,050.00 USD"}
+                    </strong>
+                    <span className="text-[9px] text-gray-400 block">Anticipo de inicio de desarrollo</span>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-[#00FF00]/15 border border-[#00FF00]/30 space-y-0.5">
+                    <span className="text-[#00FF00] text-[9.5px] block font-bold">2. Pago de Cierre (50%):</span>
+                    <strong className="text-[#00FF00] font-black block text-xs">
+                      {activePlanKey === "alacarta" ? "50% Final" : "$1,050.00 USD"}
+                    </strong>
+                    <span className="text-[9px] text-gray-300 block">Abono contra entrega en producción</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-1">
+                <a
+                  href="/"
+                  target="_blank"
+                  className="w-full sm:w-auto px-7 py-3 bg-[#1C1C22] hover:bg-[#8A2BE2] text-white rounded-2xl font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-lg flex items-center justify-center gap-2"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  <span>Ver Proyecto Principal</span>
+                </a>
+
                 <a
                   href={`https://wa.me/${config.whatsappPhone}?text=${encodeURIComponent(activePlanData.whatsappMsg)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto px-8 py-4 bg-[#00FF00] hover:bg-emerald-400 text-black font-mono text-sm font-black uppercase tracking-wider rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-7 py-3 bg-[#00FF00] hover:bg-emerald-400 text-black rounded-2xl font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-lg flex items-center justify-center gap-2"
                 >
-                  <MessageCircle className="w-5 h-5" />
+                  <Check className="w-4 h-4" />
                   <span>{activePlanData.whatsappText}</span>
                 </a>
               </div>
+
+              <p className="font-mono text-[9.5px] text-gray-500 uppercase tracking-widest pt-1">
+                Desarrollado con rigor de ingeniería de software por CarMiDev · 2026
+              </p>
             </motion.section>
           )}
         </AnimatePresence>
