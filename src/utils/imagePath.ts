@@ -1,4 +1,8 @@
-export function getImagePath(path: string | undefined): string | undefined {
+export function getImagePath(path: string): string;
+export function getImagePath(path: undefined): undefined;
+export function getImagePath(path: null): undefined;
+export function getImagePath(path: string | undefined | null): string | undefined;
+export function getImagePath(path?: string | null): string | undefined {
   if (!path) return undefined;
   
   if (path.includes('/api/proxy/supabase')) {
