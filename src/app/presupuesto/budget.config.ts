@@ -1,6 +1,8 @@
 export interface BudgetConfig {
   clientName: string;
   clientSubtitle: string;
+  clientLogoUrl?: string;
+  visiblePlans?: ("core" | "momentum" | "alacarta")[];
   projectName: string;
   heroTagline: string;
   heroDescription: string;
@@ -83,6 +85,8 @@ export interface BudgetConfig {
 export const budgetConfig: BudgetConfig = {
   clientName: "ManiaTech C.A.",
   clientSubtitle: "E-Commerce Gaming & Hardware",
+  clientLogoUrl: "/images/logo maniatech.png",
+  visiblePlans: ["core", "alacarta"],
   projectName: "Propuesta Técnica & Estimación Comercial",
   heroTagline: "Dominando la arena tecnológica con arquitectura custom",
   heroDescription: "Plataforma web transaccional custom diseñada sobre Next.js 15, Tailwind CSS y la infraestructura Serverless de alto rendimiento de CarMiDev HQ.",
