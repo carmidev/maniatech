@@ -145,7 +145,7 @@ export const budgetConfig: BudgetConfig = {
         "✓ Seguridad RLS (Row Level Security) e Infraestructura.",
       ],
       whatsappText: "Aprobar Plan CarMi Core ($2,100 USD)",
-      whatsappMsg: createWhatsAppMessage("🟢 CarMi Core", "ManiaTech C.A.", "$2,100 USD", "$1,050 USD"),
+      whatsappMsg: createWhatsAppMessage("CarMi Core", "ManiaTech C.A.", "$2,100 USD", "$1,050 USD"),
     },
     momentum: {
       tag: "🔵 FASE 1 + ATRACCIÓN DE CLIENTES",
@@ -161,7 +161,7 @@ export const budgetConfig: BudgetConfig = {
         "✓ Reportes mensuales de métricas de crecimiento y atracción de clientes.",
       ],
       whatsappText: "Aprobar Plan CarMi Momentum ($2,100 + SEO)",
-      whatsappMsg: createWhatsAppMessage("🔵 CarMi Momentum", "ManiaTech C.A.", "$2,100 USD inicial + SEO", "$1,050 USD"),
+      whatsappMsg: createWhatsAppMessage("CarMi Momentum", "ManiaTech C.A.", "$2,100 USD inicial + SEO", "$1,050 USD"),
     },
     alacarta: {
       tag: "📦 CONTRATACIÓN INDEPENDIENTE",
@@ -199,7 +199,7 @@ export const budgetConfig: BudgetConfig = {
         { name: "3. Catálogo, Modales & Carrito Reactivo", time: "1 Semana", standard: "$800.00", final: "$400.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
         { name: "4. Checkout & WhatsApp API", time: "1.5 Semanas", standard: "$600.00", final: "$500.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40", isStrikethrough: true },
         { name: "5. QA, Responsive & Ajustes UI", time: "2 Días", standard: "$350.00", final: "$200.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
-        { name: "6. Supabase DB, Panel Admin & RLS", time: "3 Días", standard: "$850.00", final: "$200.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40", isStrikethrough: true },
+        { name: "6. Supabase DB & RLS", time: "3 Días", standard: "$850.00", final: "$200.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40", isStrikethrough: true },
       ],
     },
     momentum: {
@@ -218,7 +218,7 @@ export const budgetConfig: BudgetConfig = {
         { name: "3. Catálogo, Modales & Carrito Reactivo", time: "1 Semana", standard: "$800.00", final: "$400.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
         { name: "4. Checkout & WhatsApp API", time: "1.5 Semanas", standard: "$600.00", final: "$500.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40", isStrikethrough: true },
         { name: "5. QA, Responsive & Ajustes UI", time: "2 Días", standard: "$350.00", final: "$200.00", status: "Listo (Hito 1)", statusBg: "bg-emerald-900/60 text-emerald-300 border border-emerald-500/40", isStrikethrough: true },
-        { name: "6. Supabase DB, Panel Admin & RLS", time: "3 Días", standard: "$850.00", final: "$200.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40", isStrikethrough: true },
+        { name: "6. Supabase DB & RLS", time: "3 Días", standard: "$850.00", final: "$200.00", status: "En Proceso (Hito 2)", statusBg: "bg-amber-900/60 text-amber-300 border border-amber-500/40", isStrikethrough: true },
         { name: "7. Estrategia & Posicionamiento SEO Continuo", time: "Continuo", standard: "$400.00/mo", final: "$250 – $350/mo", status: "SEO Mensual", statusBg: "bg-sky-900/60 text-sky-300 border border-sky-500/40", isStrikethrough: false, isSeoRow: true },
       ],
     },
